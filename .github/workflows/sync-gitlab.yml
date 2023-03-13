@@ -41,5 +41,5 @@ jobs:
       # Push everything to GitLab
       - name: Push to GitLab
         run: |
-          git push -f gitlab HEAD:${{ steps.repo_info.outputs.name }}_${{ steps.repo_info.outputs.branch }}/main
+          git push -f gitlab HEAD:${{ steps.repo_info.outputs.name }}/${{ steps.repo_info.outputs.branch }}
           git push -f gitlab --tags
