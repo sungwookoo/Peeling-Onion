@@ -1,35 +1,45 @@
-# This is a workflow that syncs everthing on this repository to another repository
- 
+# This is a workflow that syncs everything on this repository to another repository
 name: Sync this repository to another repository
- 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
- 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
- 
 jobs:
   push-to-gitlab:
     runs-on: ubuntu-latest
- 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      # Checkout the repository to be synced
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Fetch all history for all tags and branches
-      
-      - name: Set remote repository
-        env: # Retrieve env variable from GiGHub secrets
+      # Get the repository name and branch
+      - name: Get repository name and branch
+        id: repo_info
+        run: |
+          echo "::set-output name=name::$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)"
+          echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+      # Create directory with the repository name and branch in GitLab
+      - name: Create directory
+        env:
           gitlab_url: ${{ secrets.TARGET_URL }}
           gitlab_username: ${{ secrets.TARGET_USERNAME }}
           gitlab_token: ${{ secrets.TARGET_TOKEN }}
-        run: | # 토큰을 조합해서 저렇게 URL을 만들면 비번없이 push가 됩니다.
-          git remote add gitlab https://${gitlab_username}:${gitlab_token}@${gitlab_url#https://};
-      - name: Force push everthing
-        run: | # 모든 브랜치와 태그에 대하여 push합니다. gitlab에서 보호설정이 걸려있으면 Fail할 수 있습니다. # git push -f --all gitlab; 
-          git push -f gitlab main:backend;
-          git push -f --tags gitlab;
+        run: |
+          curl --request POST --header "PRIVATE-TOKEN: ${gitlab_token}" "${gitlab_url}/api/v4/projects/${gitlab_username}%2F${{ steps.repo_info.outputs.name }}/repository/tree" --form "branch_name=main" --form "commit_message=Create directory" --form "actions=[{\"action\":\"create\",\"file_path\":\"${{ steps.repo_info.outputs.name }}_${{ steps.repo_info.outputs.branch }}\"}]"
+      # Set remote repository
+      - name: Set remote repository
+        env:
+          gitlab_url: ${{ secrets.TARGET_URL }}
+          gitlab_username: ${{ secrets.TARGET_USERNAME }}
+          gitlab_token: ${{ secrets.TARGET_TOKEN }}
+        run: |
+          git remote add gitlab "https://${gitlab_username}:${gitlab_token}@${gitlab_url#https://}"
+      # Push everything to GitLab
+      - name: Push to GitLab
+        run: |
+          git push -f gitlab HEAD:${{ steps.repo_info.outputs.name }}_${{ steps.repo_info.outputs.branch }}/main
+          git push -f gitlab --tags
