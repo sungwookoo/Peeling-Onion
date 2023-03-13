@@ -5,4 +5,9 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY src src
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJAR1
+RUN ./gradlew bootJAR
+
+FROM adoptopenjdk/openjdk11
+COPY --from=builder build/libs/*.jar app.jar
+EXPOSE 10080
+ENTRYPOINT ["java", "-jar", "/app.jar"]
