@@ -48,96 +48,40 @@ public class User {
 	@Column(name = "mobile_number", length = 11)
 	private String mobileNumber;
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "userId")
 	@ToString.Exclude
 	@Builder.Default
 	private Set<Blocked> blockedUser = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "target")
+	@OneToMany(mappedBy = "targetId")
 	@ToString.Exclude
 	@Builder.Default
-	private Set<Blocked> blockedTarget = new LinkedHashSet<>();
+	private Set<Blocked> blockedsTarget = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "userId")
 	@ToString.Exclude
 	@Builder.Default
 	private Set<Withdraw> withdraws = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "userId")
 	@ToString.Exclude
 	@Builder.Default
 	private Set<Auth> auths = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "userId")
 	@ToString.Exclude
 	@Builder.Default
 	private Set<Configure> configures = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "userId")
 	@ToString.Exclude
 	@Builder.Default
-	private Set<Report> reportUser = new LinkedHashSet<>();
+	private Set<Report> reportsUser = new LinkedHashSet<>();
 
-	@OneToMany(mappedBy = "target")
+	@OneToMany(mappedBy = "targetId")
 	@ToString.Exclude
 	@Builder.Default
 	private Set<Report> reportsTarget = new LinkedHashSet<>();
-
-	public Set<Report> getReportsTarget() {
-		return reportsTarget;
-	}
-
-	public void setReportsTarget(Set<Report> reportsTarget) {
-		this.reportsTarget = reportsTarget;
-	}
-
-	public Set<Report> getReportUser() {
-		return reportUser;
-	}
-
-	public void setReportUser(Set<Report> reportUser) {
-		this.reportUser = reportUser;
-	}
-
-	public Set<Configure> getConfigures() {
-		return configures;
-	}
-
-	public void setConfigures(Set<Configure> configures) {
-		this.configures = configures;
-	}
-
-	public Set<Auth> getAuths() {
-		return auths;
-	}
-
-	public void setAuths(Set<Auth> auths) {
-		this.auths = auths;
-	}
-
-	public Set<Withdraw> getWithdraws() {
-		return withdraws;
-	}
-
-	public void setWithdraws(Set<Withdraw> withdraws) {
-		this.withdraws = withdraws;
-	}
-
-	public Set<Blocked> getBlockedTarget() {
-		return blockedTarget;
-	}
-
-	public void setBlockedTarget(Set<Blocked> blockedTarget) {
-		this.blockedTarget = blockedTarget;
-	}
-
-	public Set<Blocked> getBlockedUser() {
-		return blockedUser;
-	}
-
-	public void setBlockedUser(Set<Blocked> blockedUser) {
-		this.blockedUser = blockedUser;
-	}
 
 	public Long getId() {
 		return id;
