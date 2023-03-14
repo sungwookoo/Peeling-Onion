@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://mariadb_prod:3306/TRY_CATCH?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username:
+    password:
+    hikari:
+      validation-timeout: 2000
+      maximum-pool-size: 999
+
+logging:
+  level:
+    root: trace
+
+settings:
+  cross-origin: "*"
+
+apiPrefix:
+  v1
