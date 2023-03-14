@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://mariadb_prod:3306/TRY_CATCH?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
-    username:
-    password:
+    url: jdbc:mariadb://ssafy.shop:3506/user?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: bfit
+    password: xmrghkfodzld1dnl!
     hikari:
       validation-timeout: 2000
       maximum-pool-size: 999
