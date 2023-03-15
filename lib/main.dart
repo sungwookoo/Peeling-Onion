@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import './screens/home_screen.dart';
-import './screens/field_screen.dart';
-import './screens/mypage_screen.dart';
-import './screens/package_screen.dart';
+import 'widgets/custom_navigation_bar.dart';
 
 void main() {
   runApp(const App());
@@ -14,14 +11,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/field': (context) => const FieldScreen(),
-        '/mypage': (context) => const MypageScreen(),
-        '/package': (context) => const PackageScreen(),
-      },
+    return const MaterialApp(
+      home: CustomNavigationBar(),
     );
   }
 }

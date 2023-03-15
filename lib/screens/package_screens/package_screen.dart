@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/navigation_bar.dart';
 
 class PackageScreen extends StatefulWidget {
   const PackageScreen({super.key});
@@ -12,8 +11,7 @@ class _PackageScreenState extends State<PackageScreen> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Text('여긴 양파 밭입니다.'),
-      bottomNavigationBar: NavigateBar(),
+      body: Text('여긴 양파 택배함입니다.'),
     );
   }
 }

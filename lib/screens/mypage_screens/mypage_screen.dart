@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/navigation_bar.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -13,7 +12,6 @@ class _MypageScreenState extends State<MypageScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Text('여긴 마이페이지 입니다.'),
-      bottomNavigationBar: NavigateBar(),
     );
   }
 }
