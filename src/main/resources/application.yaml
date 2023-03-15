@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  tomcat:
+    uri-encoding: UTF-8
+
+logging:
+  level:
+    root: debug
+
+spring:
+  jwt:
+    key: 23bb6d094d1c598485c055907272ede0ec9ce8239b3edf662f2df67ee7c76b065003f5ab3a43bc7f4af8a345f064129f64f4354c12ff493a7225cbe00dbd00ce
+  main:
+    banner-mode: console
+  profiles:
+    active: local
+
+apiPrefix:
+  v1
+
+#springdoc:
+#  default-consumes-media-type: application/json
+#  default-produces-media-type: application/json
+#  api-docs:
+#    path: /docs
+#  swagger-ui:
+#    operations-sorter: alpha
+#    tags-sorter: alpha
+#    path: /swagger-ui
+#    disable-swagger-default-url: true
+#    display-query-params-without-oauth2: true
+#
+#  packages-to-scan: com.ssafy.trycatch
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: beta
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
