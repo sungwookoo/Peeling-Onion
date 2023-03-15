@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://ssafy.shop:3506/biz?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    username: bfit
+    password: xmrghkfodzld1dnl!
+    hikari:
+      validation-timeout: 2000
+      maximum-pool-size: 999
+
+logging:
+  level:
+    root: trace
+
+settings:
+  cross-origin: "*"
+
+apiPrefix:
+  v1
