@@ -53,11 +53,6 @@ tasks.named('test') {
 
 // Jenkins
 bootJar {
-	mainClassName = 'com.ssafy.peelingonion.PeelingOnionApplication'
-}
-
-bootRun {
-	String activeProfile = System.properties['spring.profiles.active']
-	systemProperty "spring.profiles.active", activeProfile
+	mainClass = 'com.ssafy.peelingonion.PeelingOnionApplication'
 }
 
