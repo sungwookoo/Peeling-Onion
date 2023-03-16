@@ -28,6 +28,7 @@ jobs:
         run: ./gradlew clean build
 
   push-to-gitlab:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       # Checkout the repository to be synced
