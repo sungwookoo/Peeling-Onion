@@ -23,7 +23,7 @@ if [[ "$JOB_NAME" == "biz-main" ]]; then
 	PORT=10381
 fi
 
-if [[ docker ps -a| grep "alarm-main" ]]; then
+if [[ docker ps -a | grep "alarm-main" ]]; then
 	docker stop "alarm-main"
     docker rm "alarm-main"
     docker build -t "alarm-main" .
