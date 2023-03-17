@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'widgets/custom_navigation_bar.dart';
+import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: 'e15217b353cb24be2f9d5d7fc64f220c');
   runApp(const App());
 }
 
