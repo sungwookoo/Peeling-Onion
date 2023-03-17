@@ -24,12 +24,13 @@ class _FieldScreenState extends State<FieldScreen> {
   // 밭 추가하는 메서드
   void addOne(fieldName) {
     setState(() {
+      // 이후 여기는 수정. api 받아오도록.
       _fields.add(CustomField(
+        id: 100,
         name: fieldName,
         createdAt: DateTime.now(),
         onions: [],
       ));
-      print(_fields.elementAt(4).name);
     });
   }
 
@@ -136,9 +137,62 @@ class MakeFields extends StatelessWidget {
       children: _fields.map((field) {
         return Container(
           margin: const EdgeInsets.all(20),
-          child: FieldOneScreen(field: field),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FieldOneScreen(field: field),
+                    fullscreenDialog: true),
+              );
+            },
+            child: Hero(
+              tag: field.id,
+              child: FieldOneScreenHere(field: field),
+            ),
+            // child: FieldOneScreenHere(field: field),
+          ),
         );
       }).toList(),
+    );
+  }
+}
+
+// 밭 1개를 출력하는 클래스
+class FieldOneScreenHere extends StatefulWidget {
+  final CustomField field;
+
+  const FieldOneScreenHere({super.key, required this.field});
+
+  @override
+  State<FieldOneScreenHere> createState() => _FieldOneScreenHereState();
+}
+
+class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.brown,
+      child: GridView(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 1,
+        ),
+        children: widget.field.onions.map((onion) {
+          return Container(
+            child: Column(
+              children: [
+                // Text(
+                //   onion.name,
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
+                Image.asset('assets/images/onion_image.png'),
+              ],
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }
@@ -206,21 +260,25 @@ final List<CustomOnion> _onions = [
 List<CustomField> _getFields() {
   return [
     CustomField(
+      id: 1,
       name: 'field_1',
       createdAt: DateTime.now(),
       onions: _onions,
     ),
     CustomField(
+      id: 2,
       name: 'field_2',
       createdAt: DateTime.now(),
       onions: _onions,
     ),
     CustomField(
+      id: 3,
       name: 'field_3',
       createdAt: DateTime.now(),
       onions: _onions,
     ),
     CustomField(
+      id: 4,
       name: 'field_4',
       createdAt: DateTime.now(),
       onions: _onions,

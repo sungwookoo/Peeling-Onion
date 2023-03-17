@@ -28,11 +28,13 @@ class CustomMessage {
 
 // 밭 모델
 class CustomField {
+  final int id;
   final String name;
   final DateTime createdAt;
   final List<CustomOnion> onions;
 
   CustomField({
+    required this.id,
     required this.name,
     required this.createdAt,
     required this.onions,

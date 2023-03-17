@@ -14,27 +14,36 @@ class FieldOneScreen extends StatefulWidget {
 class _FieldOneScreenState extends State<FieldOneScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.brown,
-      child: GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1,
-        ),
-        children: widget.field.onions.map((onion) {
-          return Container(
-            child: Column(
-              children: [
-                // Text(
-                //   onion.name,
-                //   maxLines: 1,
-                //   overflow: TextOverflow.ellipsis,
-                // ),
-                Image.asset('assets/images/onion_image.png'),
-              ],
+    return Scaffold(
+      body: Hero(
+        tag: widget.field.id,
+        child: Center(
+          child: Container(
+            color: Colors.purple[100],
+            child: Center(
+              child: GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1,
+                ),
+                children: widget.field.onions.map((onion) {
+                  return Container(
+                    child: Column(
+                      children: [
+                        Text(
+                          onion.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Image.asset('assets/images/onion_image.png'),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
-          );
-        }).toList(),
+          ),
+        ),
       ),
     );
   }
