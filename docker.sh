@@ -1,4 +1,4 @@
-INTERNAL_PORT = 8080
+INTERNAL_PORT=8080
 
 if [[ "$JOB_NAME" == "user-prod" ]]; then
 	EXTERNAL_PORT=10080
