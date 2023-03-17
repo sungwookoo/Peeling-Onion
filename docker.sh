@@ -23,17 +23,17 @@ if [[ "$JOB_NAME" == "biz-main" ]]; then
 	PORT=10381
 fi
 
-if [[ docker ps -a | grep "alarm-main" ]]; then
-	docker stop "alarm-main"
-    docker rm "alarm-main"
-    docker build -t "alarm-main" .
-    echo "Execute stop -> rm -> build alarm-main"
+if [[ $(docker ps -a | grep "$JOB_NAME") ]]; then
+	docker stop "$JOB_NAME"
+    docker rm "$JOB_NAME"
+    docker build -t "$JOB_NAME" .
+    echo "Execute stop -> rm -> build $JOB_NAME"
 else
-	docker build -t "alarm-main" .
-    echo "Execute build alarm-main"
+	docker build -t "$JOB_NAME" .
+    echo "Execute build $JOB_NAME"
 fi
-docker run -it -d -p $PORT:8080 --name "alarm-main" "alarm-main"
-echo "Execute run alarm-main"
+docker run -it -d -p $PORT:8080 --name "$JOB_NAME" "$JOB_NAME"
+echo "Execute run $JOB_NAME"
 
 ### jenkins Execute shell command
 #chmod +x ./docker.sh
