@@ -25,11 +25,11 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
           return Container(
             child: Column(
               children: [
-                Text(
-                  onion.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                // Text(
+                //   onion.name,
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                // ),
                 Image.asset('assets/images/onion_image.png'),
               ],
             ),
