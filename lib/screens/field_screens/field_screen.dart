@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/field_screens/field_one_screen.dart';
 import '../../models/custom_models.dart';
-import './field_one_screen.dart';
+import '../../services/field_api_service.dart';
 
 String textInput = '';
 
 // 밭 화면
 class FieldScreen extends StatefulWidget {
   const FieldScreen({super.key});
+  final int id = 1;
 
   @override
   State<FieldScreen> createState() => _FieldScreenState();
@@ -14,23 +16,24 @@ class FieldScreen extends StatefulWidget {
 
 class _FieldScreenState extends State<FieldScreen> {
   // 나타낼 밭 모양
-  final List<CustomField> _fields = _getFields();
-  // 확대됐는지 아닌지 판단
-  final bool _isExpanded = false;
+  late Future<List<CustomField>> fields;
 
-  // 확대될 밭을 결정
-  final int _expandedIndex = -1;
+  @override
+  void initState() {
+    super.initState();
+    fields = FieldApiService.getFieldsById(widget.id);
+  }
 
   // 밭 추가하는 메서드
   void addOne(fieldName) {
     setState(() {
       // 이후 여기는 수정. api 받아오도록.
-      _fields.add(CustomField(
-        id: 100,
-        name: fieldName,
-        createdAt: DateTime.now(),
-        onions: [],
-      ));
+      // fields.add(CustomField(
+      //   id: 100,
+      //   name: fieldName,
+      //   // createdAt: DateTime.now(),
+      //   onions: [],
+      // ));
     });
   }
 
@@ -41,8 +44,19 @@ class _FieldScreenState extends State<FieldScreen> {
       // 밭 표시
       body: Column(
         children: [
-          Expanded(
-            child: MakeFields(fields: _fields),
+          FutureBuilder(
+            future: fields,
+            builder: (context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                List<CustomField> fieldsData =
+                    snapshot.data as List<CustomField>;
+                return MakeFields(fields: fieldsData);
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
           ),
         ],
       ),
@@ -128,37 +142,96 @@ class MakeFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
-      // 밭을 2줄짜리 격자로 표현
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1,
-      ),
-      children: _fields.map((field) {
-        return Container(
-          margin: const EdgeInsets.all(20),
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FieldOneScreen(field: field),
-                    fullscreenDialog: true),
-              );
-            },
-            child: Hero(
-              tag: field.id,
+    return Container(
+      // 밭들을 화면에 표시 (지금은 화면 크면 밭도 커짐)
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.center,
+      child: Wrap(
+        spacing: 20,
+        runSpacing: 20,
+        children: _fields.map((field) {
+          return SizedBox(
+            width: (MediaQuery.of(context).size.width - 60) / 2,
+            height: (MediaQuery.of(context).size.width - 60) / 2,
+            child: GestureDetector(
+              // 밭 클릭하면 해당 밭으로 이동
+              onTap: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => FieldOneScreen(field: field),
+                //       fullscreenDialog: true),
+                // );
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.width,
+                    alignment: Alignment.center,
+                    child: FieldOneScreen(
+                      field: field,
+                    ),
+                  ),
+                );
+              },
               child: FieldOneScreenHere(field: field),
             ),
-            // child: FieldOneScreenHere(field: field),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 }
 
 // 밭 1개를 출력하는 클래스
+class FieldOneScreenHere extends StatefulWidget {
+  final CustomField field;
+
+  const FieldOneScreenHere({super.key, required this.field});
+
+  @override
+  State<FieldOneScreenHere> createState() => _FieldOneScreenHereState();
+}
+
+class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.brown,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.field.name,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: widget.field.onions.map((onion) {
+                  return Column(
+                    children: [
+                      Text(
+                        onion.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Image.asset('assets/images/onion_image.png'),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+/*
 class FieldOneScreenHere extends StatefulWidget {
   final CustomField field;
 
@@ -179,109 +252,19 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
           childAspectRatio: 1,
         ),
         children: widget.field.onions.map((onion) {
-          return Container(
-            child: Column(
-              children: [
-                // Text(
-                //   onion.name,
-                //   maxLines: 1,
-                //   overflow: TextOverflow.ellipsis,
-                // ),
-                Image.asset('assets/images/onion_image.png'),
-              ],
-            ),
+          return Column(
+            children: [
+              Text(
+                onion.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              Image.asset('assets/images/onion_image.png'),
+            ],
           );
         }).toList(),
       ),
     );
   }
 }
-
-// 샘플 양파
-final List<CustomOnion> _onions = [
-  CustomOnion(
-    name: '양파 1',
-    createdAt: DateTime.now(),
-    sender: 'Sender 1',
-    messages: [
-      CustomMessage(
-        sender: 'Sender 1',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image1.jpg',
-      ),
-      CustomMessage(
-        sender: 'Sender 2',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image2.jpg',
-      ),
-      CustomMessage(
-        sender: 'Sender 1',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image3.jpg',
-      ),
-    ],
-  ),
-  CustomOnion(
-    name: '양파 2 ㅎㅎㅎㅎㅎㅎㅎㅎ',
-    createdAt: DateTime.now(),
-    sender: 'Sender 3',
-    messages: [
-      CustomMessage(
-        sender: 'Sender 3',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image4.jpg',
-      ),
-      CustomMessage(
-        sender: 'Sender 4',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image5.jpg',
-      ),
-      CustomMessage(
-        sender: 'Sender 3',
-        createdAt: DateTime.now(),
-        url: 'https://example.com/image6.jpg',
-      ),
-    ],
-  ),
-  CustomOnion(
-    name: '양파 3 ㅎㅎㅎㅎㅎㅎㅎㅎ',
-    createdAt: DateTime.now(),
-    sender: 'Sender 3',
-    messages: [],
-  ),
-  CustomOnion(
-    name: '양파 4 ㅎㅎㅎㅎㅎㅎㅎㅎ',
-    createdAt: DateTime.now(),
-    sender: 'Sender 3',
-    messages: [],
-  ),
-];
-// 샘플 밭
-List<CustomField> _getFields() {
-  return [
-    CustomField(
-      id: 1,
-      name: 'field_1',
-      createdAt: DateTime.now(),
-      onions: _onions,
-    ),
-    CustomField(
-      id: 2,
-      name: 'field_2',
-      createdAt: DateTime.now(),
-      onions: _onions,
-    ),
-    CustomField(
-      id: 3,
-      name: 'field_3',
-      createdAt: DateTime.now(),
-      onions: _onions,
-    ),
-    CustomField(
-      id: 4,
-      name: 'field_4',
-      createdAt: DateTime.now(),
-      onions: _onions,
-    ),
-  ];
-}
+*/
