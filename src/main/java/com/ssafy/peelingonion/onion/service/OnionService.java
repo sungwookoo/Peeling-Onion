@@ -1,20 +1,27 @@
 package com.ssafy.peelingonion.onion.service;
 
+import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequestDto;
 import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequestDto;
 import com.ssafy.peelingonion.onion.controller.dto.OnionDeleteRequestDto;
+import com.ssafy.peelingonion.onion.domain.Message;
+import com.ssafy.peelingonion.onion.domain.MessageRepository;
 import com.ssafy.peelingonion.onion.domain.Onion;
 import com.ssafy.peelingonion.onion.domain.OnionRepository;
 import com.ssafy.peelingonion.onion.service.exceptions.OnionNotFoundException;
+import com.ssafy.peelingonion.record.domain.RecordedVoice;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.time.Instant;
 
 @Service
 public class OnionService {
     private final OnionRepository onionRepository;
+    private final MessageRepository messageRepository;
 
-    public OnionService(OnionRepository onionRepository) {
+    public OnionService(OnionRepository onionRepository,
+                        MessageRepository messageRepository) {
         this.onionRepository = onionRepository;
+        this.messageRepository = messageRepository;
     }
 
     /**
@@ -27,6 +34,7 @@ public class OnionService {
                 .mobileNumber(onionCreateRequestDto.mobile_number)
                 .imgSrc(onionCreateRequestDto.img_src)
                 .growDueDate(onionCreateRequestDto.grow_due_date.toInstant())
+                .createdAt(Instant.now())
                 .isDisabled(Boolean.FALSE)
                 .build();
         // ****나중에 해야할 것****
@@ -43,5 +51,33 @@ public class OnionService {
         Onion onion = onionRepository.findOnionById(onionDeleteRequestDto.onion_id)
                 .orElseThrow(OnionNotFoundException::new);
         onion.setIsDisabled(Boolean.TRUE);
+    }
+
+    /**
+     * 양파 겹 생성(녹음 하나)
+     * @param messageCreateRequestDto
+     * @param userId
+     */
+    public void createMessage(MessageCreateRequestDto messageCreateRequestDto, Long userId){
+        Onion onion = onionRepository.findOnionById(messageCreateRequestDto.onion_id)
+                .orElseThrow(OnionNotFoundException::new);
+        // 레코드 레포지터리에 접근해서 하나를 저장(새로운 녹음 정보를 만들어서 이때 저장 시킨다.)
+        RecordedVoice newRecordedVoice = RecordedVoice.builder()
+                .createdAt(Instant.now())
+                .fileSrc(messageCreateRequestDto.file_src)
+                .userId(userId)
+                .build();
+
+        Message newMessage = Message.builder()
+                .createdAt(Instant.now())
+                .userId(userId)
+                .content(messageCreateRequestDto.content)
+                .posRate(messageCreateRequestDto.pos_rate)
+                .negRate(messageCreateRequestDto.neg_rate)
+                .onion(onion)
+                .recordedVoice(newRecordedVoice)
+                .build();
+
+        messageRepository.save(newMessage);
     }
 }
