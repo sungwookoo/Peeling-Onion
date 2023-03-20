@@ -27,6 +27,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "message")
+// 양파 한겹
 public class Message {
 	@Id
 	@Column(name = "id", nullable = false)

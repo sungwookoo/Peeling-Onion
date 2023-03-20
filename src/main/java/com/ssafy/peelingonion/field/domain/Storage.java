@@ -27,6 +27,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "storage")
+// 보관함에 있는 양파
 public class Storage {
 	@Id
 	@Column(name = "id", nullable = false)

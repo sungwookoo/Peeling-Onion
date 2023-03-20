@@ -38,6 +38,7 @@ public class RecordedVoice {
 	@Column(name = "created_at")
 	private Instant createdAt;
 
+	// S3에 저장된 주소를 저장한다.
 	@Column(name = "file_src", length = 200)
 	private String fileSrc;
 

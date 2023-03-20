@@ -27,6 +27,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "onion")
+// 양파
 public class Onion {
 	@Id
 	@Column(name = "id", nullable = false)
@@ -55,6 +56,7 @@ public class Onion {
 
 	@Column(name = "grow_due_date")
 	private Instant growDueDate;
+
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
