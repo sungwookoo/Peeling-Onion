@@ -25,7 +25,9 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             childAspectRatio: 1,
           ),
           children: widget.field.onions.map((onion) {
-            return Column(
+            return Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.center,
               children: [
                 Text(
                   onion.name,
