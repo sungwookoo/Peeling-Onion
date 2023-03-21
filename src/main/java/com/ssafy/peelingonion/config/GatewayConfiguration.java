@@ -11,6 +11,8 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
+import java.net.URI;
+
 @Configuration
 public class GatewayConfiguration {
 
@@ -21,38 +23,24 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
-        return RouterFunctions
+        return RouterFunctions.route(RequestPredicates.all(), serverRequest -> {
+            URI uri = serverRequest.uri();
+            String scheme = uri.getScheme();
+            String host = uri.getHost();
+            String path = uri.getRawPath();
 
-                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        serverRequest -> {
-                            String serviceName = serverRequest.pathVariable("service-name");
-                            String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = "https://" + apiHost + "/" + serverRequest.pathVariable("path");
-                            return webClient
-                                    .get()
-                                    .uri(apiUrl)
-                                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
-                                    .exchange()
-                                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
-                                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
-                                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
-                        })
+            String apiUrl = scheme + "://" + host + path;
+            System.out.println("# apiUrl : "+apiUrl);
 
-                .andRoute(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        serverRequest -> {
-                            String serviceName = serverRequest.pathVariable("service-name");
-                            String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = "https://" +"test."+ apiHost + "/" + serverRequest.pathVariable("path");
-                            return webClient
-                                    .get()
-                                    .uri(apiUrl)
-                                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
-                                    .exchange()
-                                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
-                                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
-                                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
-                        });
+            return webClient
+                    .method(serverRequest.method())
+                    .uri(apiUrl)
+                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
+                    .body(BodyInserters.fromDataBuffers(serverRequest.body(BodyExtractors.toDataBuffers())))
+                    .exchange()
+                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
+                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
+                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
+        });
     }
 }
