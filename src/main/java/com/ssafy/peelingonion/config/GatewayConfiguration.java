@@ -29,7 +29,7 @@ public class GatewayConfiguration {
     public RouterFunction<ServerResponse> route(WebClient webClient) {
         System.out.println(apiPrefix);
         return RouterFunctions
-                .route(RequestPredicates.GET("/{service-name}/**")
+                .route(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
                                 ,
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
@@ -46,12 +46,13 @@ public class GatewayConfiguration {
                                             .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
                         })
 
-                .andRoute(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
+                .andRoute(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
                             String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = "https://" + "test." + apiHost + "/" + serverRequest.pathVariable("path");
+                            String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + serverRequest.pathVariable("path");
+                            System.out.println("## apiUrl : " + apiUrl);
                             return webClient
                                     .get()
                                     .uri(apiUrl)
