@@ -63,6 +63,7 @@ flutter:
     - assets/icons/box_icon.png
     - assets/icons/mypage_icon.png
     - assets/icons/sprout_icon.png
+    - assets/images/onion_image.png
 
   #   - images/a_dot_ham.jpeg
 
