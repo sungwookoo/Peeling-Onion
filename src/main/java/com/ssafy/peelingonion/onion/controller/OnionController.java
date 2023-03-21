@@ -37,17 +37,17 @@ public class OnionController {
     @PostMapping("")
     public ResponseEntity<Boolean> createOnion(
             @RequestBody OnionCreateRequestDto onionCreateRequestDto) {
-            // 1. auth check -> 인증 여부에 따라 다른 응답
-            final String uri = "~~~~";
+        // 1. auth check -> 인증 여부에 따라 다른 응답
+        final String uri = "~~~~";
 
-            // 2. 인증이 되었을 경우
-            try {
-                onionService.createOnion(onionCreateRequestDto);
-                return ResponseEntity.ok().build();
-            } catch (Exception e){
-                log.info(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
+        // 2. 인증이 되었을 경우
+        try {
+            onionService.createOnion(onionCreateRequestDto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
     /**
@@ -57,19 +57,19 @@ public class OnionController {
      */
     @GetMapping("/{onionId}")
     public ResponseEntity<OnionReadResponseDto> readOnion(@PathVariable Long onionId){
-            // 1. auth check -> 인증 여부에 따라 다른 응답
-            final String uri = "~~~~";
+        // 1. auth check -> 인증 여부에 따라 다른 응답
+        final String uri = "~~~~";
 
-            // 2. 인증이 되었을 경우
-            try{
-                Onion onion = onionService.readOnion(onionId);
-                Set<Message> messages = onion.getMessages();
-                Set<MessageSmallDto> messageSmallDtos = messagesToSmallDtos(messages);
-                return ResponseEntity.ok(OnionReadResponseDto.makeOnionReadDto(onion, messageSmallDtos));
-            } catch(Exception e){
-                log.info(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            }
+        // 2. 인증이 되었을 경우
+        try{
+            Onion onion = onionService.readOnion(onionId);
+            Set<Message> messages = onion.getMessages();
+            Set<MessageSmallDto> messageSmallDtos = messagesToSmallDtos(messages);
+            return ResponseEntity.ok(OnionReadResponseDto.makeOnionReadDto(onion, messageSmallDtos));
+        } catch(Exception e){
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
     /**

@@ -41,5 +41,4 @@ public class Field {
 
 	@OneToMany(mappedBy = "field")
 	private Set<Storage> storages = new LinkedHashSet<>();
-
 }
