@@ -2,59 +2,37 @@ package com.ssafy.peelingonion.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.BodyExtractors;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
+import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Configuration
 public class GatewayConfiguration {
 
-    @Bean
-    public WebClient webClient() {
-        System.out.println("## Start GatewayConfiguration");
-        return WebClient.create();
+    private final WebClient webClient;
+
+    public GatewayConfiguration(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
     }
 
     @Bean
-    public RouterFunction<ServerResponse> route(WebClient webClient) {
-        System.out.println("## Into route method");
-        return RouterFunctions
-//                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
-                .route(RequestPredicates.GET("https://api.ssafy.shop/**")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        serverRequest -> {
-//                            String fullUrl = "https://user.ssafy.shop";
-                            String fullUrl = "https://" + serverRequest.uri().getHost() + serverRequest.uri().getPath();
-                            return webClient
-                                    .get()
-                                    .uri(fullUrl)
-                                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
-                                    .exchange()
-                                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
-                                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
-                                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
-                        })
+    public RouterFunction<ServerResponse> apiRoute() {
+        return RouterFunctions.route(RequestPredicates.GET("/user"), this::handleUserListRequest);
+    }
 
-                .andRoute(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
-                        serverRequest -> {
-                            String serviceName = serverRequest.pathVariable("service-name");
-                            String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = serverRequest.uri().getPath().replace("/" + serviceName, "");
-                            String fullUrl = "https://" + "test." + apiHost + apiUrl;
-                            return webClient
-                                    .get()
-                                    .uri(fullUrl)
-                                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
-                                    .exchange()
-                                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
-                                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
-                                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
-                        });
+    private Mono<ServerResponse> handleUserListRequest(ServerRequest request) {
+        String url = "https://user.ssafy.shop/";
+
+        return webClient.get()
+                .uri(url)
+                .headers(httpHeaders -> httpHeaders.addAll(request.headers().asHttpHeaders()))
+                .exchange()
+                .flatMap(response -> ServerResponse.status(response.statusCode())
+                        .headers(httpHeaders -> httpHeaders.addAll(response.headers().asHttpHeaders()))
+                        .body(response.bodyToMono(String.class), String.class));
     }
 }
