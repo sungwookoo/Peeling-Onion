@@ -122,7 +122,7 @@ public class OnionController {
             }
     }
 
-    @PostMapping("/d")
+    @PostMapping("/message/{onionId}")
     public ResponseEntity<Boolean> createMessage(
             @RequestBody MessageCreateRequestDto messageCreateRequestDto) {
 

@@ -25,7 +25,6 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "field")
-// 밭
 public class Field {
 	@Id
 	@Column(name = "id", nullable = false)
