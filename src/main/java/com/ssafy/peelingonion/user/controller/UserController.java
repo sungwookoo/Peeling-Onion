@@ -65,4 +65,9 @@ public class UserController {
 		final boolean isExist = userService.isDuplicate(nickname);
 		return ResponseEntity.ok(isExist);
 	}
+
+	@GetMapping("/test")
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("success");
+	}
 }
