@@ -7,7 +7,10 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env"); // 추가
-  KakaoSdk.init(nativeAppKey: 'e15217b353cb24be2f9d5d7fc64f220c');
+  String? nativeAppKey = dotenv.env['nativeAppKey'];
+  // print("-------------------------------");
+  // print(nativeAppKey);
+  KakaoSdk.init(nativeAppKey: '$nativeAppKey');
   runApp(const App());
 }
 

@@ -81,6 +81,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       backgroundColor: Colors.white,
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text("지금 로딩중입니다"),
             ElevatedButton(
