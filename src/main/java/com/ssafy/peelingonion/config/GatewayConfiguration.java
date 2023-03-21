@@ -24,7 +24,7 @@ public class GatewayConfiguration {
     public RouterFunction<ServerResponse> route(WebClient webClient) {
         System.out.println("## Into route method");
         return RouterFunctions
-                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
+                .route(RequestPredicates.GET("/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
