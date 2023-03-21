@@ -37,7 +37,7 @@ public class UserController {
 	}
 
 	@GetMapping("/{userId}")
-	public ResponseEntity<UserResponseDto> searchUserInfomation(@PathVariable Long userId) {
+	public ResponseEntity<UserResponseDto> searchUserInformation(@PathVariable Long userId) {
 		// 토큰에 관한 인증이 완료된 상태
 		//final String uri = SERVICE_URI + "/user/" + userId.toString();
 		final String uri = "https://stoplight.io/mocks/ggaggayang/peelingonion/149504280/user/1";
@@ -64,13 +64,13 @@ public class UserController {
 	}
 
 	@PostMapping("/{userId}")
-	public ResponseEntity<String> enrollUserInfomation(@PathVariable Long userId) {
+	public ResponseEntity<String> enrollUserInformation(@PathVariable Long userId) {
 
 		return ResponseEntity.ok().build();
 	}
 
 	@PatchMapping("/{userId}")
-	public ResponseEntity<UserProfileResponseDto> modifyUserInfomation(
+	public ResponseEntity<UserProfileResponseDto> modifyUserInformation(
 		@RequestBody UserProfileRequestDto userProfileRequestDto) {
 		// 토큰에 관한 인증이 완료된 상태
 		//final String uri = SERVICE_URI + "/user/" + userId.toString();
@@ -81,9 +81,9 @@ public class UserController {
 			UserProfileResponseDto userProfileResponseDto = userService.getUserClient()
 				.patch()
 				.uri(uri)
-				.body(Mono.just(userProfileRequestDto),UserProfileRequestDto.class)
-				.retrieve()
-				.bodyToMono(UserProfileResponseDto.class)
+				.body(Mono.just(userProfileRequestDto),UserProfileRequestDto.class) // 요청
+				.retrieve() // 응답 해석
+				.bodyToMono(UserProfileResponseDto.class) // 응답을 Mono로
 				.onErrorResume(error -> {
 					if (error instanceof WebClientResponseException.NotFound) {
 						return Mono.error(new UserNotFoundException("User not found"));
@@ -91,7 +91,7 @@ public class UserController {
 						return Mono.error(error);
 					}
 				})
-				.block();
+				.block(); // Thread 중지
 			return ResponseEntity.ok(userProfileResponseDto);
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
@@ -99,7 +99,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{userId}")
-	public ResponseEntity<String> removeUserInfomation(@PathVariable Long userId) {
+	public ResponseEntity<String> removeUserInformation(@PathVariable Long userId) {
 		return ResponseEntity.ok().build();
 	}
 }
