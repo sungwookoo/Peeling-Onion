@@ -21,11 +21,12 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> apiRoute() {
-        return RouterFunctions.route(RequestPredicates.GET("/user"), this::handleUserListRequest);
+        return RouterFunctions.route(RequestPredicates.GET("/user/test"), this::handleUserListRequest);
     }
 
     private Mono<ServerResponse> handleUserListRequest(ServerRequest request) {
-        String url = "https://user.ssafy.shop/";
+        String url = "https://user.ssafy.shop/test";
+        System.out.println("##" + url);
 
         return webClient.get()
                 .uri(url)
