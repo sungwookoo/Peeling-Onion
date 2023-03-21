@@ -22,13 +22,18 @@ public class GatewayConfiguration {
         return WebClient.create();
     }
 
-    @Value("${apiPrefix}")
+    @Value("${apiPrefix:v1}")
     private String apiPrefix;
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
         System.out.println(apiPrefix);
         return RouterFunctions
+
+                // https://test.api.ssafy.shop/user/test
+                // https://test.user.ssafy.shop/v1/user/test
+
+                /*
                 .route(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
@@ -46,7 +51,7 @@ public class GatewayConfiguration {
                                             .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
                         })
 
-                .andRoute(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
+                        .andRoute(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
@@ -62,5 +67,25 @@ public class GatewayConfiguration {
                                             .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
                                             .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
                         });
+                */
+
+                .route(RequestPredicates.GET("/{service-name}/**")
+                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                        serverRequest -> {
+                            String serviceName = serverRequest.pathVariable("service-name");
+                            String apiHost = "test." + serviceName + ".ssafy.shop";
+                            String requestPath = serverRequest.path().substring(serviceName.length() + 1);
+                            String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + requestPath;
+                            System.out.println("## apiUrl : " + apiUrl);
+                            return webClient
+                                    .get()
+                                    .uri(apiUrl)
+                                    .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
+                                    .exchange()
+                                    .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
+                                            .headers(headers -> headers.addAll(clientResponse.headers().asHttpHeaders()))
+                                            .body(BodyInserters.fromDataBuffers(clientResponse.body(BodyExtractors.toDataBuffers()))));
+                        });
+
     }
 }
