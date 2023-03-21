@@ -15,15 +15,19 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: (MediaQuery.of(context).size.width - 60),
+      height: (MediaQuery.of(context).size.width - 60),
       color: Colors.brown,
-      child: GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1,
-        ),
-        children: widget.field.onions.map((onion) {
-          return Container(
-            child: Column(
+      child: Center(
+        child: GridView(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            childAspectRatio: 1,
+          ),
+          children: widget.field.onions.map((onion) {
+            return Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.center,
               children: [
                 Text(
                   onion.name,
@@ -32,9 +36,9 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                 ),
                 Image.asset('assets/images/onion_image.png'),
               ],
-            ),
-          );
-        }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
