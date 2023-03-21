@@ -8,6 +8,19 @@ import 'package:front/models/custom_models.dart';
 class OnionApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
+  // 기르는 양파 get (홈 화면에 띄울 양파 정보)
+  static Future<List<CustomHomeOnion>> getGrowingOnionByUserId(
+      int userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/grow/$userId'));
+
+    if (response.statusCode == 200) {
+      List onions = jsonDecode(response.body);
+      return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
+    } else {
+      throw Exception('Failed to load home onions');
+    }
+  }
+
   // 택배함 get (유저가 받은 택배함 양파 정보 조회)
 
   // 양파 get (양파 1개 조회. 연결된 message들 포함)
