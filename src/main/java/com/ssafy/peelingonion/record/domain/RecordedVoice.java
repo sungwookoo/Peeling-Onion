@@ -4,11 +4,7 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.ssafy.peelingonion.onion.domain.Message;
 
@@ -38,10 +34,10 @@ public class RecordedVoice {
 	@Column(name = "created_at")
 	private Instant createdAt;
 
+	// S3에 저장된 주소를 저장한다.
 	@Column(name = "file_src", length = 200)
 	private String fileSrc;
 
-	@OneToMany(mappedBy = "recordedVoice")
-	private Set<Message> messages = new LinkedHashSet<>();
-
+	@OneToOne(mappedBy = "recordedVoice")
+	private Message message;
 }

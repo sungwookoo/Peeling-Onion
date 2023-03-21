@@ -2,13 +2,7 @@ package com.ssafy.peelingonion.onion.domain;
 
 import java.time.Instant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.ssafy.peelingonion.record.domain.RecordedVoice;
 
@@ -27,6 +21,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "message")
+// 양파 한겹
 public class Message {
 	@Id
 	@Column(name = "id", nullable = false)
@@ -51,8 +46,7 @@ public class Message {
 	@JoinColumn(name = "onion_id", nullable = false)
 	private Onion onion;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "record_id", nullable = false)
 	private RecordedVoice recordedVoice;
-
 }

@@ -23,6 +23,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "my_onion")
+// 유저 - 양파 관계 테이블
 public class MyOnion {
 	@Id
 	@Column(name = "id", nullable = false)
