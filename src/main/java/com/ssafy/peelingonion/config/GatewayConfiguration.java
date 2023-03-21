@@ -24,14 +24,16 @@ public class GatewayConfiguration {
     public RouterFunction<ServerResponse> route(WebClient webClient) {
         System.out.println("## Into route method");
         return RouterFunctions
-                .route(RequestPredicates.GET("/{service-name}/**")
+                .route(RequestPredicates.GET("/user")
+//                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
+                            System.out.println("## success get");
                             String serviceName = serverRequest.pathVariable("service-name");
                             String apiHost = serviceName + ".ssafy.shop";
                             String apiUrl = serverRequest.uri().getPath().replace("/" + serviceName, "");
                             String fullUrl = "https://" + apiHost + apiUrl;
-                            System.out.println("## FullUrl : "+fullUrl);
+                            System.out.println("## FullUrl : " + fullUrl);
 
                             return webClient
                                     .get()
