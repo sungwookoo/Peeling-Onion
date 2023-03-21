@@ -27,12 +27,13 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
+        System.out.println(apiPrefix);
         return RouterFunctions
-                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
-                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                .route(RequestPredicates.GET("/{service-name}/**")
+                                ,
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
-                            String apiHost = serviceName + ".ssafy.shop";
+                            String apiHost = "test." +serviceName + ".ssafy.shop";
                             String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + serverRequest.pathVariable("path");
                             System.out.println("## apiUrl : " + apiUrl);
                             return webClient

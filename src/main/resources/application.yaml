@@ -1,6 +1,6 @@
 spring:
-  main:
-    banner-mode: console
+#  main:
+#    banner-mode: console
   profiles:
     active: local
 
@@ -9,9 +9,9 @@ server:
   tomcat:
     uri-encoding: UTF-8
 
-logging:
-  level:
-    root: debug
+#logging:
+#  level:
+#    root: debug
 
 apiPrefix:
   v1

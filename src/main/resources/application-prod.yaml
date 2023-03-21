@@ -1,9 +1,2 @@
-logging:
-  level:
-    root: trace
-
-settings:
-  cross-origin: "*"
-
 apiPrefix:
   v1
