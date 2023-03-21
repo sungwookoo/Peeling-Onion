@@ -10,7 +10,7 @@ class FieldApiService {
 
   // 밭 전체 조회
   static Future<List<CustomField>> getFieldsById(int userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/field/$userId'));
+    final response = await http.get(Uri.parse('$baseUrl/onion/field/$userId'));
 
     // 요청 성공
     if (response.statusCode == 200) {
