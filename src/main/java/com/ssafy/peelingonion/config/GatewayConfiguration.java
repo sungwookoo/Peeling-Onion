@@ -22,18 +22,17 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
-        System.out.println("## into route method");
         return RouterFunctions
                 .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
                             String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = "https://" + apiHost + "/" + serverRequest.pathVariable("path");
-                            System.out.println("## apiUrl : "+apiUrl);
+                            String apiUrl = serverRequest.uri().getPath().replace("/" + serviceName, "");
+                            String fullUrl = "https://" + apiHost + apiUrl;
                             return webClient
                                     .get()
-                                    .uri(apiUrl)
+                                    .uri(fullUrl)
                                     .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
                                     .exchange()
                                     .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
@@ -46,10 +45,11 @@ public class GatewayConfiguration {
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
                             String apiHost = serviceName + ".ssafy.shop";
-                            String apiUrl = "https://" +"test."+ apiHost + "/" + serverRequest.pathVariable("path");
+                            String apiUrl = serverRequest.uri().getPath().replace("/" + serviceName, "");
+                            String fullUrl = "https://" + "test." + apiHost + apiUrl;
                             return webClient
                                     .get()
-                                    .uri(apiUrl)
+                                    .uri(fullUrl)
                                     .headers(headers -> headers.addAll(serverRequest.headers().asHttpHeaders()))
                                     .exchange()
                                     .flatMap(clientResponse -> ServerResponse.status(clientResponse.statusCode())
