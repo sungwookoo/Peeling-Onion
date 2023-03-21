@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/field_screens/onion_one_screen.dart';
 import '../../models/custom_models.dart';
 
 // 밭 1개를 출력하는 클래스
@@ -25,14 +26,27 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             childAspectRatio: 1,
           ),
           children: widget.field.onions.map((onion) {
-            return Column(
+            return Wrap(
+              direction: Axis.horizontal,
+              alignment: WrapAlignment.center,
               children: [
                 Text(
                   onion.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                Image.asset('assets/images/onion_image.png'),
+                // 밭의 양파를 누르면, 양파 1개 화면으로 넘어감
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => OnionOneScreen(onion: onion),
+                      ),
+                    );
+                  },
+                  child: Image.asset('assets/images/onion_image.png'),
+                ),
               ],
             );
           }).toList(),

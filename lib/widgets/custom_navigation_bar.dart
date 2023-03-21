@@ -36,6 +36,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       // app Bar
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
+        actions: const [ImageIcon(AssetImage('assets/icons/noalarm.png'))],
       ),
       // 화면 내용
       body: Center(

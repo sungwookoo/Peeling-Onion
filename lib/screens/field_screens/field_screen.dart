@@ -24,7 +24,7 @@ class _FieldScreenState extends State<FieldScreen> {
     fields = FieldApiService.getFieldsById(widget.id);
   }
 
-  // 밭 추가하는 메서드
+  // 밭 추가하는 메서드 (이후 api 연결할 것)
   void addOne(fieldName) {
     setState(() {
       // 이후 여기는 수정. api 받아오도록.
@@ -44,23 +44,25 @@ class _FieldScreenState extends State<FieldScreen> {
       // 밭 표시
       body: Column(
         children: [
+          // api로 받아오는 밭 정보를 바탕으로 밭 표시
           FutureBuilder(
             future: fields,
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
                 List<CustomField> fieldsData =
                     snapshot.data as List<CustomField>;
+                // 밭을 출력하는 class
                 return MakeFields(fields: fieldsData);
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               }
-              // By default, show a loading spinner.
+              // 로딩 화면
               return const CircularProgressIndicator();
             },
           ),
         ],
       ),
-      // 밭 추가하는 버튼
+      // 밭 추가하는 버튼 (이후 디자인 따라 수정할 예정)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _displayTextInputDialog(context, addOne);
@@ -71,6 +73,7 @@ class _FieldScreenState extends State<FieldScreen> {
   }
 }
 
+// 모달로 밭 이름 입력받아서 추가 밭 생성 (이후 밭 이름 안겹치게 유효성 검사 하기)
 // 문자 변수
 TextEditingController _textFieldController = TextEditingController();
 
@@ -156,12 +159,6 @@ class MakeFields extends StatelessWidget {
             child: GestureDetector(
               // 밭 클릭하면 해당 밭으로 이동
               onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => FieldOneScreen(field: field),
-                //       fullscreenDialog: true),
-                // );
                 showDialog(
                   context: context,
                   builder: (BuildContext context) => Container(
@@ -174,6 +171,7 @@ class MakeFields extends StatelessWidget {
                   ),
                 );
               },
+              // 해당 밭 표시
               child: FieldOneScreenHere(field: field),
             ),
           );
@@ -203,27 +201,27 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // 밭 이름 표시
             Text(
               widget.field.name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Expanded(
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: widget.field.onions.map((onion) {
-                  return Column(
-                    children: [
-                      Text(
-                        onion.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Image.asset('assets/images/onion_image.png'),
-                    ],
-                  );
-                }).toList(),
-              ),
+            // 픽셀 벗어나는 버그 고치기 위한 wrap
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: widget.field.onions.map((onion) {
+                return Column(
+                  children: [
+                    Text(
+                      onion.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Image.asset('assets/images/onion_image.png'),
+                  ],
+                );
+              }).toList(),
             ),
           ],
         ),
@@ -231,40 +229,3 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
     );
   }
 }
-/*
-class FieldOneScreenHere extends StatefulWidget {
-  final CustomField field;
-
-  const FieldOneScreenHere({super.key, required this.field});
-
-  @override
-  State<FieldOneScreenHere> createState() => _FieldOneScreenHereState();
-}
-
-class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.brown,
-      child: GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1,
-        ),
-        children: widget.field.onions.map((onion) {
-          return Column(
-            children: [
-              Text(
-                onion.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Image.asset('assets/images/onion_image.png'),
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-*/
