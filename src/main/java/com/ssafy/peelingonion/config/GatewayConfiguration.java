@@ -25,10 +25,11 @@ public class GatewayConfiguration {
         System.out.println("## Into route method");
         return RouterFunctions
 //                .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
-                .route(RequestPredicates.GET("https://api.ssafy.shop/user")
+                .route(RequestPredicates.GET("https://api.ssafy.shop/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
-                            String fullUrl = "https://user.ssafy.shop";
+//                            String fullUrl = "https://user.ssafy.shop";
+                            String fullUrl = "https://" + serverRequest.uri().getHost() + serverRequest.uri().getPath();
                             return webClient
                                     .get()
                                     .uri(fullUrl)
