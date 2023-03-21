@@ -1,13 +1,18 @@
 package com.ssafy.peelingonion.field.controller;
 
+import com.ssafy.peelingonion.field.controller.dto.FieldCreateRequestDto;
+import com.ssafy.peelingonion.field.controller.dto.FieldCreateResponseDto;
+import com.ssafy.peelingonion.field.controller.dto.FieldReadResponseDto;
+import com.ssafy.peelingonion.field.domain.Field;
 import com.ssafy.peelingonion.field.service.FieldService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -20,15 +25,45 @@ public class FieldController {
         this.fieldService = fieldService;
     }
 
-    // 밭 추가
-//    @PostMapping("/{user_id}")
-//
-//    // 유저의 모든 필드를 가져오는 컨트롤러
-//    @GetMapping("/{user_id}")
-//    public ResponseEntity<FieldDtos> readFields()
+    /**
+     * Create Field
+     * @param fieldCreateRequestDto
+     * @return FieldCreateResponseDto
+     */
+    @PostMapping("/{user_id}")
+    public ResponseEntity<FieldCreateResponseDto> createField(
+            @RequestBody FieldCreateRequestDto fieldCreateRequestDto) {
+        // 1. auth check -> 인증여부에 따른 응답
+        // 2. 인증 되었을 경우
+        try {
+            Field newField = fieldService.createField(fieldCreateRequestDto);
+            return ResponseEntity.ok(FieldCreateResponseDto.makeFieldCreateDto(newField));
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
+    }
 
-    // 유저의 정보를 가져옴
-//    @PostMapping("/{user_id}")
-//    public ResponseEntity<Boolean> createField()
+//    @DeleteMapping("/{user_id}")
+//    public void deleteField(
+//            @
+//    )
+
+    // 유저의 모든 필드 정보를 가져옴 - 해당 밭에 있는 양파의 요약정보까지 가져와야한다.(썪음 여부까지)
+    @GetMapping("/{user_id}")
+    public ResponseEntity<List<FieldReadResponseDto>> readFields(
+            @PathVariable Long userId) {
+
+        // 1. auth check -> 인증여부에 따른 응답(굳이 pathVariable을 받을 필요가 없을 것 같다.
+        // 2. 인증 되었을 때
+        try {
+
+
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
+
 
 }
