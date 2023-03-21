@@ -54,6 +54,7 @@ public class Onion {
 	@Column(name = "send_date")
 	private Instant sendDate;
 
+	// growDueDate를 통해서 성장이 완료되었는지, 완료되지 않았는지를 판단할 수 있다.
 	@Column(name = "grow_due_date")
 	private Instant growDueDate;
 

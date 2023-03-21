@@ -2,7 +2,6 @@ package com.ssafy.peelingonion.onion.service;
 
 import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequestDto;
 import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequestDto;
-import com.ssafy.peelingonion.onion.controller.dto.OnionDeleteRequestDto;
 import com.ssafy.peelingonion.onion.domain.Message;
 import com.ssafy.peelingonion.onion.domain.MessageRepository;
 import com.ssafy.peelingonion.onion.domain.Onion;
@@ -44,11 +43,21 @@ public class OnionService {
     }
 
     /**
-     * 양파 삭제 : 양파를 삭제하는 대신, disabled를 true로 바꿔서 이용자가 활용하지 못하게 한다.
-     * @param onionDeleteRequestDto
+     * 양파 읽기
+     * @param onionId
      */
-    public void deleteOnion(OnionDeleteRequestDto onionDeleteRequestDto){
-        Onion onion = onionRepository.findOnionById(onionDeleteRequestDto.onion_id)
+    public Onion readOnion(Long onionId){
+        Onion onion = onionRepository.findOnionById(onionId)
+                .orElseThrow(OnionNotFoundException::new);
+        return onion;
+    }
+
+    /**
+     * 양파 삭제
+     * @param onionId
+     */
+    public void deleteOnion(Long onionId){
+        Onion onion = onionRepository.findOnionById(onionId)
                 .orElseThrow(OnionNotFoundException::new);
         onion.setIsDisabled(Boolean.TRUE);
     }

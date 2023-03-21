@@ -40,5 +40,4 @@ public class RecordedVoice {
 
 	@OneToOne(mappedBy = "recordedVoice")
 	private Message message;
-
 }
