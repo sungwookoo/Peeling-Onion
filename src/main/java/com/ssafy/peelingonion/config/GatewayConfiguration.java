@@ -69,13 +69,13 @@ public class GatewayConfiguration {
                         });
                 */
 
-                .route(RequestPredicates.GET("/{service-name}/**")
+                .route(RequestPredicates.GET("/{service-name}/{api-name}")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
+                            String apiName = serverRequest.pathVariable("api-name");
                             String apiHost = "test." + serviceName + ".ssafy.shop";
-                            String requestPath = serverRequest.path().substring(serviceName.length() + 1);
-                            String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + requestPath;
+                            String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + "/" + apiName;
                             System.out.println("## apiUrl : " + apiUrl);
                             return webClient
                                     .get()
