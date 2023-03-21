@@ -22,6 +22,7 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
+        System.out.println("## Into route method");
         return RouterFunctions
                 .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
@@ -30,6 +31,8 @@ public class GatewayConfiguration {
                             String apiHost = serviceName + ".ssafy.shop";
                             String apiUrl = serverRequest.uri().getPath().replace("/" + serviceName, "");
                             String fullUrl = "https://" + apiHost + apiUrl;
+                            System.out.println("## FullUrl : "+fullUrl);
+
                             return webClient
                                     .get()
                                     .uri(fullUrl)
