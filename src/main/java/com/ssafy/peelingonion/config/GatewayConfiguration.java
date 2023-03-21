@@ -22,6 +22,7 @@ public class GatewayConfiguration {
 
     @Bean
     public RouterFunction<ServerResponse> route(WebClient webClient) {
+        System.out.println("## into route method");
         return RouterFunctions
                 .route(RequestPredicates.GET("https://api.ssafy.shop/{service-name}/**")
                                 .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
