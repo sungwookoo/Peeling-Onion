@@ -30,10 +30,10 @@ public class GatewayConfiguration {
         System.out.println(apiPrefix);
         return RouterFunctions
                 .route(RequestPredicates.GET("https://test.api.ssafy.shop/{service-name}/**")
-                                ,
+                                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
                         serverRequest -> {
                             String serviceName = serverRequest.pathVariable("service-name");
-                            String apiHost = "test." +serviceName + ".ssafy.shop";
+                            String apiHost = "test." + serviceName + ".ssafy.shop";
                             String apiUrl = "https://" + apiHost + "/" + apiPrefix + "/" + serviceName + serverRequest.pathVariable("path");
                             System.out.println("## apiUrl : " + apiUrl);
                             return webClient
