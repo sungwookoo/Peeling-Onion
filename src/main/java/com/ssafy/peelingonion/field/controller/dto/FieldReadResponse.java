@@ -17,4 +17,5 @@ public class FieldReadResponse {
     public Long id;
     public String name;
     public Instant createdAt;
+    public List<OnionOutlineDto> onionInfos;
 }

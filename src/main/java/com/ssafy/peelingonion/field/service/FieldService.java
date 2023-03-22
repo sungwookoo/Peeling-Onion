@@ -1,10 +1,7 @@
 package com.ssafy.peelingonion.field.service;
 
 import com.ssafy.peelingonion.field.controller.dto.FieldCreateRequest;
-import com.ssafy.peelingonion.field.domain.Field;
-import com.ssafy.peelingonion.field.domain.FieldRepository;
-import com.ssafy.peelingonion.field.domain.MyField;
-import com.ssafy.peelingonion.field.domain.MyFieldRepository;
+import com.ssafy.peelingonion.field.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,13 +13,16 @@ public class FieldService {
     private final FieldService fieldService;
     private final FieldRepository fieldRepository;
     private final MyFieldRepository myFieldRepository;
+    private final StorageRepository storageRepository;
 
     public FieldService(FieldService fieldService,
                         FieldRepository fieldRepository,
-                        MyFieldRepository myFieldRepository) {
+                        MyFieldRepository myFieldRepository,
+                        StorageRepository storageRepository) {
         this.fieldService = fieldService;
         this.fieldRepository = fieldRepository;
         this.myFieldRepository = myFieldRepository;
+        this.storageRepository = storageRepository;
     }
 
     public Field createField(FieldCreateRequest fieldCreateReuqest, Long userId) {
@@ -55,5 +55,27 @@ public class FieldService {
             }
         }
         return fields;
+    }
+
+    public Field readField(Long fieldId){
+        //**챌린지1 : userId, fieldId에 맞는 중개 테이블이 있는지 확인하고 로직을 진행해보는 것
+        //           -> 이 때 userId를 컨트롤러에서 받아와야한다.
+        //**챌린지2 : field entity가 없을 때, 예외처리하기
+        return fieldRepository.findById(fieldId).get();
+    }
+
+    public List<Storage> findStorages(Long fieldId){
+        return storageRepository.findAllByFieldId(fieldId);
+    }
+
+    public Field updateField(Long fieldId, String updateName){
+        Field field = fieldRepository.findById(fieldId).get();
+        field.setName(updateName);
+        return fieldRepository.save(field);
+    }
+
+    public void deleteField(Long fieldId){
+        Field field = fieldRepository.findById(fieldId).get();
+        field.setIsDisabled(Boolean.TRUE);
     }
 }
