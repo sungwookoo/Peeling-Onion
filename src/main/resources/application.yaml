@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  main:
+    banner-mode: console
+
+  profiles:
+    active: beta
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: beta
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod

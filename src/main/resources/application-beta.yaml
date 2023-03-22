@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: https://test.user.ssafy.shop
+          predicates:
+#            - Host=test.api.ssafy.shop
+            - Path=/user/**
+          filters:
+            - RewritePath=/user/(?<segment>.*), /$\{segment}
+        - id: biz-service
+          uri: https://test.biz.ssafy.shop
+          predicates:
+#            - Host=test.api.ssafy.shop
+            - Path=/onion/**
+          filters:
+            - RewritePath=/biz/(?<segment>.*), /$\{segment}
+        - id: alarm-service
+          uri: https://test.alarm.ssafy.shop
+          predicates:
+#            - Host=test.api.ssafy.shop
+            - Path=/alarm/**
+          filters:
+            - RewritePath=/alarm/(?<segment>.*), /$\{segment}
+        - id: auth-service
+          uri: https://test.auth.ssafy.shop
+          predicates:
+#            - Host=test.api.ssafy.shop
+            - Path=/auth/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /$\{segment}
