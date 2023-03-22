@@ -68,6 +68,6 @@ public class UserController {
 
 	@GetMapping("/gateway")
 	public ResponseEntity<String> test() {
-		return ResponseEntity.ok("main branch");
+		return ResponseEntity.ok("prod branch");
 	}
 }
