@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: https://user.ssafy.shop
+          predicates:
+            - Path=/user/**
+        - id: biz-service
+          uri: https://biz.ssafy.shop
+          predicates:
+            - Path=/onion/**
+        - id: alarm-service
+          uri: https://alarm.ssafy.shop
+          predicates:
+            - Path=/alarm/**
+        - id: auth-service
+          uri: https://auth.ssafy.shop
+          predicates:
+            - Path=/auth/**
