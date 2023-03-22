@@ -13,21 +13,18 @@ spring:
             - Path=/user/**
           filters:
             - RewritePath=/user/(?<segment>.*), /$\{segment}
-            -
         - id: biz-service
           uri: https://biz.ssafy.shop
           predicates:
             - Path=/biz/**
           filters:
             - RewritePath=/biz/(?<segment>.*), /$\{segment}
-            -
         - id: alarm-service
           uri: https://alarm.ssafy.shop
           predicates:
             - Path=/alarm/**
           filters:
             - RewritePath=/alarm/(?<segment>.*), /$\{segment}
-            -
         - id: auth-service
           uri: https://auth.ssafy.shop
           predicates:
