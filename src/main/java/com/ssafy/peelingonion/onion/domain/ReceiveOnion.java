@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.sun.istack.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,18 +24,27 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "my_onion")
-// 유저 - 양파 관계 테이블
-public class MyOnion {
+@Table(name = "receive_onion")
+public class ReceiveOnion {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "user_id")
+	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "onion_id", nullable = false)
+	@Column(name = "from_user_id", nullable = false)
+	private Long fromUserId;
+
+	@Column(name = "is_received")
+	private Boolean isReceived;
+
+	@Column(name = "is_bookmarked")
+	private Boolean isBookmarked;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "onion_id")
 	private Onion onion;
 
 }

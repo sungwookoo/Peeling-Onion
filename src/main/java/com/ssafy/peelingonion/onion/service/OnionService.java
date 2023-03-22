@@ -7,7 +7,8 @@ import com.ssafy.peelingonion.onion.domain.MessageRepository;
 import com.ssafy.peelingonion.onion.domain.Onion;
 import com.ssafy.peelingonion.onion.domain.OnionRepository;
 import com.ssafy.peelingonion.onion.service.exceptions.OnionNotFoundException;
-import com.ssafy.peelingonion.record.domain.RecordedVoice;
+import com.ssafy.peelingonion.record.domain.Record;
+
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -30,7 +31,7 @@ public class OnionService {
     public void createOnion(OnionCreateRequestDto onionCreateRequestDto){
         Onion newOnion = Onion.builder()
                 .onionName(onionCreateRequestDto.onion_name)
-                .mobileNumber(onionCreateRequestDto.mobile_number)
+                //.mobileNumber(onionCreateRequestDto.mobile_number)
                 .imgSrc(onionCreateRequestDto.img_src)
                 .growDueDate(onionCreateRequestDto.grow_due_date.toInstant())
                 .createdAt(Instant.now())
@@ -71,10 +72,10 @@ public class OnionService {
         Onion onion = onionRepository.findOnionById(messageCreateRequestDto.onion_id)
                 .orElseThrow(OnionNotFoundException::new);
         // 레코드 레포지터리에 접근해서 하나를 저장(새로운 녹음 정보를 만들어서 이때 저장 시킨다.)
-        RecordedVoice newRecordedVoice = RecordedVoice.builder()
+        Record newRecordedVoice = Record.builder()
                 .createdAt(Instant.now())
                 .fileSrc(messageCreateRequestDto.file_src)
-                .userId(userId)
+                //.userId(userId)
                 .build();
 
         Message newMessage = Message.builder()
@@ -84,7 +85,7 @@ public class OnionService {
                 .posRate(messageCreateRequestDto.pos_rate)
                 .negRate(messageCreateRequestDto.neg_rate)
                 .onion(onion)
-                .recordedVoice(newRecordedVoice)
+                //.recordedVoice(newRecordedVoice)
                 .build();
 
         messageRepository.save(newMessage);

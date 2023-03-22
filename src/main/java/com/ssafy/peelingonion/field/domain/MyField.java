@@ -1,16 +1,12 @@
 package com.ssafy.peelingonion.field.domain;
 
-import java.time.Instant;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.ssafy.peelingonion.onion.domain.Onion;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -27,25 +23,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "storage")
-public class Storage {
+@Table(name = "my_field")
+public class MyField {
 	@Id
-	@Column(name = "id", nullable = false)
-	private Long id;
+	@Column(name = "uid", nullable = false)
+	private Long uid;
 
-	@Column(name = "created_at")
-	private Instant createdAt;
-
-	@Column(name = "is_bookmarked")
-	private Boolean isBookmarked;
+	@Column(name = "user_id", nullable = false)
+	private Long userId;
 
 	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "onion_id")
-	private Onion onion;
-
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne
 	@JoinColumn(name = "field_id")
 	private Field field;
 

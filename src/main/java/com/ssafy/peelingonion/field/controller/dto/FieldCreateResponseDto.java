@@ -1,12 +1,13 @@
 package com.ssafy.peelingonion.field.controller.dto;
 
-import com.ssafy.peelingonion.field.domain.Field;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+
+import com.ssafy.peelingonion.field.domain.Field;
 
 @Data
 @Builder

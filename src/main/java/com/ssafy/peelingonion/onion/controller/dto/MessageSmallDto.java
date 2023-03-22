@@ -1,12 +1,13 @@
 package com.ssafy.peelingonion.onion.controller.dto;
 
-import com.ssafy.peelingonion.onion.domain.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
+
+import com.ssafy.peelingonion.onion.domain.Message;
 
 @Data
 @Builder
@@ -31,7 +32,7 @@ public class MessageSmallDto {
                 .content(message.getContent())
                 .posRate(message.getPosRate())
                 .negRate(message.getNegRate())
-                .fileSrc(message.getRecordedVoice().getFileSrc())
+                .fileSrc(message.getRecord().getFileSrc())
                 .build();
     }
 }
