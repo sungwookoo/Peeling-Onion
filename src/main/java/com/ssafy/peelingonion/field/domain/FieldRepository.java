@@ -2,7 +2,8 @@ package com.ssafy.peelingonion.field.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ssafy.peelingonion.field.domain.Field;
+import java.util.Optional;
 
 public interface FieldRepository extends JpaRepository<Field, Long> {
+    Optional<Field> findById(Long id);
 }

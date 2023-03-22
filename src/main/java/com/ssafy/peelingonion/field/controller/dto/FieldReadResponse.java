@@ -5,12 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FieldCreateRequestDto {
-    // cf) 유저 ID는 토큰 값을 통해서 받을 예정
-    // cf) 생성일은 저장하는 순간 저장된다.
+// Field하나의 정보, 이 안에 양파정보(개요)도 담겨져있다.
+public class FieldReadResponse {
+    public Long id;
     public String name;
+    public Instant createdAt;
 }

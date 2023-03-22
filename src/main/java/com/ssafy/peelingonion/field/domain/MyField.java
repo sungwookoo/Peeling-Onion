@@ -36,5 +36,4 @@ public class MyField {
 	@ManyToOne
 	@JoinColumn(name = "field_id")
 	private Field field;
-
 }
