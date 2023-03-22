@@ -1,39 +1,25 @@
-spring:
-  main:
-    banner-mode: console
-  profiles:
-    active: local
-
 server:
   port: 8080
-  tomcat:
-    uri-encoding: UTF-8
-
-logging:
-  level:
-    root: debug
-
-apiPrefix:
-  v1
-
----
 
 spring:
-  config:
-    activate:
-      on-profile: local
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: beta
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: prod
-
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: https://user.ssafy.shop
+          predicates:
+            - Path=/user/**
+        - id: biz-service
+          uri: https://biz.ssafy.shop
+          predicates:
+            - Path=/onion/**
+        - id: alarm-service
+          uri: https://alarm.ssafy.shop
+          predicates:
+            - Path=/alarm/**
+        - id: auth-service
+          uri: https://auth.ssafy.shop
+          predicates:
+            - Path=/auth/**

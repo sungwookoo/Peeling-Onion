@@ -1,7 +1,7 @@
 plugins {
+	id 'org.springframework.boot' version '2.5.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id 'org.springframework.boot' version '2.7.9'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 group = 'com.ssafy'
@@ -13,18 +13,13 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul:2.2.9.RELEASE'
-	implementation 'com.google.guava:guava:31.0.1-jre'
-	implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-// Jenkins
-bootJar {
-	mainClass = 'com.ssafy.peelingonion.PeelingOnionApplication'
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:2020.0.3"
+	}
 }
