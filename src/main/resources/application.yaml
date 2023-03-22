@@ -8,8 +8,8 @@ spring:
   main:
     banner-mode: console
 
-#  profiles:
-#    active: beta
+  profiles:
+    active: beta
 
 ---
 
