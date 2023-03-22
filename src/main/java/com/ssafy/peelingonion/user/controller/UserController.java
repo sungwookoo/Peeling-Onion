@@ -66,8 +66,8 @@ public class UserController {
 		return ResponseEntity.ok(isExist);
 	}
 
-	@GetMapping("/test")
+	@GetMapping("/gateway")
 	public ResponseEntity<String> test() {
-		return ResponseEntity.ok("success");
+		return ResponseEntity.ok("main branch");
 	}
 }
