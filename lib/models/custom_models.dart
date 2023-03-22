@@ -12,6 +12,22 @@ class CustomOnion {
             .toList();
 }
 
+// 홈 화면에서의 양파 모델 (상세 메시지는 안받음)
+class CustomHomeOnion {
+  final int onionId;
+  final String onionName;
+  final String imgSrc;
+  final int sendDate;
+  final String mobileNumber;
+
+  CustomHomeOnion.fromJson(Map<String, dynamic> json)
+      : onionId = json['onion_id'],
+        onionName = json['onion_name'],
+        imgSrc = json['img_src'],
+        sendDate = json['send_data'],
+        mobileNumber = json['mobile_number'];
+}
+
 // 메시지 모델
 class CustomMessage {
   final int id;
