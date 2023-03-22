@@ -1,9 +1,15 @@
 package com.ssafy.peelingonion.user.domain;
 
+import java.time.Instant;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.ssafy.peelingonion.user.domain.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +23,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "auth")
 public class Auth {
@@ -25,14 +30,26 @@ public class Auth {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "user_id", nullable = false)
-	private Long userId;
-
 	@Column(name = "auth_code", length = 10)
 	private String authCode;
 
 	@Column(name = "auth_state")
 	private Boolean authState;
+
+	@Column(name = "created_at")
+	private Instant createdAt;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public Long getId() {
 		return id;
@@ -40,14 +57,6 @@ public class Auth {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
 	}
 
 	public String getAuthCode() {
@@ -64,6 +73,14 @@ public class Auth {
 
 	public void setAuthState(Boolean authState) {
 		this.authState = authState;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }
