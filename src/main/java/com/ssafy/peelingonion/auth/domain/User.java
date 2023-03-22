@@ -1,4 +1,4 @@
-package com.ssafy.peelingonion.user.domain;
+package com.ssafy.peelingonion.auth.domain;
 
 import java.time.Instant;
 import java.util.LinkedHashSet;
@@ -10,19 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.ssafy.peelingonion.auth.domain.Auth;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "user")
 public class User {
@@ -49,15 +49,23 @@ public class User {
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "user")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Withdraw> withdraws = new LinkedHashSet<>();
 
 	@OneToMany(mappedBy = "user")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Auth> auths = new LinkedHashSet<>();
 
 	@OneToMany(mappedBy = "user")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Report> reportUser = new LinkedHashSet<>();
 
 	@OneToMany(mappedBy = "targetUserId")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Report> reportTargets = new LinkedHashSet<>();
 
 	public Long getId() {

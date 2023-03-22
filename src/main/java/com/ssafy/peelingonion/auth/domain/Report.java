@@ -1,9 +1,10 @@
-package com.ssafy.peelingonion.user.domain;
+package com.ssafy.peelingonion.auth.domain;
 
 import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -36,11 +37,11 @@ public class Report {
 	@Column(name = "created_at")
 	private Instant createdAt;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "target_user_id_id")
 	private User targetUserId;
 

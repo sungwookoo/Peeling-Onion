@@ -1,4 +1,4 @@
-package com.ssafy.peelingonion.user.service.exceptions;
+package com.ssafy.peelingonion.auth.service.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 
