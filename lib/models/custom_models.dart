@@ -24,7 +24,7 @@ class CustomHomeOnion {
       : onionId = json['onion_id'],
         onionName = json['onion_name'],
         imgSrc = json['img_src'],
-        sendDate = json['send_date'],
+        sendDate = json['send_data'],
         mobileNumber = json['mobile_number'];
 }
 

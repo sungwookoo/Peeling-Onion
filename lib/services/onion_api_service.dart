@@ -11,7 +11,7 @@ class OnionApiService {
   // 기르는 양파 get (홈 화면에 띄울 양파 정보)
   static Future<List<CustomHomeOnion>> getGrowingOnionByUserId(
       int userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/grow/$userId'));
+    final response = await http.get(Uri.parse('$baseUrl/onion/grow/$userId'));
 
     if (response.statusCode == 200) {
       List onions = jsonDecode(response.body);

@@ -75,6 +75,7 @@ flutter:
     - assets/images/backfarm.png
     - assets/images/onion_image.png
     - assets/images/customonion1.png
+    - assets/images/shelf.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
