@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/services/user_api_service.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -9,17 +10,23 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  late Future<CustomUser?> userId;
+
   void tokenCheck(context) async {
     if (await AuthApi.instance.hasToken()) {
       try {
         AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
-        print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        print(tokenInfo.id);
-        print(tokenInfo);
+        // print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
+        // print(tokenInfo.id);
+        // print(tokenInfo);
 
         // 여기서 tokenInfo.id를 통해서 우리 서비스 가입했는지 가려야 함. (헤더로 보냄)
         // 가입 되어 있으면 userId를 반환받아서 상태 저장.
         // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
+        Future<OAuthToken?> accessToken = DefaultTokenManager().getToken();
+
+        userId = UserApiService.checkSignin(accessToken);
+        print(userId);
 
         // Navigator.pushNamed(context, '/home');
       } catch (error) {

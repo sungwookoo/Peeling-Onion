@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class CustomUser {
-  final int userId;
+  final String userId;
 
   CustomUser.fromJson(Map<String, dynamic> json) : userId = json['userId'];
 }
@@ -13,11 +13,11 @@ class UserApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 회원가입 완료 여부 확인
-  static dynamic checkSignin(int tokenId) async {
+  static Future<CustomUser> checkSignin(accessToken) async {
     final response = await http.get(
       Uri.parse('$baseUrl/user'),
       headers: <String, String>{
-        'Authorization': 'Bearer $tokenId',
+        'Authorization': 'Bearer $accessToken',
       },
     );
 
