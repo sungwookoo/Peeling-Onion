@@ -27,7 +27,6 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "onion")
-// 양파
 public class Onion {
 	@Id
 	@Column(name = "id", nullable = false)
@@ -35,9 +34,6 @@ public class Onion {
 
 	@Column(name = "onion_name", length = 50)
 	private String onionName;
-
-	@Column(name = "mobile_number", length = 11)
-	private String mobileNumber;
 
 	@Column(name = "img_src", length = 200)
 	private String imgSrc;
@@ -54,21 +50,33 @@ public class Onion {
 	@Column(name = "send_date")
 	private Instant sendDate;
 
-	// growDueDate를 통해서 성장이 완료되었는지, 완료되지 않았는지를 판단할 수 있다.
 	@Column(name = "grow_due_date")
 	private Instant growDueDate;
-
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
-	@OneToMany(mappedBy = "onion")
-	private Set<MyOnion> myOnions = new LinkedHashSet<>();
+	@Column(name = "is_single")
+	private Boolean isSingle;
 
 	@OneToMany(mappedBy = "onion")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Storage> storages = new LinkedHashSet<>();
 
 	@OneToMany(mappedBy = "onion")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Message> messages = new LinkedHashSet<>();
+
+	@OneToMany(mappedBy = "onion")
+	@ToString.Exclude
+	@Builder.Default
+	private Set<ReceiveOnion> receiveOnions = new LinkedHashSet<>();
+
+	@OneToMany(mappedBy = "onion")
+	@ToString.Exclude
+	@Builder.Default
+	private Set<SendOnion> sendOnions = new LinkedHashSet<>();
 
 }

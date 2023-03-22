@@ -4,7 +4,11 @@ import java.time.Instant;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import com.ssafy.peelingonion.onion.domain.Message;
 
@@ -22,22 +26,26 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "recorded_voice")
-public class RecordedVoice {
+@Table(name = "record")
+public class Record {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "user_id")
-	private Long userId;
-
 	@Column(name = "created_at")
 	private Instant createdAt;
 
-	// S3에 저장된 주소를 저장한다.
-	@Column(name = "file_src", length = 200)
+	@Column(name = "file_src", length = 100)
 	private String fileSrc;
 
-	@OneToOne(mappedBy = "recordedVoice")
-	private Message message;
+	@OneToMany(mappedBy = "record")
+	@ToString.Exclude
+	@Builder.Default
+	private Set<Message> messages = new LinkedHashSet<>();
+
+	@OneToMany(mappedBy = "record")
+	@ToString.Exclude
+	@Builder.Default
+	private Set<MyRecord> myRecords = new LinkedHashSet<>();
+
 }
