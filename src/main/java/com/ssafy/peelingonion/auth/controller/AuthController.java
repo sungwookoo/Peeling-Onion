@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.peelingonion.auth.service.AuthService;
 import com.ssafy.peelingonion.auth.service.exceptions.KakaoError;
-import com.ssafy.peelingonion.auth.service.exceptions.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,18 +33,9 @@ public class AuthController {
 			if (kakaoId.equals(UNAUTHRIZED))
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			return ResponseEntity.ok(authService.findUserId(kakaoId));
-		} catch (KakaoError | UserNotFoundException e) {
+		} catch (KakaoError e) {
+			log.error(e.getMessage());
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
-
-	// @GetMapping("/validity")
-	// public ResponseEntity<Boolean> validateMobile(@RequestHeader("Authorization") String token){
-	// 	try {
-	// 		if(authService.validateCodeOnKakao(token) && authService.)
-	// 		return ResponseEntity.ok(authService.validateCodeOnKakao(token));
-	// 	} catch (KakaoError e) {
-	// 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-	// 	}
-	// }
 }
