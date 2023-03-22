@@ -14,25 +14,28 @@ class _LoadingScreenState extends State<LoadingScreen> {
       try {
         AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
         print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        Navigator.pushNamed(context, '/home');
+        print(tokenInfo.id);
+        print(tokenInfo);
+
+        // 여기서 tokenInfo.id를 통해서 우리 서비스 가입했는지 가려야 함. (헤더로 보냄)
+        // 가입 되어 있으면 userId를 반환받아서 상태 저장.
+        // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
+
+        // Navigator.pushNamed(context, '/home');
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {
           print('토큰 만료 $error');
         } else {
           print('토큰 정보 조회 실패 $error');
         }
-
-        Navigator.pushNamed(context, '/login');
       }
     } else {
       print('발급된 토큰 없음');
-      Navigator.pushNamed(context, '/login');
     }
   }
 
   Future<void> kakaoLogin() async {
     // 카카오 로그인 구현 예제
-
     // 카카오톡 실행 가능 여부 확인
     // 카카오톡 실행이 가능하면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
     if (await isKakaoTalkInstalled()) {
@@ -41,6 +44,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
         print('------------------------------------------------------------');
         print(a);
         print('카카오톡으로 로그인 성공');
+
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+        Future<OAuthToken?> oAuthToken = DefaultTokenManager().getToken();
+        oAuthToken.then((value) => print(value));
+        // access token
       } catch (error) {
         print('카카오톡으로 로그인 실패 $error');
 

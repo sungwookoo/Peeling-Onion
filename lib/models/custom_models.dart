@@ -37,3 +37,6 @@ class CustomField {
             .map((onionJson) => CustomOnion.fromJson(onionJson))
             .toList();
 }
+
+
+// 유저 모델

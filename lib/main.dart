@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/screens/login_screens/loading_screen.dart';
-import 'package:front/screens/login_screens/login_screen.dart';
+import 'package:front/screens/login_screens/sign_in_screen.dart';
 import 'widgets/custom_navigation_bar.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
@@ -23,7 +23,7 @@ class App extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => const LoadingScreen(),
-        '/login': (context) => const LoginScreen(),
+        '/signin': (context) => const SigninScreen(),
         '/home': (context) => const CustomNavigationBar(),
       },
     );
