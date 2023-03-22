@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.ssafy.peelingonion.auth.controller.KakaoDto;
 import com.ssafy.peelingonion.auth.domain.AuthRepository;
 import com.ssafy.peelingonion.auth.domain.UserRepository;
-import com.ssafy.peelingonion.auth.service.exceptions.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
@@ -34,7 +33,7 @@ public class AuthService {
 		try {
 			kakaoDto = client.get()
 				.uri(KAKAO_URI)
-				.header("Authorization", "Bearer " + token)
+				.header("Authorization", token)
 				.retrieve()
 				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
 				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
@@ -48,6 +47,6 @@ public class AuthService {
 	}
 
 	public Long findUserId(Long kakaoId) {
-		return userRepository.findIdByKakaoId(kakaoId).orElseThrow(UserNotFoundException::new);
+		return userRepository.findIdByKakaoId(kakaoId).orElse(NON_MEMBER);
 	}
 }
