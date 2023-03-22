@@ -1,23 +1,244 @@
 import 'package:flutter/material.dart';
+import 'package:front/models/custom_models.dart';
 import 'package:front/screens/home_onion_create_screen.dart';
+import 'package:front/services/onion_api_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  final int id = 1;
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  // 받아온 기르는 양파 정보들
+  late Future<List<CustomHomeOnion>> onions;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    onions = OnionApiService.getGrowingOnionByUserId(widget.id);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
-      body: const Text('여긴 홈 화면'),
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const OnionCreate()));
-      }),
+      body: Center(
+        child: FutureBuilder(
+          future: onions,
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              List<CustomHomeOnion> onionsData =
+                  snapshot.data as List<CustomHomeOnion>;
+              // 양파들 출력
+              return Stack(
+                children: [
+                  ShowGrowingOnions(onions: onionsData),
+                  const TrashCan(),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text('에러: ${snapshot.error}');
+            }
+            // 로딩 화면
+            return const CircularProgressIndicator();
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const OnionCreate()));
+        },
+      ),
       // bottomNavigationBar: const NavigateBar(),
     );
   }
 }
 
-// service에서 받아온 axios 요청을 바탕으로, 양파 출력
+// 쓰레기통
+class TrashCan extends StatefulWidget {
+  const TrashCan({
+    super.key,
+  });
 
+  @override
+  State<TrashCan> createState() => _TrashCanState();
+}
+
+class _TrashCanState extends State<TrashCan> {
+  int trashCan = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    // 위치 (화면의 오른쪽 상단)
+    return Positioned(
+      top: 0,
+      right: 0,
+      child: Align(
+        alignment: Alignment.topRight,
+        // drag & drop 기능 (쓰레기통에 drop)
+        child: DragTarget<int>(
+          builder: (
+            BuildContext context,
+            List<dynamic> accepted,
+            List<dynamic> rejected,
+          ) {
+            // 쓰레기통 UI
+            return Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.amber,
+                borderRadius: BorderRadius.circular(25),
+              ),
+              // child: const Icon(Icons.delete),   // 쓰레기통 아이콘
+              child: Text('$trashCan'),
+            );
+          },
+          // drop 하면 경고창 (정말 삭제하시겠습니까?) 표시 후, 삭제 api 요청
+          onAccept: (int data) {
+            // 경고창
+            // DELETE API 보내기 (현재는 쓰레기통 위치의 숫자가 바뀜)
+            setState(() {
+              trashCan = data + 1;
+            });
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// 양파들을 격자로 표시할 예정
+class ShowGrowingOnions extends StatelessWidget {
+  final List<CustomHomeOnion> _onions;
+
+  ShowGrowingOnions({
+    super.key,
+    required List<CustomHomeOnion> onions,
+  }) : _onions = onions;
+
+  int onionsPerPage = 9;
+  late int numOfPages = (_onions.length / onionsPerPage).ceil();
+
+  @override
+  Widget build(BuildContext context) {
+    // 양파 수가 많으면, 페이지 넘겨서 확인
+    return PageView.builder(
+      itemCount: numOfPages,
+      itemBuilder: (context, pageIndex) {
+        // 선반 세로로 출력
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // 선반 3개출력
+            children: List.generate(
+              3,
+              (shelfIndex) {
+                int onionsPerShelf = 3;
+                int firstOnionIndex =
+                    pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
+                // 각 선반 1개
+                return Column(
+                  children: [
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: onionsPerShelf,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                      ),
+                      itemBuilder: (BuildContext context, int itemIndex) {
+                        int globalIndex = firstOnionIndex + itemIndex;
+                        if (globalIndex < _onions.length) {
+                          // 각 양파 1개 (텍스트 + 이미지)
+                          return DraggableOnion(
+                              onions: _onions, globalIndex: globalIndex);
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
+                    // 선반 1개 이미지
+                    Image.asset(
+                      'assets/images/shelf.png',
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+// 양파 drag & drop 기능
+class DraggableOnion extends StatelessWidget {
+  const DraggableOnion({
+    super.key,
+    required List<CustomHomeOnion> onions,
+    required this.globalIndex,
+  }) : _onions = onions;
+
+  final List<CustomHomeOnion> _onions;
+  final int globalIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Draggable<int>(
+      // 전달할 데이터 (양파 번호)
+      data: _onions.elementAt(globalIndex).onionId,
+      // 드래그 할 때 양파 이미지만 투명해지게 이동하기. 이후 예쁘게 수정 예정
+      feedback: SizedBox(
+        width: 100,
+        height: 100,
+        child: Center(
+          child: Transform.scale(
+            scale: 1.2,
+            child: Opacity(
+              opacity: 0.6,
+              child: Image.asset('assets/images/onion_image.png'),
+            ),
+          ),
+        ),
+      ),
+      // 드래그할 때 보일 양파 이미지
+      childWhenDragging: OneOnion(onions: _onions, globalIndex: globalIndex),
+      // 겉으로 보일 양파
+      child: OneOnion(onions: _onions, globalIndex: globalIndex),
+    );
+  }
+}
+
+// 양파 1개
+class OneOnion extends StatelessWidget {
+  const OneOnion({
+    super.key,
+    required List<CustomHomeOnion> onions,
+    required this.globalIndex,
+  }) : _onions = onions;
+
+  final List<CustomHomeOnion> _onions;
+  final int globalIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(_onions.elementAt(globalIndex).onionName),
+        Image.asset('assets/images/onion_image.png'),
+      ],
+    );
+  }
+}
