@@ -2,32 +2,39 @@ server:
   port: 8080
 
 spring:
-  application:
-    name: api-gateway
-
-  main:
-    banner-mode: console
-
   profiles:
-    active: beta
+    active: dev
 
 ---
 
 spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service-dev
+          uri: https://test.user.ssafy.shop
+          predicates:
+            - Host=test.api.ssafy.shop
+            - Path=/user/v1/**
+          filters:
+            - RewritePath=/user/v1/(?<path>.*), /v1/$\{path}
   config:
     activate:
-      on-profile: local
+      on-profile: dev
 
 ---
 
 spring:
-  config:
-    activate:
-      on-profile: beta
-
----
-
-spring:
+  cloud:
+    gateway:
+      routes:
+        - id: user-service-prod
+          uri: https://user.ssafy.shop
+          predicates:
+            - Host=api.ssafy.shop
+            - Path=/user/v1/**
+          filters:
+            - RewritePath=/user/v1/(?<path>.*), /v1/$\{path}
   config:
     activate:
       on-profile: prod
