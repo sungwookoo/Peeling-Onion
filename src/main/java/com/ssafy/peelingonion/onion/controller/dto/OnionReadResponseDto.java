@@ -1,6 +1,5 @@
 package com.ssafy.peelingonion.onion.controller.dto;
 
-import com.ssafy.peelingonion.onion.domain.Onion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Set;
+
+import com.ssafy.peelingonion.onion.domain.Onion;
 
 @Data
 @Builder
@@ -32,11 +33,12 @@ public class OnionReadResponseDto {
     // 양파의 메세지파일
     public Set<MessageSmallDto> messages;
 
+    // need check
     public static OnionReadResponseDto makeOnionReadDto(Onion onion, Set<MessageSmallDto> messageSmallDtos){
         return OnionReadResponseDto.builder()
                 .id(onion.getId())
                 .onionName(onion.getOnionName())
-                .mobileNumber(onion.getMobileNumber())
+                //.mobileNumber(onion.getMobileNumber())
                 .imgSrc(onion.getImgSrc())
                 .createdAt(onion.getCreatedAt())
                 .growDueDate(onion.getGrowDueDate())

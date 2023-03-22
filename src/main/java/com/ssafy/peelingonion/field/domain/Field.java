@@ -40,5 +40,13 @@ public class Field {
 	private Boolean isDisabled;
 
 	@OneToMany(mappedBy = "field")
+	@ToString.Exclude
+	@Builder.Default
 	private Set<Storage> storages = new LinkedHashSet<>();
+
+	@OneToMany(mappedBy = "field")
+	@ToString.Exclude
+	@Builder.Default
+	private Set<MyField> myFields = new LinkedHashSet<>();
+
 }

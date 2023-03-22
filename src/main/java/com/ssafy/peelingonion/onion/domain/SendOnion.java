@@ -1,7 +1,5 @@
 package com.ssafy.peelingonion.onion.domain;
 
-import java.time.Instant;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.ssafy.peelingonion.record.domain.Record;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -27,8 +24,8 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "message")
-public class Message {
+@Table(name = "send_onion")
+public class SendOnion {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
@@ -36,22 +33,11 @@ public class Message {
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
-	@Column(name = "created_at")
-	private Instant createdAt;
+	@Column(name = "receiver_number", length = 11)
+	private String receiverNumber;
 
-	@Column(name = "content", length = 1000)
-	private String content;
-
-	@Column(name = "pos_rate")
-	private Double posRate;
-
-	@Column(name = "neg_rate")
-	private Double negRate;
-
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "record_id")
-	private Record record;
+	@Column(name = "is_sended")
+	private Boolean isSended;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
