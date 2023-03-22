@@ -1,6 +1,10 @@
 spring:
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true
+
       routes:
         - id: user-service-test
           uri: https://test.user.ssafy.shop
@@ -8,7 +12,7 @@ spring:
             - Host=test.api.ssafy.shop
             - Path=/user/**
           filters:
-            - RewritePath=/user/(?<segment>.*), /$\{segment}
+            - RewritePath=/test.user/(?<segment>.*), /$\{segment}
 
         - id: user-service-prod
           uri: https://user.ssafy.shop
@@ -24,7 +28,7 @@ spring:
             - Host=test.api.ssafy.shop
             - Path=/alarm/**
           filters:
-            - RewritePath=/alarm/(?<segment>.*), /$\{segment}
+            - RewritePath=/test.alarm/(?<segment>.*), /$\{segment}
 
         - id: alarm-service-prod
           uri: https://alarm.ssafy.shop
@@ -40,7 +44,7 @@ spring:
             - Host=test.api.ssafy.shop
             - Path=/onion/**
           filters:
-            - RewritePath=/biz/(?<segment>.*), /$\{segment}
+            - RewritePath=/test.biz/(?<segment>.*), /$\{segment}
 
         - id: biz-service-prod
           uri: https://biz.ssafy.shop
@@ -56,7 +60,7 @@ spring:
             - Host=test.api.ssafy.shop
             - Path=/auth/**
           filters:
-            - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - RewritePath=/test.auth/(?<segment>.*), /$\{segment}
 
         - id: auth-service-prod
           uri: https://auth.ssafy.shop
