@@ -34,15 +34,7 @@ public class FieldController {
 	@PostMapping("/{user_id}")
 	public ResponseEntity<FieldCreateResponseDto> createField(
 		@RequestBody FieldCreateRequestDto fieldCreateRequestDto) {
-		// 1. auth check -> 인증여부에 따른 응답
-		// 2. 인증 되었을 경우
-		try {
-			Field newField = fieldService.createField(fieldCreateRequestDto);
-			return ResponseEntity.ok(FieldCreateResponseDto.makeFieldCreateDto(newField));
-		} catch (Exception e) {
-			log.info(e.getMessage());
-			return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
-		}
+		return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
 	}
 
 	//    @DeleteMapping("/{user_id}")
@@ -54,16 +46,8 @@ public class FieldController {
 	@GetMapping("/{user_id}")
 	public ResponseEntity<List<FieldReadResponseDto>> readFields(
 		@PathVariable Long userId) {
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
-		// 1. auth check -> 인증여부에 따른 응답(굳이 pathVariable을 받을 필요가 없을 것 같다.
-		// 2. 인증 되었을 때
-		try {
-
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		} catch (Exception e) {
-			log.info(e.getMessage());
-			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-		}
 	}
 
 }

@@ -8,7 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ssafy.peelingonion.field.domain.Storage;
 
 public interface StorageRepository extends JpaRepository<Storage, Long> {
-	Set<Long> findAllFieldIdByUserId(Long userId);
-
 	List<Storage> findAllByFieldId(Long fId);
 }
