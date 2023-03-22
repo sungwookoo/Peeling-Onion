@@ -10,16 +10,13 @@ import java.util.List;
 
 @Service
 public class FieldService {
-    private final FieldService fieldService;
     private final FieldRepository fieldRepository;
     private final MyFieldRepository myFieldRepository;
     private final StorageRepository storageRepository;
 
-    public FieldService(FieldService fieldService,
-                        FieldRepository fieldRepository,
+    public FieldService(FieldRepository fieldRepository,
                         MyFieldRepository myFieldRepository,
                         StorageRepository storageRepository) {
-        this.fieldService = fieldService;
         this.fieldRepository = fieldRepository;
         this.myFieldRepository = myFieldRepository;
         this.storageRepository = storageRepository;

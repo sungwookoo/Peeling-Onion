@@ -3,11 +3,10 @@ package com.ssafy.peelingonion.field.controller;
 import com.ssafy.peelingonion.field.controller.dto.*;
 import com.ssafy.peelingonion.field.domain.Field;
 import com.ssafy.peelingonion.field.domain.Storage;
-import com.ssafy.peelingonion.field.domain.StorageRepository;
 import com.ssafy.peelingonion.field.service.FieldService;
 import com.ssafy.peelingonion.field.service.exceptions.*;
 import com.ssafy.peelingonion.onion.domain.Onion;
-import com.ssafy.peelingonion.onion.domain.OnionRepository;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,9 +22,7 @@ import java.util.List;
 public class FieldController {
     private final FieldService fieldService;
     @Autowired
-    public FieldController(FieldService fieldService,
-                           OnionRepository onionRepository,
-                           StorageRepository storageRepository){
+    public FieldController(FieldService fieldService){
         this.fieldService = fieldService;
     }
 
@@ -145,7 +142,7 @@ public class FieldController {
     }
 
     @DeleteMapping("/{userId}/{fieldId}")
-    public ResponseEntity deleteField(
+    public ResponseEntity<Boolean> deleteField(
             @PathVariable Long fieldId){
         // **생략**auth check
         // **인증 후의 과정
