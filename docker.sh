@@ -24,10 +24,10 @@ fi
 if [[ "$JOB_NAME" == "biz-main" ]]; then
 	EXTERNAL_PORT=10381
 fi
-if [[ "$JOB_NAME" == "api-main" ]]; then
+if [[ "$JOB_NAME" == "api-prod" ]]; then
 	EXTERNAL_PORT=31415
 fi
-if [[ "$JOB_NAME" == "api-prod" ]]; then
+if [[ "$JOB_NAME" == "api-main" ]]; then
 	EXTERNAL_PORT=31416
 fi
 
