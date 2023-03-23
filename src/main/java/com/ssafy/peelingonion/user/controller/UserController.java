@@ -114,7 +114,7 @@ public class UserController {
 		@PathVariable String keyword) {
 		final Long userId = authorizeService.getAuthorization(token);
 		if (authorizeService.isAuthorization(userId)) {
-			List<SearchUserResponseDto> list = userService.searchData(keyword)
+			List<SearchUserResponseDto> list = userService.searchData(keyword,userId)
 				.stream()
 				.map(SearchUserResponseDto::from)
 				.collect(Collectors.toList());

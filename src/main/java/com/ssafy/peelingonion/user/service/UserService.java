@@ -1,11 +1,9 @@
 package com.ssafy.peelingonion.user.service;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ssafy.peelingonion.user.controller.dto.SearchUserResponseDto;
 import com.ssafy.peelingonion.user.domain.User;
 import com.ssafy.peelingonion.user.domain.UserRepository;
 import com.ssafy.peelingonion.user.service.exceptions.UserNotFoundException;
@@ -64,7 +62,8 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public List<User> searchData(String keyword) {
-		return userRepository.findTop10ByNicknameLike("%"+keyword+"%");
+	public List<User> searchData(String keyword, Long userId) {
+		User user = userRepository.findById(userId).orElse(User.builder().nickname("").build());
+		return userRepository.findTop10ByNicknameContainsAndNicknameNotLike(keyword, user.getNickname());
 	}
 }
