@@ -114,6 +114,5 @@ public class FieldService {
 			.stream()
 			.map(Storage::getOnion)
 			.collect(Collectors.toList());
-
 	}
 }

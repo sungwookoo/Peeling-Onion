@@ -43,11 +43,7 @@ public class FieldController {
 			// **인증 후의 과정
 			try {
 				Field field = fieldService.createField(fieldCreateRequest, userId);
-				FieldCreateResponse fieldCreateResponse = FieldCreateResponse.builder()
-					.id(field.getId())
-					.name(field.getName())
-					.createdAt(field.getCreatedAt())
-					.build();
+				FieldCreateResponse fieldCreateResponse = FieldCreateResponse.from(field);
 				return ResponseEntity.ok(fieldCreateResponse);
 			} catch (FieldNotCreatedException e) {
 				log.info(e.getMessage());
@@ -67,18 +63,12 @@ public class FieldController {
 			// **인증 후의 과정
 			try {
 				List<Field> fields = fieldService.readAllFields(userId);
-				List<FieldReadResponse> fieldReadResponses = new ArrayList<>();
-				for (Field field : fields) {
-					FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
-						.id(field.getId())
-						.name(field.getName())
-						.createdAt(field.getCreatedAt())
-						.build();
-					fieldReadResponses.add(fieldReadResponse);
-				}
+				List<FieldReadResponse> fieldReadResponses = fields.stream()
+					.map(FieldReadResponse::from)
+					.collect(Collectors.toList());
 				return ResponseEntity.ok(fieldReadResponses);
 			} catch (FieldAllNotFoundException e) {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		}
@@ -101,7 +91,7 @@ public class FieldController {
 
 				return ResponseEntity.ok(resultList);
 			} catch (FieldNotFoundException e) {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 		}
@@ -119,14 +109,10 @@ public class FieldController {
 			// **인증 후의 과정
 			try {
 				Field field = fieldService.updateField(fieldId, fieldUpdateRequest.getName());
-				FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
-					.id(field.getId())
-					.name(field.getName())
-					.createdAt((field.getCreatedAt()))
-					.build();
+				FieldReadResponse fieldReadResponse = FieldReadResponse.from(field);
 				return ResponseEntity.ok(fieldReadResponse);
 			} catch (FieldNotUpdatedException e) {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
 			}
 		}
@@ -145,7 +131,7 @@ public class FieldController {
 				fieldService.deleteField(fieldId);
 				return ResponseEntity.ok().build();
 			} catch (FieldNotDeletedException e) {
-				log.info(e.getMessage());
+				log.error(e.getMessage());
 				return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
 			}
 		}
