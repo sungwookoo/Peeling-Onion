@@ -124,4 +124,9 @@ public class UserController {
 
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
+
+	@GetMapping("/gateway")
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("main Branch");
+	}
 }
