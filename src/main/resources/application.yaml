@@ -6,9 +6,9 @@ spring:
           uri: https://test.user.ssafy.shop
           predicates:
             - Host=test.api.ssafy.shop
-            - Path=/user/**
+            - Path=/v1/user/**
           filters:
-            - RewritePath=/user/(?<segment>.*), /$\{segment}
+            - RewritePath=/v1/user/(?<segment>.*), /$\{segment}
 
         - id: user-service-prod
           uri: https://user.ssafy.shop
