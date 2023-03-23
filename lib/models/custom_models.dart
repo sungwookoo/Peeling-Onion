@@ -54,5 +54,9 @@ class CustomField {
             .toList();
 }
 
-
 // 유저 모델
+class UserModel {
+  String userId;
+
+  UserModel({required this.userId})
+}
