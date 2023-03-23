@@ -29,6 +29,7 @@ public class FieldController {
 
     @PostMapping("/{userId}")
     public ResponseEntity<FieldCreateResponse> createField(
+            @RequestHeader("Authorization") String token,
             @RequestBody FieldCreateRequest fieldCreateRequest,
             @PathVariable Long userId) {
         // **생략**auth check
@@ -49,6 +50,7 @@ public class FieldController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<List<FieldReadResponse>> readAllFields(
+            @RequestHeader("Authorization") String token,
             @PathVariable Long userId) {
         // **생략**auth check
         // **인증 후의 과정
@@ -72,6 +74,7 @@ public class FieldController {
 
     @GetMapping("/{userId}/{fieldId}")
     public ResponseEntity<List<OnionOutlineDto>> readFieldOnions(
+            @RequestHeader("Authorization") String token,
             @PathVariable Long fieldId){
         // **생략**auth check
         // **인증 후의 과정
@@ -107,7 +110,7 @@ public class FieldController {
                 String userName = "zzangbae"; //***임의의 발신자값(더미데이터) ** 코드 진행 후 삭제해 주세요 **
                 OnionOutlineDto onionOutlineDto = OnionOutlineDto.builder()
                         .id(fieldOnion.getId())
-                        .onionName(fieldOnion.getOnionName())
+                        .onionName(fieldOnion.getName())
                         .imgSrc(fieldOnion.getImgSrc())
                         .recieveDate(fieldOnion.getSendDate())
                         .sender(userName)       //***이부분도 바껴야합니다.
@@ -124,6 +127,7 @@ public class FieldController {
 
     @PutMapping("/{userId}/{fieldId}")
     public ResponseEntity<FieldReadResponse> updateField(
+            @RequestHeader("Authorization") String token,
             @RequestBody FieldUpdateRequest fieldUpdateRequest,
             @PathVariable Long fieldId){
         // **생략**auth check
@@ -144,6 +148,7 @@ public class FieldController {
 
     @DeleteMapping("/{userId}/{fieldId}")
     public ResponseEntity<Boolean> deleteField(
+            @RequestHeader("Authorization") String token,
             @PathVariable Long fieldId){
         // **생략**auth check
         // **인증 후의 과정

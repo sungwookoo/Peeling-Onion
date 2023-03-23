@@ -33,7 +33,7 @@ public class Onion {
 	private Long id;
 
 	@Column(name = "onion_name", length = 50)
-	private String onionName;
+	private String name;
 
 	@Column(name = "img_src", length = 200)
 	private String imgSrc;
