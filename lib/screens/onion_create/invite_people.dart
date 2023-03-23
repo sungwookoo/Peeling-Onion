@@ -1,14 +1,27 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
+import '../../services/find_user_api_service.dart';
 
 class InvitePeople extends StatefulWidget {
-  const InvitePeople({super.key});
+  const InvitePeople({Key? key, required this.people}) : super(key: key);
+
+  final List<Map> people;
 
   @override
   State<InvitePeople> createState() => _InvitePeopleState();
 }
 
 class _InvitePeopleState extends State<InvitePeople> {
-  final List<Map?> _selectedPeople = [];
+  List<Map?> _selectedPeople = [];
+  final _findPeopleKey = GlobalKey<FormState>();
+  late Future<List<Map>> _searchedUser = Future.value([]);
+  String _searchWord = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedPeople = widget.people.map((person) => person).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +32,7 @@ class _InvitePeopleState extends State<InvitePeople> {
           builder: (BuildContext context) {
             return IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, []);
               },
               icon: const Icon(
                 Icons.arrow_back,
@@ -36,7 +49,9 @@ class _InvitePeopleState extends State<InvitePeople> {
           FloatingActionButton(
             elevation: 0,
             backgroundColor: const Color(0xFFFDFDF5),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context, _selectedPeople);
+            },
             child: const Text(
               '확인',
               style: TextStyle(
@@ -47,39 +62,21 @@ class _InvitePeopleState extends State<InvitePeople> {
           )
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFFFDFDF5),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              // _selectedPeople.isNotEmpty
-              //     ? SingleChildScrollView(
-              //         scrollDirection: Axis.horizontal,
-              //         child: Row(
-              //           children: _selectedPeople.map((person) {
-              //             return Container(
-              //               padding: const EdgeInsets.all(8.0),
-              //               width: 50,
-              //               decoration: BoxDecoration(
-              //                 borderRadius: BorderRadius.circular(20),
-              //                 color: Colors.grey,
-              //               ),
-              //               child: Text(
-              //                 person?['nickname'] ?? '',
-              //                 style: const TextStyle(
-              //                     fontSize: 16, color: Colors.black),
-              //               ),
-              //             );
-              //           }).toList(),
-              //         ))
-              //     : Container(),
-              _selectedPeople.isNotEmpty
-                  ? SizedBox(
-                      height: 40,
-                      child: Expanded(
+      body: GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFFDFDF5),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                _selectedPeople.isNotEmpty
+                    ? SizedBox(
+                        height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: _selectedPeople.length,
@@ -128,21 +125,100 @@ class _InvitePeopleState extends State<InvitePeople> {
                             );
                           },
                         ),
-                      ),
-                    )
-                  : Container(),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('heloo')
-            ],
+                      )
+                    : Container(),
+                const SizedBox(
+                  height: 10,
+                ),
+                Form(
+                  key: _findPeopleKey,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                        hintText: '검색어를 입력하세요.',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          onPressed: () async {
+                            if (_findPeopleKey.currentState!.validate()) {
+                              _findPeopleKey.currentState!.save();
+
+                              _searchedUser =
+                                  FindPeopleApiService.findUsersByWord(
+                                      _searchWord);
+
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(_searchWord)),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.search),
+                          iconSize: 33,
+                          padding: const EdgeInsets.only(top: 5),
+                        )),
+                    onSaved: (val) {
+                      setState(() {
+                        _searchWord = val as String;
+                      });
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '검색어를 입력해주세요!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                FutureBuilder(
+                  future: _searchedUser,
+                  builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData) {
+                      final searchedUsers = snapshot.data!;
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: searchedUsers.length,
+                          itemBuilder: (context, int index) {
+                            final user = searchedUsers[index];
+                            return ListTile(
+                              title: Text(user['nickname']),
+                              trailing: _selectedPeople
+                                      .any((obj) => obj?['id'] == user['id'])
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedPeople.removeWhere(
+                                              (element) =>
+                                                  element?['id'] == user['id']);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.remove))
+                                  : IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        setState(() {
+                                          _selectedPeople.add(user);
+                                        });
+                                      },
+                                    ),
+                            );
+                          },
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return const Text('데이터를 불러오는데 문제가 발생했습니다.');
+                    }
+
+                    return const CircularProgressIndicator();
+                  },
+                )
+              ],
+            ),
           ),
         ),
       ),
       bottomSheet: ElevatedButton(
         onPressed: () {
           setState(() {
-            _selectedPeople.add({'id': 123, 'nickname': '이름'});
+            int n = Random().nextInt(100) + 1;
+            _selectedPeople.add({'id': 123, 'nickname': n.toString()});
           });
         },
         child: const Text('추가'),

@@ -4,9 +4,9 @@ import 'package:front/screens/onion_create/invite_people.dart';
 import 'package:intl/intl.dart';
 
 class OnionCreate extends StatefulWidget {
-  const OnionCreate({Key? key, required this.isAlone}) : super(key: key);
+  const OnionCreate({Key? key, required this.isTogether}) : super(key: key);
 
-  final bool isAlone;
+  final bool isTogether;
 
   @override
   State<OnionCreate> createState() => _OnionCreateState();
@@ -16,11 +16,12 @@ class _OnionCreateState extends State<OnionCreate> {
   String _date = DateFormat.yMMMd().format(DateTime.now());
   String _onionName = '';
   String _mobileNumber = '';
+  List<Map> _withUser = [];
   final _onionFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    bool isAlone = widget.isAlone;
+    bool isTogether = widget.isTogether;
 
     return Container(
       decoration: const BoxDecoration(
@@ -41,15 +42,19 @@ class _OnionCreateState extends State<OnionCreate> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                const Center(
-                  child: Image(
-                    image: AssetImage('assets/images/customonion1.png'),
-                    height: 400,
-                    fit: BoxFit.cover,
-                  ),
+                const Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Center(
+                      child: Image(
+                        image: AssetImage('assets/images/customonion1.png'),
+                        height: 350,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ],
                 ),
                 Form(
                   key: _onionFormKey,
@@ -61,7 +66,12 @@ class _OnionCreateState extends State<OnionCreate> {
                           children: [
                             const Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text('양파 이름')),
+                                child: Text(
+                                  '양파 이름',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )),
                             TextFormField(
                               onSaved: (val) {
                                 setState(() {
@@ -81,31 +91,16 @@ class _OnionCreateState extends State<OnionCreate> {
                         const SizedBox(
                           height: 10,
                         ),
-                        Visibility(
-                          visible: isAlone,
-                          child: Row(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const InvitePeople()));
-                                },
-                                child: const Text('함께 보낼 사람'),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
                         Column(
                           children: [
                             const Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('수신자(전화번호)'),
+                              child: Text(
+                                '수신자(전화번호)',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                             TextFormField(
                               keyboardType: TextInputType.number,
@@ -131,6 +126,66 @@ class _OnionCreateState extends State<OnionCreate> {
                             ),
                           ],
                         ),
+                        Visibility(
+                            visible: isTogether,
+                            child: const SizedBox(
+                              height: 10,
+                            )),
+                        Visibility(
+                          visible: isTogether,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  '선택된 사람',
+                                  style: TextStyle(
+                                    // fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                _withUser.isNotEmpty
+                                    ? Row(
+                                        children: [
+                                          Text(_withUser[0]['nickname']),
+                                          if (_withUser.length > 1)
+                                            Text('외 ${_withUser.length - 1}명'),
+                                        ],
+                                      )
+                                    : Container(
+                                        width: 100,
+                                      ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 22, 110, 24),
+                                  ),
+                                  onPressed: () async {
+                                    final people = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => InvitePeople(
+                                                  people: _withUser,
+                                                )));
+                                    if (people is List<Map>) {
+                                      setState(() {
+                                        _withUser = people;
+                                      });
+                                    }
+                                  },
+                                  child: const Text('함께 보낼 사람'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
@@ -145,7 +200,7 @@ class _OnionCreateState extends State<OnionCreate> {
                                 '수확일',
                                 style: TextStyle(
                                   fontSize: 15,
-                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(
@@ -195,12 +250,25 @@ class _OnionCreateState extends State<OnionCreate> {
                             onPressed: () async {
                               if (_onionFormKey.currentState!.validate()) {
                                 _onionFormKey.currentState!.save();
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                if (_withUser.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('함께 보낼 사람을 적어도 1명 선택해주세요!')),
+                                  );
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
                                       content:
-                                          Text('$_onionName/$_mobileNumber')),
-                                );
+                                          Text('$_onionName/$_mobileNumber'),
+                                      behavior: SnackBarBehavior.floating,
+                                      // margin: const EdgeInsets.symmetric(
+                                      //   vertical: 50,
+                                      //   horizontal: 20,
+                                      // ),
+                                    ),
+                                  );
+                                }
                                 // Navigator.pop(context);
                               }
                             },

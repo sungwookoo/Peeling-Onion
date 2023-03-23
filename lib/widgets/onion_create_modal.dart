@@ -31,7 +31,7 @@ class OnionCreateDialog extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const OnionCreate(isAlone: false)));
+                            const OnionCreate(isTogether: false)));
               },
             ),
             InkWell(
@@ -52,7 +52,7 @@ class OnionCreateDialog extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            const OnionCreate(isAlone: true)));
+                            const OnionCreate(isTogether: true)));
               },
             )
           ],
