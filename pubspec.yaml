@@ -75,6 +75,8 @@ flutter:
     - assets/images/backfarm.png
     - assets/images/onion_image.png
     - assets/images/customonion1.png
+    - assets/images/letter.png
+    - assets/images/letters.png
     - assets/images/shelf.png
   #   - images/a_dot_ham.jpeg
 
