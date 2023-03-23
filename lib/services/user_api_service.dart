@@ -6,7 +6,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 class CustomUser {
   final int? userId;
 
-  CustomUser.fromJson(Map<String, dynamic> json) : userId = json['userId'];
+  CustomUser.fromJson(Map<String, dynamic> json) : userId = json['user_id'];
 }
 
 //유저 api 요청들
@@ -14,20 +14,24 @@ class UserApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 회원가입 완료 여부 확인
-  static Future<int?> checkSignin(OAuthToken? accessToken) async {
+  static Future<int?> checkSignin() async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
+    final accessToken = await Token.then((value) => value?.accessToken);
+    // print("$accessToken : accessToken");
+    // print('yessssssssssssssssssssssssss');
     final response = await http.get(
       Uri.parse('$baseUrl/user'),
       headers: <String, String>{
         'Authorization': 'Bearer $accessToken',
       },
     );
-
     if (response.statusCode == 200) {
-      print(response.body);
       CustomUser user = CustomUser.fromJson(jsonDecode(response.body));
-      print(user.userId);
       return user.userId;
     } else if (response.statusCode == 204) {
+      // 회원가입한 녀석이 아니면
+      return -1;
       throw Exception('User Not Found');
     } else {
       throw Exception('Failed to request');

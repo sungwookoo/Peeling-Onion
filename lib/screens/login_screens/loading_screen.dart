@@ -11,32 +11,22 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   late Future<CustomUser?> userId;
+  late Future<String> accessTokenFuture;
+
+  Future<String> getAccessToken() async {
+    OAuthToken? token = await DefaultTokenManager().getToken();
+    return token?.accessToken ?? '';
+  }
 
   void tokenCheck(context) async {
     if (await AuthApi.instance.hasToken()) {
       try {
         AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
         // print('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        // print(tokenInfo.id);
-        // print(tokenInfo);
 
-        // 여기서 tokenInfo.id를 통해서 우리 서비스 가입했는지 가려야 함. (헤더로 보냄)
         // 가입 되어 있으면 userId를 반환받아서 상태 저장.
         // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
-        Future<OAuthToken?> accessToken = DefaultTokenManager().getToken();
-
-        print("accessToken입니다.");
-        accessToken.then((value) => print(value));
-        accessToken.then((value) => print(UserApiService.checkSignin(value)));
-        final userId = await accessToken
-            .then((value) => UserApiService.checkSignin(value));
-        print(userId);
-        print('aaaaaaaaaaa');
-
-        // userId = UserApiService.checkSignin(accessToken);
-        // print(userId);
-
-        // Navigator.pushNamed(context, '/home');
+        // await goNext(context);
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {
           print('토큰 만료 $error');
@@ -49,21 +39,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
   }
 
-  Future<void> kakaoLogin() async {
+  Future<void> goNext(context) async {
+    // 가입 되어 있으면 userId를 반환받아서 상태 저장.
+    // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
+    final userId = await UserApiService.checkSignin();
+    if (userId != -1) {
+      Navigator.pushNamed(context, '/home');
+    } else if (userId == -1) {
+      Navigator.pushNamed(context, 'signin');
+    }
+  }
+
+  Future<void> kakaoLogin(context) async {
     // 카카오 로그인 구현 예제
     // 카카오톡 실행 가능 여부 확인
     // 카카오톡 실행이 가능하면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
     if (await isKakaoTalkInstalled()) {
       try {
-        dynamic a = await UserApi.instance.loginWithKakaoTalk();
-        print('------------------------------------------------------------');
-        print(a);
+        await UserApi.instance.loginWithKakaoTalk();
         print('카카오톡으로 로그인 성공');
-
-        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        Future<OAuthToken?> oAuthToken = DefaultTokenManager().getToken();
-        oAuthToken.then((value) => print(value));
-        // access token
+        await goNext(context);
       } catch (error) {
         print('카카오톡으로 로그인 실패 $error');
 
@@ -77,6 +72,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
         try {
           await UserApi.instance.loginWithKakaoAccount();
+          await goNext(context);
           print('카카오계정으로 로그인 성공');
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
@@ -85,6 +81,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     } else {
       try {
         await UserApi.instance.loginWithKakaoAccount();
+        await goNext(context);
         print('카카오계정으로 로그인 성공');
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
@@ -95,7 +92,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
+    accessTokenFuture = getAccessToken();
     tokenCheck(context);
+  }
+
+  void refreshAccessToken() {
+    setState(() {
+      accessTokenFuture = getAccessToken();
+    });
   }
 
   @override
@@ -108,10 +112,24 @@ class _LoadingScreenState extends State<LoadingScreen> {
           children: [
             const Text("지금 로딩중입니다"),
             ElevatedButton(
-                onPressed: () async {
-                  await kakaoLogin();
-                },
-                child: const Text('Kakao Login'))
+              onPressed: () async {
+                await kakaoLogin(context);
+              },
+              child: const Text('Kakao Login'),
+            ),
+            FutureBuilder<String>(
+              future: accessTokenFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasData) {
+                  return Text('Access Token: ${snapshot.data}');
+                } else {
+                  return const Text('No access token found');
+                }
+              },
+            ),
           ],
         ),
       ),
