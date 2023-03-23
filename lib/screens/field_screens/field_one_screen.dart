@@ -26,28 +26,54 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             childAspectRatio: 1,
           ),
           children: widget.field.onions.map((onion) {
-            return Wrap(
-              direction: Axis.horizontal,
-              alignment: WrapAlignment.center,
-              children: [
-                Text(
-                  onion.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                // 밭의 양파를 누르면, 양파 1개 화면으로 넘어감
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OnionOneScreen(onion: onion),
+            // 밭 하나하나가 drag target 이다 (양파 이동 시)
+            return DragTarget<int>(
+              onWillAccept: (data) {
+                return true;
+              },
+              onAccept: (data) async {
+                // 밭 위치 조정 API 보내기 (data 는 onion Id)
+                int targetField = widget.field.id;
+              },
+              builder: (
+                BuildContext context,
+                List<dynamic> accepted,
+                List<dynamic> rejected,
+              ) {
+                return Wrap(
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    Text(
+                      onion.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    // 꾹 누르면 drag and drop 가능하게
+                    LongPressDraggable<int>(
+                      data: onion.id,
+                      // 드래그 시작하면, 모달을 내리자. 그런데 feedback 도 사라진다. 이후 고민
+                      onDragStarted: () {
+                        Navigator.pop(context);
+                      },
+                      feedback: const Text('양파 드래그 앤 드롭'),
+                      // 밭의 양파를 누르면, 양파 1개 화면으로 넘어감
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OnionOneScreen(onion: onion),
+                            ),
+                          );
+                        },
+                        child: Image.asset('assets/images/onion_image.png'),
                       ),
-                    );
-                  },
-                  child: Image.asset('assets/images/onion_image.png'),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             );
           }).toList(),
         ),

@@ -1,11 +1,13 @@
 // 양파 모델. 이렇게 만들어 쓰는 게 맞나?
 class CustomOnion {
+  final int id;
   final String name;
   final String sender;
   final List<CustomMessage> messages;
 
   CustomOnion.fromJson(Map<String, dynamic> json)
-      : name = json['onion_name'],
+      : id = json['id'],
+        name = json['onion_name'],
         sender = json['sender'],
         messages = (json['messages'] as List)
             .map((messageJson) => CustomMessage.fromJson(messageJson))

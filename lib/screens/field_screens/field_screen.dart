@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:front/screens/field_screens/field_one_screen.dart';
+import 'package:front/widgets/trash_can.dart';
 import '../../models/custom_models.dart';
 import '../../services/field_api_service.dart';
+import './field_widgets/make_fields.dart';
 
 String textInput = '';
 
@@ -51,10 +50,15 @@ class _FieldScreenState extends State<FieldScreen> {
             if (snapshot.hasData) {
               List<CustomField> fieldsData = snapshot.data as List<CustomField>;
               // 밭들을 출력하는 class
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              return Stack(
                 children: [
-                  MakeFields(fields: fieldsData),
+                  const TrashCan(kind: 'field'),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MakeFields(fields: fieldsData),
+                    ],
+                  ),
                 ],
               );
             } else if (snapshot.hasError) {
@@ -78,9 +82,9 @@ class _FieldScreenState extends State<FieldScreen> {
 
 // 모달로 밭 이름 입력받아서 추가 밭 생성 (이후 밭 이름 안겹치게 유효성 검사 하기)
 // 문자 변수
-TextEditingController _textFieldController = TextEditingController();
+TextEditingController textFieldController = TextEditingController();
 
-// 문자 포함하는 모달
+// 문자 포함하는 모달 출력 함수
 Future<void> _displayTextInputDialog(
   BuildContext context,
   Function addOne,
@@ -95,16 +99,16 @@ Future<void> _displayTextInputDialog(
             title: const Text('밭 이름 작성'),
             // 입력 창
             content: TextField(
-              controller: _textFieldController,
+              controller: textFieldController,
               decoration: InputDecoration(
                 hintText: '밭 이름',
                 errorText:
-                    _textFieldController.text.isEmpty ? '값을 입력해 주세요' : null,
+                    textFieldController.text.isEmpty ? '값을 입력해 주세요' : null,
               ),
               // 입력값 있으면 빨간 줄 사라지게
               onChanged: (value) {
                 setState(() {
-                  _textFieldController.text.isEmpty;
+                  textFieldController.text.isEmpty;
                 });
               },
             ),
@@ -120,7 +124,7 @@ Future<void> _displayTextInputDialog(
                 child: const Text('등록'),
                 onPressed: () {
                   // Get the value of the text input
-                  String text = _textFieldController.text;
+                  String text = textFieldController.text;
                   // Do something with the text
                   if (text.isEmpty) {
                     return;
@@ -138,6 +142,7 @@ Future<void> _displayTextInputDialog(
 }
 
 // 밭을 격자무늬로 표시하는 클래스
+/*
 class MakeFields extends StatelessWidget {
   const MakeFields({
     super.key,
@@ -205,8 +210,10 @@ class MakeFields extends StatelessWidget {
     );
   }
 }
+*/
 
 // 밭 1개를 출력하는 클래스
+/*
 class FieldOneScreenHere extends StatefulWidget {
   final CustomField field;
 
@@ -231,7 +238,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
               widget.field.name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            // 픽셀 벗어나는 버그 고치기 위한 wrap
+            // 밭 안의 양파들 출력
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -254,3 +261,4 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
     );
   }
 }
+*/

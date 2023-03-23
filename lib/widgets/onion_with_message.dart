@@ -6,7 +6,7 @@ import './listen_audio_url.dart';
 class OnionWithMessage extends StatefulWidget {
   final CustomOnion onion;
 
-  const OnionWithMessage({super.key, required this.onion});
+  const OnionWithMessage({Key? key, required this.onion}) : super(key: key);
 
   @override
   State<OnionWithMessage> createState() => _OnionWithMessageState();
@@ -25,6 +25,8 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     // audioUrl 에 양파의 메시지 url 할당 (메시지가 있는 경우)
     if (widget.onion.messages.isNotEmpty) {
       audioUrl = widget.onion.messages.elementAt(index).url;
+    } else {
+      audioUrl = '';
     }
   }
 
@@ -41,7 +43,7 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
       setState(
         () {
           index -= 1;
-          audioUrl = widget.onion.messages.elementAt(0).url;
+          audioUrl = widget.onion.messages.elementAt(index).url;
           isPlayed.value = true;
         },
       );
