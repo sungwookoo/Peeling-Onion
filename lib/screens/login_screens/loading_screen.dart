@@ -25,8 +25,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
         Future<OAuthToken?> accessToken = DefaultTokenManager().getToken();
 
-        userId = UserApiService.checkSignin(accessToken);
+        print("accessToken입니다.");
+        accessToken.then((value) => print(value));
+        accessToken.then((value) => print(UserApiService.checkSignin(value)));
+        final userId = await accessToken
+            .then((value) => UserApiService.checkSignin(value));
         print(userId);
+        print('aaaaaaaaaaa');
+
+        // userId = UserApiService.checkSignin(accessToken);
+        // print(userId);
 
         // Navigator.pushNamed(context, '/home');
       } catch (error) {

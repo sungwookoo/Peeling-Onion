@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class CustomUser {
-  final String userId;
+  final int? userId;
 
   CustomUser.fromJson(Map<String, dynamic> json) : userId = json['userId'];
 }
@@ -13,7 +14,7 @@ class UserApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 회원가입 완료 여부 확인
-  static Future<CustomUser> checkSignin(accessToken) async {
+  static Future<int?> checkSignin(OAuthToken? accessToken) async {
     final response = await http.get(
       Uri.parse('$baseUrl/user'),
       headers: <String, String>{
@@ -22,8 +23,10 @@ class UserApiService {
     );
 
     if (response.statusCode == 200) {
-      CustomUser userId = jsonDecode(response.body);
-      return userId;
+      print(response.body);
+      CustomUser user = CustomUser.fromJson(jsonDecode(response.body));
+      print(user.userId);
+      return user.userId;
     } else if (response.statusCode == 204) {
       throw Exception('User Not Found');
     } else {
