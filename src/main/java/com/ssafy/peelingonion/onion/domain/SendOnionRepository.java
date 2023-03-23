@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface SendOnionRepository extends JpaRepository<SendOnion, Long> {
     List<SendOnion> findALlByUserIdAndIsSended(Long userId, Boolean isSended);
+    SendOnion findByOnion(Onion onion);
 }

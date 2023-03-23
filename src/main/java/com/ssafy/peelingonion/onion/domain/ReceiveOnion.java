@@ -37,10 +37,16 @@ public class ReceiveOnion {
 	private Long fromUserId;
 
 	@Column(name = "is_received")
-	private Boolean isReceived;
+	private Boolean isReceived;		// 상대방이 보내면 True가 되어 택배함에서 확인할 수 있음
 
 	@Column(name = "is_bookmarked")
 	private Boolean isBookmarked;
+
+	@Column(name = "receiver_number", length = 11)
+	private String receiverNumber;	// 양파받은 사람 번호
+
+	@Column(name = "is_checked")
+	private Boolean isChecked;	// 택배함에서 읽으면 True값
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)

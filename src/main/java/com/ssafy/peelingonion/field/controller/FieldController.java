@@ -112,7 +112,7 @@ public class FieldController {
                         .id(fieldOnion.getId())
                         .onionName(fieldOnion.getName())
                         .imgSrc(fieldOnion.getImgSrc())
-                        .recieveDate(fieldOnion.getSendDate())
+                        .receiveDate(fieldOnion.getSendDate())
                         .sender(userName)       //***이부분도 바껴야합니다.
                         .isSingle(fieldOnion.getIsSingle())
                         .build();
