@@ -116,7 +116,7 @@ public class UserController {
 		if (authorizeService.isAuthorization(userId)) {
 			List<SearchUserResponseDto> list = userService.searchData(keyword)
 				.stream()
-				.map(e -> SearchUserResponseDto.from(e))
+				.map(SearchUserResponseDto::from)
 				.collect(Collectors.toList());
 
 			return ResponseEntity.ok(list);
@@ -125,6 +125,17 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
+	@GetMapping("/{userId}/nickname")
+	public ResponseEntity<String> getNickname(@PathVariable Long userId) {
+		try {
+			User user = userService.getUserInfomation(userId);
+			return ResponseEntity.ok(user.getNickname());
+		} catch (UserNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
+
+	// Gateway Test
 	@GetMapping("/gateway")
 	public ResponseEntity<String> test() {
 		return ResponseEntity.ok("main Branch");
