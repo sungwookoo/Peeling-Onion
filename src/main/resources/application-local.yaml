@@ -21,7 +21,7 @@ spring:
 
 logging:
   level:
-    root: trace
+    root: info
 
 settings:
   cross-origin: "*"
