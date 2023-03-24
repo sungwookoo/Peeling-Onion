@@ -3,6 +3,7 @@ package com.ssafy.peelingonion.field.controller;
 import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.field.controller.dto.*;
 import com.ssafy.peelingonion.field.domain.Field;
+import com.ssafy.peelingonion.field.domain.Storage;
 import com.ssafy.peelingonion.field.service.FieldService;
 import com.ssafy.peelingonion.field.service.exceptions.*;
 import com.ssafy.peelingonion.onion.domain.Onion;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController

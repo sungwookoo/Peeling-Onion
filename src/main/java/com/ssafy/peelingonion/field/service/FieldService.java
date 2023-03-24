@@ -104,6 +104,10 @@ public class FieldService {
 		}
 	}
 
+	public List<Storage> findStorages(Long fieldId){
+		return storageRepository.findAllByFieldId(fieldId);
+	}
+
 	/**
 	 * fieldId에 속한 모든 Onion 객체를 반환
 	 * @param fieldId
