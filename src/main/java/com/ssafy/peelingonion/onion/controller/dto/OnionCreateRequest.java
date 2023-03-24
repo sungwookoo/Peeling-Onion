@@ -13,11 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OnionCreateRequest {
-    public String onionName;
-    public String imgSrc;
-    public String reciverNumber;
-    public Instant growDueDate;
-    public Boolean isSingle;
+    public String name;
+    public String img_src;
+    public String receiver_number;
+    public Instant grow_due_date;
+    public Boolean is_single;
     // 모아보내기인 경우 같이 보낼 사람
-    public List<Long> userIdList;
+    public List<Long> user_id_list;
 }

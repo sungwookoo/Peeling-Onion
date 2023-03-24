@@ -15,12 +15,12 @@ import java.util.List;
 public class OnionDetailResponse {
     public Long id;
     public String name;
-    public String imgSrc;
+    public String img_src;
     public String sender;
-    public Instant createdAt;
-    public Instant sendDate;
-    public Instant growDueDate;
-    public Boolean isSingle;
-    public Boolean isBookmarked;
-    public List<Long> messageIdList;
+    public Instant created_at;
+    public Instant send_date;
+    public Instant grow_due_date;
+    public Boolean is_single;
+    public Boolean is_bookmarked;
+    public List<Long> message_id_list;
 }

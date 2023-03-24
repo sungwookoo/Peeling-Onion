@@ -14,18 +14,17 @@ import com.ssafy.peelingonion.field.domain.Field;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-// Field하나의 정보, 이 안에 양파정보(개요)도 담겨져있다.
 public class FieldReadResponse {
 	public Long id;
 	public String name;
-	public Instant createdAt;
-	public List<OnionOutlineDto> onionInfos;
+	public Instant created_at;
+	public List<OnionOutlineDto> onion_infos;
 
 	public static FieldReadResponse from(Field field) {
 		return FieldReadResponse.builder()
 			.id(field.getId())
 			.name(field.getName())
-			.createdAt((field.getCreatedAt()))
+			.created_at((field.getCreatedAt()))
 			.build();
 	}
 }

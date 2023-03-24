@@ -81,14 +81,14 @@ public class OnionController {
                     OnionDetailResponse onionDetailResponse = OnionDetailResponse.builder()
                             .id(onion.getId())
                             .name(onion.getName())
-                            .imgSrc(onion.getImgSrc())
+                            .img_src(onion.getImgSrc())
                             .sender(userName)
-                            .createdAt(onion.getCreatedAt())
-                            .sendDate(onion.getSendDate())
-                            .growDueDate(onion.getGrowDueDate())
-                            .isSingle(onion.getIsSingle())
-                            .isBookmarked(receiveOnion.getIsBookmarked())
-                            .messageIdList(messageIdList)
+                            .created_at(onion.getCreatedAt())
+                            .send_date(onion.getSendDate())
+                            .grow_due_date(onion.getGrowDueDate())
+                            .is_single(onion.getIsSingle())
+                            .is_bookmarked(receiveOnion.getIsBookmarked())
+                            .message_id_list(messageIdList)
                             .build();
                     return ResponseEntity.ok(onionDetailResponse);
                 }
@@ -170,12 +170,12 @@ public class OnionController {
                         SendOnionResponse sendOnionResponse = SendOnionResponse.builder()
                                 .id(sendOnion.getOnion().getId())
                                 .name(sendOnion.getOnion().getName())
-                                .imgSrc(sendOnion.getOnion().getImgSrc())
-                                .createdAt(sendOnion.getOnion().getCreatedAt())
-                                .lastestModified(sendOnion.getOnion().getLatestModify())
-                                .growDueDate(sendOnion.getOnion().getGrowDueDate())
-                                .isSingle(sendOnion.getOnion().getIsSingle())
-                                .receiverNumber(sendOnion.getReceiverNumber())
+                                .img_src(sendOnion.getOnion().getImgSrc())
+                                .created_at(sendOnion.getOnion().getCreatedAt())
+                                .lastest_modified(sendOnion.getOnion().getLatestModify())
+                                .grow_due_date(sendOnion.getOnion().getGrowDueDate())
+                                .is_single(sendOnion.getOnion().getIsSingle())
+                                .receiver_number(sendOnion.getReceiverNumber())
                                 .build();
                         sendOnionResponses.add(sendOnionResponse);
                     }
@@ -256,11 +256,11 @@ public class OnionController {
                     ReceiveOnionResponse receiveOnionResponse = ReceiveOnionResponse.builder()
                             .id(receiveOnion.getOnion().getId())
                             .name(receiveOnion.getOnion().getImgSrc())
-                            .receiveDate(receiveOnion.getOnion().getSendDate())
+                            .receive_date(receiveOnion.getOnion().getSendDate())
                             .sender(userName)
-                            .isSingle(receiveOnion.getOnion().getIsSingle())
-                            .createdAt(receiveOnion.getOnion().getCreatedAt())
-                            .growDueDate(receiveOnion.getOnion().getGrowDueDate())
+                            .is_single(receiveOnion.getOnion().getIsSingle())
+                            .created_at(receiveOnion.getOnion().getCreatedAt())
+                            .grow_due_date(receiveOnion.getOnion().getGrowDueDate())
                             .build();
                     receiveOnionResponses.add(receiveOnionResponse);
                 }
@@ -292,10 +292,10 @@ public class OnionController {
                 MessageDetailResponse messageDetailResponse = MessageDetailResponse.builder()
                         .id(messageId)
                         .sender(userName)
-                        .createdAt(message.getCreatedAt())
-                        .posRate(message.getPosRate())
-                        .negRate(message.getNegRate())
-                        .fileSrc(message.getRecord().getFileSrc())
+                        .created_at(message.getCreatedAt())
+                        .pos_rate(message.getPosRate())
+                        .neg_rate(message.getNegRate())
+                        .file_src(message.getRecord().getFileSrc())
                         .build();
                 return ResponseEntity.ok(messageDetailResponse);
             } catch (Exception e) {

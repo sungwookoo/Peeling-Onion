@@ -50,22 +50,22 @@ public class OnionService {
 
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
         Onion onion = Onion.builder()
-                .name(onionCreateRequest.getOnionName())
-                .imgSrc(onionCreateRequest.getImgSrc())
+                .name(onionCreateRequest.getName())
+                .imgSrc(onionCreateRequest.getImg_src())
                 .userId(userId)
                 .createdAt(Instant.now())
                 .latestModify(Instant.now())
-                .growDueDate(onionCreateRequest.getGrowDueDate())
+                .growDueDate(onionCreateRequest.getGrow_due_date())
                 .isDisabled(Boolean.FALSE)
-                .isSingle(onionCreateRequest.getIsSingle())
+                .isSingle(onionCreateRequest.getIs_single())
                 .build();
         Onion newOnion = onionRepository.save(onion);
 
-        List<Long> senderIds = onionCreateRequest.getUserIdList();
+        List<Long> senderIds = onionCreateRequest.getUser_id_list();
         for(Long senderId : senderIds){
             SendOnion sendOnion = SendOnion.builder()
                     .userId(senderId)
-                    .receiverNumber(onionCreateRequest.getReciverNumber())
+                    .receiverNumber(onionCreateRequest.getReceiver_number())
                     .isSended(Boolean.FALSE)
                     .onion(newOnion)
                     .build();
@@ -77,7 +77,7 @@ public class OnionService {
                 .fromUserId(userId)
                 .isReceived(Boolean.FALSE)
                 .isBookmarked(Boolean.FALSE)
-                .receiverNumber(onionCreateRequest.getReciverNumber())
+                .receiverNumber(onionCreateRequest.getReceiver_number())
                 .isChecked(Boolean.FALSE)
                 .build());
     }
@@ -91,7 +91,7 @@ public class OnionService {
         // 녹음 생성
         Record record = recordRepository.save(Record.builder()
                 .createdAt(Instant.now())
-                .fileSrc(messageCreateRequest.getFileSrc())
+                .fileSrc(messageCreateRequest.getFile_src())
                 .build());
         // 나의 녹음
         myRecordRepository.save(MyRecord.builder()
@@ -99,18 +99,18 @@ public class OnionService {
                 .userId(userId)
                 .build());
         // 양파 기록 갱신
-        Onion onion = onionRepository.findById(messageCreateRequest.getOnionId()).get();
+        Onion onion = onionRepository.findById(messageCreateRequest.getId()).get();
         onion.setLatestModify(Instant.now());
         onionRepository.save(onion);
         // 메세지 저장
         messageRepository.save(Message.builder()
                 .userId(userId)
-                .onion(onionRepository.findById(messageCreateRequest.getOnionId()).get())
+                .onion(onionRepository.findById(messageCreateRequest.getId()).get())
                 .record(record)
                 .createdAt(Instant.now())
                 .content(messageCreateRequest.getContent())
-                .posRate(messageCreateRequest.getPosRate())
-                .negRate(messageCreateRequest.getNegRate())
+                .posRate(messageCreateRequest.getPos_rate())
+                .negRate(messageCreateRequest.getNeg_rate())
                 .build());
     }
 
