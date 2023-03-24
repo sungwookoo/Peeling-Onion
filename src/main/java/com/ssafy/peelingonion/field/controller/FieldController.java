@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/onion/field")
+@RequestMapping("/field")
 public class FieldController {
 
     private final FieldService fieldService;

@@ -132,14 +132,6 @@ public class OnionService {
         }
     }
 
-    public void deleteGrowingOnion(Long onionId){
-        Onion onion = onionRepository.findById(onionId).get();
-        if(!onion.getIsDisabled()) {
-            onion.setIsDisabled(Boolean.TRUE);
-            onionRepository.save(onion);
-        }
-    }
-
     public List<ReceiveOnion> findReceiveOnions(Long userId){
         return receiveOnionRepository.findALlByUserIdAndIsReceivedAndIsChecked(userId, Boolean.TRUE, Boolean.FALSE);
     }
