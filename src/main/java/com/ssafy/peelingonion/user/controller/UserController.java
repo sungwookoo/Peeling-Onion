@@ -2,7 +2,6 @@ package com.ssafy.peelingonion.user.controller;
 
 import static com.ssafy.peelingonion.common.ConstValues.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
