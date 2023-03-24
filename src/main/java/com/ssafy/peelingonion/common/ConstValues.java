@@ -1,16 +1,26 @@
 package com.ssafy.peelingonion.common;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Component
 public class ConstValues {
-	public static final String AUTH_SERVER = "https://test.auth.ssafy.shop";
+	public static String AUTH_SERVER;
 	public static final WebClient AUTH_SERVER_CLIENT = WebClient.builder().baseUrl(AUTH_SERVER).build();
-	public static final String USER_SERVER = "https://test.user.ssafy.shop";
+	public static String USER_SERVER;
 	public static final WebClient USER_SERVER_CLIENT = WebClient.builder().baseUrl(USER_SERVER).build();
 	public static final String AUTH_URI = "/auth/validity/kakao";
 	public static final Long UNAUTHORIZED_USER = -2L;
 	public static final Long NON_MEMBER = -1L;
 
-	private ConstValues() {
+	@Value(value = "${authServer}")
+	public void setAuthServer(String authServer) {
+		this.AUTH_SERVER = authServer;
+	}
+
+	@Value(value = "${userServer}")
+	public void setUserServer(String userServer) {
+		this.USER_SERVER = userServer;
 	}
 }
