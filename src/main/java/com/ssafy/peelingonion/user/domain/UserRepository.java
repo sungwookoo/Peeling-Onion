@@ -10,8 +10,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findById(Long id);
 
-	Optional<User> findByMobileNumber(String mobileNumber);
-
-	List<User> findTop10ByNicknameLike(String nickname);
+	List<User> findTop10ByNicknameContainsAndNicknameNotLike(String keyword, String notInclude);
 
 }
