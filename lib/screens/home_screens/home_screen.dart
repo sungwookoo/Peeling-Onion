@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
-import 'package:front/screens/home_onion_create_screen.dart';
 import 'package:front/services/onion_api_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     onions = OnionApiService.getGrowingOnionByUserId(widget.id);
   }
@@ -50,8 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const OnionCreate()));
+          _displayOnionCreateModal(context);
         },
       ),
       // bottomNavigationBar: const NavigateBar(),
@@ -64,6 +62,8 @@ class TrashCan extends StatefulWidget {
   const TrashCan({
     super.key,
   });
+
+// 양파 생성 모달 띄우는 함수
 
   @override
   State<TrashCan> createState() => _TrashCanState();
@@ -241,4 +241,14 @@ class OneOnion extends StatelessWidget {
       ],
     );
   }
+}
+
+Future<void> _displayOnionCreateModal(
+  BuildContext context,
+) async {
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return const OnionCreateDialog();
+      });
 }
