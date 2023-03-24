@@ -3,12 +3,12 @@ package com.ssafy.peelingonion.field.controller;
 import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.field.controller.dto.*;
 import com.ssafy.peelingonion.field.domain.Field;
-import com.ssafy.peelingonion.field.domain.Storage;
 import com.ssafy.peelingonion.field.service.FieldService;
 import com.ssafy.peelingonion.field.service.exceptions.*;
 import com.ssafy.peelingonion.onion.domain.Onion;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("v1/onion/field")
+@RequestMapping("/onion/field")
 public class FieldController {
 
     private final FieldService fieldService;
@@ -187,4 +188,5 @@ public class FieldController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
+
 }
