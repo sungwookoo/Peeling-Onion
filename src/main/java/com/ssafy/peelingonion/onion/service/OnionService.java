@@ -1,5 +1,9 @@
 package com.ssafy.peelingonion.onion.service;
 
+import com.ssafy.peelingonion.field.domain.Field;
+import com.ssafy.peelingonion.field.domain.FieldRepository;
+import com.ssafy.peelingonion.field.domain.Storage;
+import com.ssafy.peelingonion.field.domain.StorageRepository;
 import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
 import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
 import com.ssafy.peelingonion.onion.domain.*;
@@ -20,18 +24,24 @@ public class OnionService {
     private final MyRecordRepository myRecordRepository;
     private final MessageRepository messageRepository;
     private final ReceiveOnionRepository receiveOnionRepository;
+    private final FieldRepository fieldRepository;
+    private final StorageRepository storageRepository;
 
     public OnionService(OnionRepository onionRepository, SendOnionRepository sendOnionRepository,
                         RecordRepository recordRepository,
                         MyRecordRepository myRecordRepository,
                         MessageRepository messageRepository,
-                        ReceiveOnionRepository receiveOnionRepository) {
+                        ReceiveOnionRepository receiveOnionRepository,
+                        FieldRepository fieldRepository,
+                        StorageRepository storageRepository) {
         this.onionRepository = onionRepository;
         this.sendOnionRepository = sendOnionRepository;
         this.recordRepository = recordRepository;
         this.myRecordRepository = myRecordRepository;
         this.messageRepository = messageRepository;
         this.receiveOnionRepository = receiveOnionRepository;
+        this.fieldRepository = fieldRepository;
+        this.storageRepository = storageRepository;
     }
 
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
@@ -73,7 +83,7 @@ public class OnionService {
     }
 
     public void recordMessage(MessageCreateRequest messageCreateRequest, Long userId) {
-        // 나의 녹음, 녹음, 메시지 저장해야한다.***점심 후에 하기
+        // 나의 녹음, 녹음, 메시지 저장해야한다.
         // 녹음 생성
         Record record = recordRepository.save(Record.builder()
                 .createdAt(Instant.now())
@@ -128,5 +138,40 @@ public class OnionService {
 
     public List<ReceiveOnion> findReceiveOnions(Long userId){
         return receiveOnionRepository.findALlByUserIdAndIsReceivedAndIsChecked(userId, Boolean.TRUE, Boolean.FALSE);
+    }
+
+    public Onion findOnionById(Long onionId){
+        return onionRepository.findById(onionId).get();
+    }
+
+    public ReceiveOnion findReceiveOnionByOnionId(Long onionId) {
+        Onion onion = onionRepository.findById(onionId).get();
+        ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
+        receiveOnion.setIsChecked(Boolean.TRUE);
+        return receiveOnionRepository.save(receiveOnion);
+    }
+
+    public void bookmarkOnion(Long onionId) {
+        Onion onion = onionRepository.findById(onionId).get();
+        ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
+        if(receiveOnion.getIsBookmarked()) {
+            receiveOnion.setIsBookmarked(Boolean.FALSE);
+        } else {
+            receiveOnion.setIsBookmarked(Boolean.TRUE);
+        }
+        receiveOnionRepository.save(receiveOnion);
+    }
+
+    public void deleteOnion(Long onionId) {
+        Onion onion = onionRepository.findById(onionId).get();
+        onion.setIsDisabled(Boolean.TRUE);
+        onionRepository.save(onion);
+    }
+
+    public void transferOnion(Long fromFId, Long toFId, Long onionId) {
+        Storage storage = storageRepository.findByFieldIdAndOnionId(fromFId, onionId).get();
+        Field toField = fieldRepository.findById(toFId).get();
+        storage.setField(toField);
+        storageRepository.save(storage);
     }
 }

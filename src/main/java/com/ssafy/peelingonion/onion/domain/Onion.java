@@ -78,5 +78,4 @@ public class Onion {
 	@ToString.Exclude
 	@Builder.Default
 	private Set<SendOnion> sendOnions = new LinkedHashSet<>();
-
 }

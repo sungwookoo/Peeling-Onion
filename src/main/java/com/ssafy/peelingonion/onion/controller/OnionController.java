@@ -1,15 +1,15 @@
 package com.ssafy.peelingonion.onion.controller;
 
 import com.ssafy.peelingonion.common.service.AuthorizeService;
-import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
-import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
-import com.ssafy.peelingonion.onion.controller.dto.ReceiveOnionResponse;
-import com.ssafy.peelingonion.onion.controller.dto.SendOnionResponse;
+import com.ssafy.peelingonion.onion.controller.dto.*;
+import com.ssafy.peelingonion.onion.domain.Message;
+import com.ssafy.peelingonion.onion.domain.Onion;
 import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
 import com.ssafy.peelingonion.onion.domain.SendOnion;
 import com.ssafy.peelingonion.onion.service.OnionService;
 import com.ssafy.peelingonion.onion.service.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -202,5 +203,126 @@ public class OnionController {
         }
     }
 
-//    @GetMapping("/delivery/{onionId}")
+    /**
+     * 택배함 화면 or 밭에서 양파 세부사항 읽기(아이디까지 받아옴)
+     * @param token
+     * @param onionId
+     * @return 양파의 정보들과 안에 들어있는 메시지 아이디(-> 메세지 읽을 때 따로)
+     */
+//    @GetMapping("/{onionId}")
+//    public ResponseEntity<OnionDetailResponse> readOnionDetail(
+//            @RequestHeader("Authorization") String token,
+//            @PathVariable Long onionId) {
+//        final Long userId = authorizeService.getAuthorization(token);
+//        if (authorizeService.isAuthorization(userId)){
+//            try {
+//                // onionId로 접근
+//                Onion onion = onionService.findOnionById(onionId);
+//                if(onion.getIsDisabled() != Boolean.TRUE) {
+//                    ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(onionId);
+//                    List<Long> messageIdList = new ArrayList<>();
+//                    Set<Message> messages = onion.getMessages();
+//
+//                    for(Message message : messages) {
+//                        messageIdList.add(message.getId());
+//                    }
+//                    OnionDetailResponse onionDetailResponse = OnionDetailResponse.builder()
+//                            .id(onion.getId())
+//                            .name(onion.getName())
+//                            .imgSrc(onion.getImgSrc())
+//                            .sender()
+//                            .createdAt(onion.getCreatedAt())
+//                            .sendDate(onion.getSendDate())
+//                            .growDueDate(onion.getGrowDueDate())
+//                            .isSingle(onion.getIsSingle())
+//                            .isBookmarked(receiveOnion.getIsBookmarked())
+//                            .messageIdList(messageIdList)
+//                            .build();
+//                    // 내가 받은 양파에서 즐겨찾기 인지 여부를 찾는다.
+//                }
+//            } catch {
+//
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+//        }
+//    }
+
+    /**
+     * 양파를 까면서 메세지를 확인하는 API
+     * @param token
+     * @return
+     */
+//    @GetMapping("/{onionId}/{messageId}")
+//    public ResponseEntity<MessageDetailResponse> readMessageDetail(
+//            @RequestHeader("Authorization") String token,
+//            @PathVariable
+//    ) {
+//
+//    }
+
+    /**
+     * 받은 양파를 삭제하는 API
+     */
+    @DeleteMapping("/{onionId}")
+    public ResponseEntity<Boolean> deleteOnion(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long onionId) {
+        final Long userId = authorizeService.getAuthorization(token);
+        if (authorizeService.isAuthorization(userId)) {
+            try {
+                onionService.deleteOnion(onionId);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    /**
+     * 받은 양파에 즐겨찾기 하는 API(Put)
+     */
+    @PutMapping("/{onionId}/bookmark")
+    public ResponseEntity<Boolean> bookmarkOnion(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long onionId) {
+        final Long userId = authorizeService.getAuthorization(token);
+        if (authorizeService.isAuthorization(userId)) {
+            try {
+                onionService.bookmarkOnion(onionId);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    /**
+     * 받은 양파의 밭을 옮기는 API(storage 수정)
+     */
+    @PutMapping("/{fromFId}/{toFId}/{onionId}/transfer")
+    public ResponseEntity<Boolean> transferOnion(
+            @RequestHeader("Authorization") String token,
+            @PathVariable Long fromFId,
+            @PathVariable Long toFId,
+            @PathVariable Long onionId) {
+        final Long userId = authorizeService.getAuthorization(token);
+        if(authorizeService.isAuthorization(userId)) {
+            try {
+                onionService.transferOnion(fromFId, toFId, onionId);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                log.error(e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
 }
