@@ -14,10 +14,10 @@ import java.time.Instant;
 public class SendOnionResponse {
     public Long id;
     public String name;
-    public String imgSrc;
-    public Instant createdAt;
-    public Instant lastestModified;
-    public Instant growDueDate;
-    public Boolean isSingle;
-    public String receiverNumber;
+    public String img_src;
+    public Instant created_at;
+    public Instant lastest_modified;
+    public Instant grow_due_date;
+    public Boolean is_single;
+    public String receiver_number;
 }

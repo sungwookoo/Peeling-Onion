@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageCreateRequest {
-    public Long onionId;
+    public Long id;
     public String content;
-    public Double posRate;
-    public Double negRate;
-    public String fileSrc; // 녹음 S3주소
+    public Double pos_rate;
+    public Double neg_rate;
+    public String file_src;
 }

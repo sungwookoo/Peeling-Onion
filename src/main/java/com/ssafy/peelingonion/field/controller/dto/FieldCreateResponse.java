@@ -16,13 +16,13 @@ import com.ssafy.peelingonion.field.domain.Field;
 public class FieldCreateResponse {
 	public Long id;
 	public String name;
-	public Instant createdAt;
+	public Instant created_at;
 
 	public static FieldCreateResponse from(Field field) {
 		return FieldCreateResponse.builder()
 			.id(field.getId())
 			.name(field.getName())
-			.createdAt(field.getCreatedAt())
+			.created_at(field.getCreatedAt())
 			.build();
 	}
 }

@@ -48,7 +48,7 @@ public class FieldController {
                 FieldCreateResponse fieldCreateResponse = FieldCreateResponse.builder()
                         .id(field.getId())
                         .name(field.getName())
-                        .createdAt(field.getCreatedAt())
+                        .created_at(field.getCreatedAt())
                         .build();
                 return ResponseEntity.ok(fieldCreateResponse);
             } catch(FieldNotCreatedException e){
@@ -77,7 +77,7 @@ public class FieldController {
                     FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
                             .id(field.getId())
                             .name(field.getName())
-                            .createdAt(field.getCreatedAt())
+                            .created_at(field.getCreatedAt())
                             .build();
                     fieldReadResponses.add(fieldReadResponse);
                 }
@@ -111,11 +111,11 @@ public class FieldController {
                     String userName = fieldService.getNameByUserId(userId);
                     OnionOutlineDto onionOutlineDto = OnionOutlineDto.builder()
                             .id(fieldOnion.getId())
-                            .onionName(fieldOnion.getName())
-                            .imgSrc(fieldOnion.getImgSrc())
-                            .receiveDate(fieldOnion.getSendDate())
+                            .onion_name(fieldOnion.getName())
+                            .img_src(fieldOnion.getImgSrc())
+                            .receive_date(fieldOnion.getSendDate())
                             .sender(userName)
-                            .isSingle(fieldOnion.getIsSingle())
+                            .is_single(fieldOnion.getIsSingle())
                             .build();
                     onionInfos.add(onionOutlineDto);
                 }
@@ -148,7 +148,7 @@ public class FieldController {
                 FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
                         .id(field.getId())
                         .name(field.getName())
-                        .createdAt((field.getCreatedAt()))
+                        .created_at((field.getCreatedAt()))
                         .build();
                 return ResponseEntity.ok(fieldReadResponse);
             } catch(FieldNotUpdatedException e){

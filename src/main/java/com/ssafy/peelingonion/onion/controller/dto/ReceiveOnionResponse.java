@@ -14,10 +14,10 @@ import java.time.Instant;
 public class ReceiveOnionResponse {
     public Long id;
     public String name;
-    public String imgSrc;
-    public Instant receiveDate;
+    public String img_src;
+    public Instant receive_date;
     public String sender;
-    public Boolean isSingle;
-    public Instant createdAt;
-    public Instant growDueDate;
+    public Boolean is_single;
+    public Instant created_at;
+    public Instant grow_due_date;
 }

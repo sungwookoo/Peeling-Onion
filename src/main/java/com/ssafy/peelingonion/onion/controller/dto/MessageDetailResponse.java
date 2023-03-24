@@ -14,9 +14,9 @@ import java.time.Instant;
 public class MessageDetailResponse {
     public Long id;
     public String sender;
-    public Instant createdAt;
+    public Instant created_at;
     public String content;
-    public Double posRate;
-    public Double negRate;
-    public String fileSrc;
+    public Double pos_rate;
+    public Double neg_rate;
+    public String file_src;
 }
