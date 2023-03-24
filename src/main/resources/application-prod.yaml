@@ -15,5 +15,5 @@ logging:
 settings:
   cross-origin: "*"
 
-apiPrefix:
-  v1
+authServer: auth.ssafy.shop
+userServer: user.ssafy.shop
