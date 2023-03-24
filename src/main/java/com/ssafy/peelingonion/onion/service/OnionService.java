@@ -174,4 +174,8 @@ public class OnionService {
         storage.setField(toField);
         storageRepository.save(storage);
     }
+
+    public Message findMessageById(Long messageId){
+        return messageRepository.findById(messageId).get();
+    }
 }
