@@ -28,7 +28,6 @@ public class AuthService {
 	public Long validateCodeOnKakao(String token) {
 		boolean flag = false;
 
-		log.info("Token :" + token);
 		KakaoDto kakaoDto = KakaoDto.builder().id(-1L).build();
 		try {
 			kakaoDto = client.get()
@@ -40,13 +39,13 @@ public class AuthService {
 				.bodyToMono(KakaoDto.class)
 				.block();
 		} catch (Exception e) {
-			log.info(e.getMessage());
+			log.error(e.getMessage());
 		}
-		log.info("Here :" + kakaoDto.getId().toString());
 		return kakaoDto.getId();
 	}
 
 	public Long findUserId(Long kakaoId) {
+		Long value = userRepository.findIdByKakaoId(kakaoId).orElse(NON_MEMBER);
 		return userRepository.findIdByKakaoId(kakaoId).orElse(NON_MEMBER);
 	}
 }

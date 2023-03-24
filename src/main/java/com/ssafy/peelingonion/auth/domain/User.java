@@ -30,8 +30,8 @@ public class User {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "kakao_id", length = 50)
-	private String kakaoId;
+	@Column(name = "kakao_id")
+	private Long kakaoId;
 
 	@Column(name = "nickname", length = 20)
 	private String nickname;
