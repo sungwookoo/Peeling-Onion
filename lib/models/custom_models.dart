@@ -1,4 +1,5 @@
 // 양파 모델. 이렇게 만들어 쓰는 게 맞나?
+
 class CustomOnion {
   final String name;
   final String sender;
@@ -52,11 +53,4 @@ class CustomField {
         onions = (json['onions'] as List)
             .map((onionJson) => CustomOnion.fromJson(onionJson))
             .toList();
-}
-
-// 유저 모델
-class UserModel {
-  String userId;
-
-  UserModel({required this.userId})
 }

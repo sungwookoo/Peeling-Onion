@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:front/models/custom_models.dart';
 
-class UserProvider extends ChangeNotifier {
-  UserModel? _user;
+// 유저 모델
+class UserIdModel with ChangeNotifier {
+  int? _userId;
 
-  UserModel? get user => _user;
+  int? get userId => _userId;
 
-  void setUser(UserModel user) {
-    _user = user;
+  void setUserId(int? userId) {
+    _userId = userId;
     notifyListeners();
   }
 }

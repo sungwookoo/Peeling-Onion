@@ -21,7 +21,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> goNext(context) async {
     // 가입 되어 있으면 userId를 반환받아서 상태 저장.
     // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
-    final userId = await UserApiService.checkSignin();
+    final userId = await UserApiService.checkSignin(context);
     if (userId != -1) {
       Navigator.pushNamed(context, '/home');
     } else if (userId == -1) {
@@ -37,7 +37,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
         // 가입 되어 있으면 userId를 반환받아서 상태 저장.
         // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
-        await goNext(context);
+        final userId = await UserApiService.checkSignin(context);
+        if (userId != -1) {
+          Navigator.pushNamed(context, '/home');
+        }
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {
           print('토큰 만료 $error');
@@ -124,7 +127,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   return const CircularProgressIndicator();
                 }
                 if (snapshot.hasData) {
-                  return Text('Access Token: ${snapshot.data}');
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: SelectableText(
+                        'Access Token: \n ${snapshot.data}',
+                        style: const TextStyle(fontSize: 32),
+                      ));
                 } else {
                   return const Text('No access token found');
                 }
