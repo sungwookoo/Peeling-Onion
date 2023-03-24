@@ -104,21 +104,17 @@ public class FieldController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)) {
             try {
-                // field id에 해당하는 양파id를 찾고 양파dto를 만들고 이들을 리스트로 넣어서 만든다.
                 List<OnionOutlineDto> onionInfos = new ArrayList<>();
-                // storages를 찾고
                 List<Storage> storages = fieldService.findStorages(fieldId);
-                // storages를 순회하면서 storage의 양파id를 찾고 양파 OnionDto를 만들어서 List에 추가하기
                 for(Storage storage : storages){
                     Onion fieldOnion = storage.getOnion();
-                    // fieldOnion의 userId값을 통해서 userName을 받아와주세요!:_)
-                    String userName = "zzangbae"; //***임의의 발신자값(더미데이터) ** 코드 진행 후 삭제해 주세요 **
+                    String userName = fieldService.getNameByUserId(userId);
                     OnionOutlineDto onionOutlineDto = OnionOutlineDto.builder()
                             .id(fieldOnion.getId())
                             .onionName(fieldOnion.getName())
                             .imgSrc(fieldOnion.getImgSrc())
                             .receiveDate(fieldOnion.getSendDate())
-                            .sender(userName)       //***이부분도 바껴야합니다.
+                            .sender(userName)
                             .isSingle(fieldOnion.getIsSingle())
                             .build();
                     onionInfos.add(onionOutlineDto);

@@ -11,10 +11,14 @@ import com.ssafy.peelingonion.record.domain.MyRecord;
 import com.ssafy.peelingonion.record.domain.MyRecordRepository;
 import com.ssafy.peelingonion.record.domain.Record;
 import com.ssafy.peelingonion.record.domain.RecordRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
+
+import static com.ssafy.peelingonion.common.ConstValues.USER_SERVER_CLIENT;
 
 @Service
 public class OnionService {
@@ -177,5 +181,19 @@ public class OnionService {
 
     public Message findMessageById(Long messageId){
         return messageRepository.findById(messageId).get();
+    }
+
+    public String getNameByUserId(Long userId) {
+        try {
+            return USER_SERVER_CLIENT.get()
+                    .uri("/user/" + userId.toString() + "/nickname")
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+                    .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

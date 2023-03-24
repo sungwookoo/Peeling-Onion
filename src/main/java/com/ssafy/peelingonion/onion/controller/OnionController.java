@@ -181,12 +181,13 @@ public class OnionController {
             try {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(userId);
+                String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions){
                     ReceiveOnionResponse receiveOnionResponse = ReceiveOnionResponse.builder()
                             .id(receiveOnion.getOnion().getId())
                             .name(receiveOnion.getOnion().getImgSrc())
                             .receiveDate(receiveOnion.getOnion().getSendDate())
-//                            .sender("zzangbae_dummydata") ---> MSA 후에 바꿀 부분
+                            .sender(userName)
                             .isSingle(receiveOnion.getOnion().getIsSingle())
                             .createdAt(receiveOnion.getOnion().getCreatedAt())
                             .growDueDate(receiveOnion.getOnion().getGrowDueDate())
@@ -221,7 +222,7 @@ public class OnionController {
                     ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(onionId);
                     List<Long> messageIdList = new ArrayList<>();
                     Set<Message> messages = onion.getMessages();
-
+                    String userName = onionService.getNameByUserId(userId);
                     for(Message message : messages) {
                         messageIdList.add(message.getId());
                     }
@@ -229,7 +230,7 @@ public class OnionController {
                             .id(onion.getId())
                             .name(onion.getName())
                             .imgSrc(onion.getImgSrc())
-//                            .sender()     -> MSA 연결 후에 구현할 것
+                            .sender(userName)
                             .createdAt(onion.getCreatedAt())
                             .sendDate(onion.getSendDate())
                             .growDueDate(onion.getGrowDueDate())
@@ -263,9 +264,10 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)) {
             try {
                 Message message = onionService.findMessageById(messageId);
+                String userName = onionService.getNameByUserId(userId);
                 MessageDetailResponse messageDetailResponse = MessageDetailResponse.builder()
                         .id(messageId)
-//                        .sender()     -> MSA 후에 진행할 부분
+                        .sender(userName)
                         .createdAt(message.getCreatedAt())
                         .posRate(message.getPosRate())
                         .negRate(message.getNegRate())
