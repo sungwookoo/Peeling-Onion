@@ -57,7 +57,7 @@ public class OnionController {
     }
 
     /**
-     * Home화면에서 내가 키우는 모든 양파를 보여준다.
+     * Home화면에서 내가 키우는 모든 양파를 보여주는 API
      * @param token 로그인 유저의 토큰
      * 전송 여부, 삭제 여부를 판단하여 전송하지 않았고, 삭제되지 않는 양파들의 리스트를 보내준다.
      * @return 키우고 있는 양파 리스트
@@ -132,7 +132,7 @@ public class OnionController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)){
             try {
-                onionService.throwOnion(onionId, userId);
+                onionService.throwOnion(onionId);
                 return ResponseEntity.ok().build();
             } catch (ThrowOnionFailException e) {
                 log.error(e.getMessage());

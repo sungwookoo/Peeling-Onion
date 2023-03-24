@@ -110,7 +110,7 @@ public class OnionService {
                 .build());
     }
 
-    public void throwOnion(Long onionId, Long userId){
+    public void throwOnion(Long onionId){
         Onion onion = onionRepository.findById(onionId).get();
         // getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
         if(onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled()){
