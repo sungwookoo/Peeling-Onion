@@ -14,6 +14,7 @@ import com.ssafy.peelingonion.onion.domain.Onion;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OnionOutlineDto {
+
 	public Long id;
 	public String onionName;
 	public String imgSrc;
@@ -47,4 +48,5 @@ public class OnionOutlineDto {
 			.isSingle(onion.getIsSingle())
 			.build();
 	}
+
 }

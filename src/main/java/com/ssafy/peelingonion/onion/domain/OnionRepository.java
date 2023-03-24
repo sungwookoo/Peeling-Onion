@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ssafy.peelingonion.onion.domain.Onion;
 
 public interface OnionRepository extends JpaRepository<Onion, Long> {
-	Optional<Onion> findOnionById(Long onionId);
+	Optional<Onion> findById(Long onionId);
 }
