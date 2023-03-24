@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/package_screens/package_screen.dart';
+import '../screens/postbox_screens/postbox_screen.dart';
 import '../screens/home_screens/home_screen.dart';
 import '../screens/field_screens/field_screen.dart';
 import '../screens/mypage_screens/mypage_screen.dart';

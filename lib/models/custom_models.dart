@@ -1,4 +1,4 @@
-// 양파 모델. 이렇게 만들어 쓰는 게 맞나?
+// 양파 모델.
 class CustomOnion {
   final int id;
   final String name;
@@ -29,6 +29,8 @@ class CustomHomeOnion {
         sendDate = json['send_date'],
         mobileNumber = json['mobile_number'];
 }
+
+// 택배함 화면에서의 양파 모델 ()
 
 // 메시지 모델
 class CustomMessage {
