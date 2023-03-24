@@ -15,9 +15,6 @@ spring:
   profiles:
     active: local
 
-apiPrefix:
-  v1
-
 #springdoc:
 #  default-consumes-media-type: application/json
 #  default-produces-media-type: application/json
