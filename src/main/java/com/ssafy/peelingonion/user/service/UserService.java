@@ -52,6 +52,7 @@ public class UserService {
 
 			return base.getId();
 		} else { // 신규 가입자인 경우
+			user.setId(null); // autoincrement를 활용하기 위해 null 처리
 			User newUser = userRepository.save(user);
 			return newUser.getId();
 		}
