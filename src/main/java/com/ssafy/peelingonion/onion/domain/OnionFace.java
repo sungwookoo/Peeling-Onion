@@ -4,6 +4,8 @@ import java.time.Instant;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,6 +26,7 @@ import lombok.ToString;
 @Table(name = "onion_face")
 public class OnionFace {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "uid", nullable = false)
 	private Long uid;
 
