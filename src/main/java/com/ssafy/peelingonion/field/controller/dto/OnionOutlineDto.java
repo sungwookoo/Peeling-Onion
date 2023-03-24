@@ -18,7 +18,7 @@ public class OnionOutlineDto {
 	public Long id;
 	public String onionName;
 	public String imgSrc;
-	public Instant recieveDate; // 받은 날짜
+	public Instant receiveDate; // 받은 날짜
 	public String sender; // 대표 발신자
 	public Boolean isSingle; // True : 혼자보내는 것, False : 모아보내는 것
 
@@ -31,9 +31,9 @@ public class OnionOutlineDto {
 	public static OnionOutlineDto from(Onion onion) {
 		return OnionOutlineDto.builder()
 			.id(onion.getId())
-			.onionName(onion.getOnionName())
+			.onionName(onion.getName())
 			.imgSrc(onion.getImgSrc())
-			.recieveDate(onion.getSendDate())
+			.receiveDate(onion.getSendDate())
 			.isSingle(onion.getIsSingle())
 			.build();
 	}
@@ -41,12 +41,11 @@ public class OnionOutlineDto {
 	public static OnionOutlineDto from(Onion onion, String name) {
 		return OnionOutlineDto.builder()
 			.id(onion.getId())
-			.onionName(onion.getOnionName())
+			.onionName(onion.getName())
 			.imgSrc(onion.getImgSrc())
-			.recieveDate(onion.getSendDate())
+			.receiveDate(onion.getSendDate())
 			.sender(name)
 			.isSingle(onion.getIsSingle())
 			.build();
 	}
-
 }
