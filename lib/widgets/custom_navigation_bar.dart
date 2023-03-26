@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/alarm_screens/alarm_screen.dart';
 import '../screens/package_screens/package_screen.dart';
 import '../screens/home_screens/home_screen.dart';
 import '../screens/field_screens/field_screen.dart';
@@ -36,7 +37,19 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       // app Bar
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
-        actions: const [ImageIcon(AssetImage('assets/icons/noalarm.png'))],
+        actions: [
+          IconButton(
+            icon: Image.asset('assets/icons/noalarm.png'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AlarmScreen(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       // 화면 내용
       body: Center(
