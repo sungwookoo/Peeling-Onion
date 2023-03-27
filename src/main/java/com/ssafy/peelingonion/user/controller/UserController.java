@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.user.controller.dto.SearchUserResponseDto;
+import com.ssafy.peelingonion.user.controller.dto.UserExitstInfoDto;
 import com.ssafy.peelingonion.user.controller.dto.UserRequestDto;
 import com.ssafy.peelingonion.user.controller.dto.UserResponseDto;
 import com.ssafy.peelingonion.user.domain.User;
@@ -42,10 +43,10 @@ public class UserController {
 	}
 
 	@GetMapping("")
-	public ResponseEntity<Long> isMember(@RequestHeader("Authorization") String token) {
+	public ResponseEntity<UserExitstInfoDto> isMember(@RequestHeader("Authorization") String token) {
 		final Long userId = authorizeService.getAuthorization(token);
 		if (authorizeService.isAuthorization(userId))
-			return ResponseEntity.ok(userId);
+			return ResponseEntity.ok(UserExitstInfoDto.from(userId));
 		else
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
@@ -114,7 +115,7 @@ public class UserController {
 		@PathVariable String keyword) {
 		final Long userId = authorizeService.getAuthorization(token);
 		if (authorizeService.isAuthorization(userId)) {
-			List<SearchUserResponseDto> list = userService.searchData(keyword,userId)
+			List<SearchUserResponseDto> list = userService.searchData(keyword, userId)
 				.stream()
 				.map(SearchUserResponseDto::from)
 				.collect(Collectors.toList());
