@@ -6,8 +6,9 @@ spring:
     password: xmrghkfodzld1dnl!
     hikari:
       validation-timeout: 2000
-      maximum-pool-size: 300
-
+      maximum-pool-size: 200
+  jpa:
+    database: mysql
 logging:
   level:
     root: info
