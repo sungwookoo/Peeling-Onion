@@ -33,7 +33,7 @@ public class ReceiveOnion {
 	@Column(name = "id", nullable = false)
 	private Long id;
 
-	@Column(name = "user_id", nullable = false)
+	@Column(name = "user_id", nullable = true)
 	private Long userId;
 
 	@Column(name = "from_user_id", nullable = false)
