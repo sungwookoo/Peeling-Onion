@@ -21,7 +21,9 @@ public class AuthorizeService {
 	 */
 	public Long getAuthorization(String token) {
 		Long userId = NON_MEMBER;
+
 		try {
+			log.info("URL : "+AUTH_SERVER+AUTH_URI);
 			userId = AUTH_SERVER_CLIENT.get()
 				.uri(AUTH_URI)
 				.header("Authorization", token)

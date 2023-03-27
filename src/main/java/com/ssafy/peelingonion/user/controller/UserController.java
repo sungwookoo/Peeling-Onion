@@ -65,6 +65,7 @@ public class UserController {
 	public ResponseEntity<Long> enrollUserInfomation(@RequestHeader("Authorization") String token,
 		@RequestBody UserRequestDto userRequestDto) {
 		final Long userId = authorizeService.getAuthorization(token);
+		log.info("token :" + token);
 		// 토큰이 유효하지 않음
 		if (userId.equals(UNAUTHORIZED_USER)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
