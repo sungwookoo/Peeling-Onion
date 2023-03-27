@@ -10,9 +10,9 @@ spring:
 
 logging:
   level:
-    root: info
+    root: debug
 
 settings:
   cross-origin: "*"
 
-authServer: test.auth.ssafy.shop
+authServer: https://test.auth.ssafy.shop

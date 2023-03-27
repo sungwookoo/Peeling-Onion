@@ -10,9 +10,9 @@ spring:
 
 logging:
   level:
-    root: trace
+    root: info
 
 settings:
   cross-origin: "*"
 
-authServer: auth.ssafy.shop
+authServer: https://auth.ssafy.shop
