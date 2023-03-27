@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.peelingonion.auth.controller.KakaoDto;
-import com.ssafy.peelingonion.auth.domain.AuthRepository;
+import com.ssafy.peelingonion.auth.domain.User;
 import com.ssafy.peelingonion.auth.domain.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,7 @@ public class AuthService {
 	private final UserRepository userRepository;
 	private final WebClient client;
 
-	public AuthService(AuthRepository authRepository,
-		UserRepository userRepository) {
+	public AuthService(UserRepository userRepository) {
 		this.client = WebClient.builder().baseUrl(KAKAO_URI).build();
 		this.userRepository = userRepository;
 	}
@@ -45,7 +44,6 @@ public class AuthService {
 	}
 
 	public Long findUserId(Long kakaoId) {
-		Long value = userRepository.findIdByKakaoId(kakaoId).orElse(NON_MEMBER);
-		return userRepository.findIdByKakaoId(kakaoId).orElse(NON_MEMBER);
+		return userRepository.findByKakaoId(kakaoId).orElse(User.builder().id(NON_MEMBER).build()).getId();
 	}
 }
