@@ -6,11 +6,11 @@ spring:
     password: xmrghkfodzld1dnl!
     hikari:
       validation-timeout: 2000
-      maximum-pool-size: 999
+      maximum-pool-size: 300
 
 logging:
   level:
-    root: trace
+    root: debug
 
 settings:
   cross-origin: "*"
