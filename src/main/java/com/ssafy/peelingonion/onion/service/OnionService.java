@@ -1,5 +1,6 @@
 package com.ssafy.peelingonion.onion.service;
 
+import com.ssafy.peelingonion.common.StringToInstant;
 import com.ssafy.peelingonion.field.domain.Field;
 import com.ssafy.peelingonion.field.domain.FieldRepository;
 import com.ssafy.peelingonion.field.domain.Storage;
@@ -49,13 +50,14 @@ public class OnionService {
     }
 
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
+        Instant instant = StringToInstant.S2Ins(onionCreateRequest.getGrow_due_date());
         Onion onion = Onion.builder()
                 .name(onionCreateRequest.getName())
                 .imgSrc(onionCreateRequest.getImg_src())
                 .userId(userId)
                 .createdAt(Instant.now())
                 .latestModify(Instant.now())
-                .growDueDate(onionCreateRequest.getGrow_due_date())
+                .growDueDate(instant)
                 .isDisabled(Boolean.FALSE)
                 .isSingle(onionCreateRequest.getIs_single())
                 .build();
