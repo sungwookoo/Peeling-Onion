@@ -43,6 +43,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   kakao_flutter_sdk_user: ^1.4.1
   provider: ^6.0.5
+  firebase_core: ^2.8.0
 
 dev_dependencies:
   flutter_test:
