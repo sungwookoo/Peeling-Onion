@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'dart:convert';
 import 'dart:core'; // RegExp를 사용하기 위해 추가
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -102,7 +103,74 @@ class _SigninScreenState extends State<SigninScreen> {
     // });
 
     // print(result);
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    await auth.verifyPhoneNumber(
+      forceResendingToken: _resendToken, // 인증번호를 잘못 입력시 다시 입력하기 위한 부분
+
+      phoneNumber: phoneNumber, // 입력받은 전화번호
+
+      codeAutoRetrievalTimeout: (String verificationId) {},
+
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
+
+      verificationFailed: (FirebaseAuthException e) {
+        logger.e(e.message);
+        setState(() {
+          _verificationStatus = VerificationStatus.none;
+        });
+      },
+
+      // 핵심적인 부분
+      codeSent: (String verificationId, int? resendToken) async {
+        logger.d("인증");
+        _verificationId = verificationId;
+        _resendToken = resendToken;
+        setState(() {
+          _verificationStatus = VerificationStatus.codeSent;
+        });
+      },
+    );
   }
+
+  // Future<void> _sendAuthCode() async {
+  //   RegExp regExp = RegExp(r'^\d{11}$');
+  //   if (!regExp.hasMatch(_phoneNumberController.text)) {
+  //     setState(() {
+  //       _phoneValidationMessage = '전화번호는 11자리 숫자만 입력 가능합니다.';
+  //     });
+  //     return;
+  //   }
+
+  //   FirebaseAuth auth = FirebaseAuth.instance;
+
+  //   await auth.verifyPhoneNumber(
+  //     phoneNumber: _phoneNumberController.text, // 입력받은 전화번호
+  //     verificationCompleted: (PhoneAuthCredential credential) async {
+  //       // 자동 인증이 완료된 경우
+  //       await auth.signInWithCredential(credential);
+  //     },
+  //     verificationFailed: (FirebaseAuthException e) {
+  //       // 인증 실패
+  //       print(e.message);
+  //     },
+  //     codeSent: (String verificationId, int? resendToken) {
+  //       // 인증 코드가 전송된 경우
+  //       setState(() {
+  //         _verificationId = verificationId;
+  //       });
+  //     },
+  //     codeAutoRetrievalTimeout: (String verificationId) {
+  //       // 타임아웃 처리
+  //       setState(() {
+  //         _verificationId = verificationId;
+  //       });
+  //     },
+  //   );
+  // }
 
   Future<void> _completeSignUp() async {
     AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
