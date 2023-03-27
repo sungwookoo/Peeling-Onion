@@ -47,6 +47,7 @@ class UserApiService {
       return -1;
       throw Exception('User Not Found');
     } else {
+      return 0;
       throw Exception('Failed to request');
     }
   }
