@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://ssafy.shop:3506/biz?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+    url: jdbc:mariadb://ssafy.shop:3506/onion?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
     username: bfit
     password: xmrghkfodzld1dnl!
     hikari:
@@ -10,7 +10,7 @@ spring:
 
 logging:
   level:
-    root: info
+    root: debug
 
 settings:
   cross-origin: "*"

@@ -15,5 +15,5 @@ logging:
 settings:
   cross-origin: "*"
 
-authServer: auth.ssafy.shop
-userServer: user.ssafy.shop
+authServer: https://auth.ssafy.shop
+userServer: https://user.ssafy.shop
