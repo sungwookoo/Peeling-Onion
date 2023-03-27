@@ -154,7 +154,7 @@ public class OnionController {
                 List<SendOnion> sendOnions = onionService.findSendOnions(userId);
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
                 for(SendOnion sendOnion : sendOnions){
-                    if(sendOnion.getOnion().getIsDisabled() != Boolean.FALSE) {
+                    if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
                         sendOnionResponses.add(SendOnionResponse.from(sendOnion));
                     }
                 }
