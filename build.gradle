@@ -50,3 +50,9 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Jenkins
+bootJar {
+	mainClass = 'com.ssafy.peelingonion.PeelingOnionApplication'
+}
+

@@ -9,5 +9,4 @@ public class PeelingOnionApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(PeelingOnionApplication.class, args);
 	}
-
 }
