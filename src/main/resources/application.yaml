@@ -13,7 +13,7 @@ spring:
   main:
     banner-mode: console
   profiles:
-    active: local
+    active: beta
 
 apiPrefix:
   v1
