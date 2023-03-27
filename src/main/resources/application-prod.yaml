@@ -7,6 +7,8 @@ spring:
     hikari:
       validation-timeout: 2000
       maximum-pool-size: 300
+  jpa:
+    database: mysql
 
 logging:
   level:
