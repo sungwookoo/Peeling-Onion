@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,21 +18,23 @@ class RecordScreen extends StatefulWidget {
 class _RecordScreenState extends State<RecordScreen> {
   final FlutterSoundRecorder _myRecorder = FlutterSoundRecorder();
   String _recordFilePath = '';
-  late String sttToken;
-  late Future<String> _sttMessage;
+  String sttToken = '';
+  String _sttMessage = '';
+  late Timer _timer;
+  var _time = 180;
 
   @override
   void initState() {
-    super.initState();
-    sttToken = SttApiService().getSttToken().toString();
-    print(sttToken);
-    print(
-        '------------------------------------------------------------------------------------');
-    _myRecorder.openRecorder();
     initializer();
+    super.initState();
+    _myRecorder.openRecorder();
   }
 
   void initializer() async {
+    final sttresult = await SttApiService().getSttToken();
+    setState(() {
+      sttToken = sttresult;
+    });
     await Permission.microphone.request();
     await Permission.storage.request();
   }
@@ -51,11 +54,14 @@ class _RecordScreenState extends State<RecordScreen> {
 
   Future<void> stopRecording() async {
     await _myRecorder.stopRecorder();
-    sendSttRequest();
+    final sttText = await sendSttRequest();
+    setState(() {
+      _sttMessage = sttText;
+    });
   }
 
   Future<String> sendSttRequest() async {
-    Map<String, dynamic> config = {
+    final config = {
       'diarization': {
         'use_verification': false,
       },
@@ -64,31 +70,73 @@ class _RecordScreenState extends State<RecordScreen> {
     };
 
     var configData = jsonEncode(config);
-    final File file = File(_recordFilePath);
-    final bytes = await file.readAsBytes();
+    final file = File(_recordFilePath);
     final url = Uri.parse('https://openapi.vito.ai/v1/transcribe');
-    final request = http.MultipartRequest('POST', url);
-    request.files.add(http.MultipartFile.fromBytes('file', bytes));
-    request.headers['Authorization'] = 'bearer $sttToken';
-    request.fields['config'] = configData;
+
+    final request = http.MultipartRequest('POST', url)
+      ..headers['Authorization'] = 'bearer $sttToken'
+      ..fields['config'] = configData
+      ..files.add(await http.MultipartFile.fromPath('file', file.path));
 
     final response = await request.send();
 
     if (response.statusCode == 200) {
       final responseString = await response.stream.bytesToString();
       final responseData = jsonDecode(responseString);
-      print(responseData);
+      while (true) {
+        var getResult = await getSTT(responseData['id']);
+        if (getResult['status'] == 'completed') {
+          List t = getResult['results']['utterances'];
+          if (t.isEmpty) {
+            return '어떤 말도 하지 않으셨어요!';
+          }
+          return t[0]['msg'];
+        }
+      }
     } else {
-      print('요청 실패');
-      print(response.statusCode);
+      throw Exception('요청 실패');
     }
+  }
 
-    return '1';
+  Future<Map> getSTT(String sttId) async {
+    final getSttUrl = 'https://openapi.vito.ai/v1/transcribe/$sttId';
+    final response = await http.get(Uri.parse(getSttUrl),
+        headers: {'Authorization': 'bearer $sttToken'});
+
+    if (response.statusCode == 200) {
+      var results = jsonDecode(response.body);
+      return results;
+    } else {
+      throw Exception('stt 불러오기 실패');
+    }
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        _time--;
+      });
+
+      if (_time == 0) {
+        setState(() {
+          _time = 180;
+        });
+        _timer.cancel();
+      }
+    });
+  }
+
+  void _stopTimer() {
+    setState(() {
+      _time = 180;
+    });
+    _timer.cancel();
   }
 
   @override
   void dispose() {
     _myRecorder.closeRecorder();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -115,19 +163,23 @@ class _RecordScreenState extends State<RecordScreen> {
                 ),
                 height: 300,
                 width: 350,
-                child: const Text(''),
+                child: Text(_sttMessage),
               ),
               const Image(
                 image: AssetImage('assets/images/customonion1.png'),
                 height: 300,
               ),
               Text('여기에 저장 : $_recordFilePath'),
+              if (_myRecorder.isRecording)
+                Text('${_time ~/ 60} : ${_time % 60}'),
               ElevatedButton(
                 onPressed: () async {
                   if (_myRecorder.isRecording) {
+                    _stopTimer();
                     await stopRecording();
                     setState(() {});
                   } else {
+                    _startTimer();
                     await startRecording();
                     setState(() {});
                   }
