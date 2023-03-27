@@ -78,19 +78,7 @@ public class OnionController {
                     for(Message message : messages) {
                         messageIdList.add(message.getId());
                     }
-                    OnionDetailResponse onionDetailResponse = OnionDetailResponse.builder()
-                            .id(onion.getId())
-                            .name(onion.getName())
-                            .img_src(onion.getImgSrc())
-                            .sender(userName)
-                            .created_at(onion.getCreatedAt())
-                            .send_date(onion.getSendDate())
-                            .grow_due_date(onion.getGrowDueDate())
-                            .is_single(onion.getIsSingle())
-                            .is_bookmarked(receiveOnion.getIsBookmarked())
-                            .message_id_list(messageIdList)
-                            .build();
-                    return ResponseEntity.ok(onionDetailResponse);
+                    return ResponseEntity.ok(OnionDetailResponse.from(onion, receiveOnion, userName, messageIdList));
                 }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             } catch (Exception e){
@@ -167,17 +155,7 @@ public class OnionController {
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
                 for(SendOnion sendOnion : sendOnions){
                     if(sendOnion.getOnion().getIsDisabled() != Boolean.FALSE) {
-                        SendOnionResponse sendOnionResponse = SendOnionResponse.builder()
-                                .id(sendOnion.getOnion().getId())
-                                .name(sendOnion.getOnion().getName())
-                                .img_src(sendOnion.getOnion().getImgSrc())
-                                .created_at(sendOnion.getOnion().getCreatedAt())
-                                .lastest_modified(sendOnion.getOnion().getLatestModify())
-                                .grow_due_date(sendOnion.getOnion().getGrowDueDate())
-                                .is_single(sendOnion.getOnion().getIsSingle())
-                                .receiver_number(sendOnion.getReceiverNumber())
-                                .build();
-                        sendOnionResponses.add(sendOnionResponse);
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);
