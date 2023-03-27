@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../record_screens/record_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -28,7 +29,13 @@ class LoginScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/home');
+                // Navigator.pushNamed(context, '/home');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RecordScreen(),
+                  ),
+                );
               },
               child: const Text('Login'),
             ),
