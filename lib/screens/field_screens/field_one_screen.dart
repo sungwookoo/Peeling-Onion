@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/screens/postbox_screens/onion_one_screen.dart';
 import '../../models/custom_models.dart';
 
 // 밭 1개를 출력하는 클래스
@@ -35,7 +34,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             crossAxisCount: 4,
             childAspectRatio: 1,
           ),
-          children: widget.field.onions.map((onion) {
+          children: widget.field.onionInfos.map((onion) {
             // 밭 하나하나가 drag target 이다 (양파 이동 시)
             return DragTarget<int>(
               onWillAccept: (data) {
@@ -54,11 +53,11 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                   direction: Axis.horizontal,
                   alignment: WrapAlignment.center,
                   children: [
-                    Text(
-                      onion.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // Text(
+                    //   onion.name,
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
                     // 꾹 누르면 drag and drop 가능하게
                     // 꾹 누를 때 모달이 사라지면 draggable 도 사라짐.
                     // 꾹 누르면 아래에 밭들 이름이 나타나게 해서 이동하도록 수정
@@ -90,9 +89,9 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  OnionOneScreen(onion: onion),
-                            ),
+                                builder: (context) => const Text('hi')
+                                // OnionOneScreen(onion: onion),
+                                ),
                           );
                         },
                         child: Image.asset('assets/images/onion_image.png'),
