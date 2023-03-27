@@ -15,8 +15,8 @@ public class AuthorizeService {
 	 * token 정보가 유효한지 확인한다.
 	 * @param token
 	 * @return
-	 * 정상적인 회원일경우 : USER ID
-	 * 요청이 실패한 경우 : NON_MEMBER (-1)
+	 * 정상적인 회원일경우 : USER ID,
+	 * 요청이 실패한 경우 : NON_MEMBER (-1),
 	 * 요청은 성공하였으나, 회원이 아닌경우 : UNAUTHORIZED_USER (-2)
 	 */
 	public Long getAuthorization(String token) {
