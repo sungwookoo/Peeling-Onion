@@ -72,6 +72,15 @@ class ShowGrowingOnions extends StatefulWidget {
 }
 
 class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
+  late final List<CustomHomeOnion> _onions = widget._onions;
+
+  void _deleteOnion(int index) {
+    setState(() {
+      // Remove the onion from the list
+      _onions.removeAt(index);
+    });
+  }
+
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
@@ -111,8 +120,11 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                         int globalIndex = firstOnionIndex + itemIndex;
                         if (globalIndex < widget._onions.length) {
                           // 각 양파 1개 (텍스트 + 이미지)
-                          return DraggableOnion(
-                              onions: widget._onions, globalIndex: globalIndex);
+                          return OneOnion(
+                            onions: widget._onions,
+                            globalIndex: globalIndex,
+                            onDelete: () => _deleteOnion(globalIndex),
+                          );
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -133,65 +145,73 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   }
 }
 
-// 양파 drag & drop 기능
-class DraggableOnion extends StatelessWidget {
-  const DraggableOnion({
-    super.key,
-    required List<CustomHomeOnion> onions,
-    required this.globalIndex,
-  }) : _onions = onions;
-
-  final List<CustomHomeOnion> _onions;
-  final int globalIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Draggable<int>(
-      // 전달할 데이터 (양파 번호)
-      data: _onions.elementAt(globalIndex).id,
-      // 드래그 할 때 양파 이미지만 투명해지게 이동하기. 이후 예쁘게 수정 예정
-      feedback: SizedBox(
-        width: 100,
-        height: 100,
-        child: Center(
-          child: Transform.scale(
-            scale: 1.2,
-            child: Opacity(
-              opacity: 0.6,
-              child: Image.asset('assets/images/onion_image.png'),
-            ),
-          ),
-        ),
-      ),
-      // 드래그할 때 보일 양파 이미지
-      childWhenDragging: OneOnion(onions: _onions, globalIndex: globalIndex),
-      // 겉으로 보일 양파
-      child: OneOnion(onions: _onions, globalIndex: globalIndex),
-    );
-  }
-}
-
-// 양파 1개
+// 양파 1개 (이후 이곳의 onTap 속성에, 혜빈누나 작업물 붙일 예정)
 class OneOnion extends StatelessWidget {
   const OneOnion({
     super.key,
     required List<CustomHomeOnion> onions,
     required this.globalIndex,
+    required this.onDelete,
   }) : _onions = onions;
 
   final List<CustomHomeOnion> _onions;
   final int globalIndex;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(_onions.elementAt(globalIndex).name),
-        Image.asset('assets/images/onion_image.png'),
-      ],
+    return GestureDetector(
+      onLongPress: () {
+        _showDeleteModal(context, _onions.elementAt(globalIndex), onDelete);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(_onions.elementAt(globalIndex).name),
+          Image.asset('assets/images/onion_image.png'),
+        ],
+      ),
     );
   }
+}
+
+// 양파 delete 모달창 띄우는 함수
+Future<void> _showDeleteModal(
+    BuildContext context, CustomHomeOnion onion, VoidCallback onDelete) async {
+  final RenderBox box = context.findRenderObject() as RenderBox;
+  final Offset position = box.localToGlobal(Offset.zero);
+  final Size size = box.size;
+
+  return showMenu(
+    context: context,
+    position: RelativeRect.fromLTRB(
+      position.dx,
+      position.dy + size.height,
+      position.dx + size.width,
+      position.dy,
+    ),
+    items: [
+      PopupMenuItem(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('Delete Onion'),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                // TODO: Implement the delete functionality
+
+                OnionApiService.deleteOnionById(onion.id);
+                onDelete();
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
 
 Future<void> _displayOnionCreateModal(

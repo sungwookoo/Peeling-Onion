@@ -66,7 +66,7 @@ class OnionApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    if (response.statusCode == 204) {
+    if (response.statusCode == 200) {
       // On success, do something
     } else {
       throw Exception('Failed to delete onion');
