@@ -10,9 +10,8 @@ import java.time.format.DateTimeFormatter;
 public class StringToInstant {
 
     public static Instant S2Ins(String s) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDate date = LocalDate.parse(s, formatter);
-        Instant inst = date.atStartOfDay(ZoneOffset.UTC).toInstant();
-        return inst;
+        return date.atStartOfDay(ZoneOffset.UTC).toInstant();
     }
 }
