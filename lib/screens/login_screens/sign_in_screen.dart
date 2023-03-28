@@ -106,34 +106,34 @@ class _SigninScreenState extends State<SigninScreen> {
 
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    await auth.verifyPhoneNumber(
-      forceResendingToken: _resendToken, // 인증번호를 잘못 입력시 다시 입력하기 위한 부분
+    // await auth.verifyPhoneNumber(
+    //   forceResendingToken: _resendToken, // 인증번호를 잘못 입력시 다시 입력하기 위한 부분
 
-      phoneNumber: phoneNumber, // 입력받은 전화번호
+    //   phoneNumber: phoneNumber, // 입력받은 전화번호
 
-      codeAutoRetrievalTimeout: (String verificationId) {},
+    //   codeAutoRetrievalTimeout: (String verificationId) {},
 
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await auth.signInWithCredential(credential);
-      },
+    //   verificationCompleted: (PhoneAuthCredential credential) async {
+    //     await auth.signInWithCredential(credential);
+    //   },
 
-      verificationFailed: (FirebaseAuthException e) {
-        logger.e(e.message);
-        setState(() {
-          _verificationStatus = VerificationStatus.none;
-        });
-      },
+    //   verificationFailed: (FirebaseAuthException e) {
+    //     logger.e(e.message);
+    //     setState(() {
+    //       _verificationStatus = VerificationStatus.none;
+    //     });
+    //   },
 
-      // 핵심적인 부분
-      codeSent: (String verificationId, int? resendToken) async {
-        logger.d("인증");
-        _verificationId = verificationId;
-        _resendToken = resendToken;
-        setState(() {
-          _verificationStatus = VerificationStatus.codeSent;
-        });
-      },
-    );
+    //   // 핵심적인 부분
+    //   codeSent: (String verificationId, int? resendToken) async {
+    //     logger.d("인증");
+    //     _verificationId = verificationId;
+    //     _resendToken = resendToken;
+    //     setState(() {
+    //       _verificationStatus = VerificationStatus.codeSent;
+    //     });
+    //   },
+    // );
   }
 
   // Future<void> _sendAuthCode() async {

@@ -40,9 +40,14 @@ class _MypageScreenState extends State<MypageScreen> {
     if (response.statusCode == 200) {
       // 성공적으로 회원가입이 완료된 경우
       print(response.body);
-      print('회원탈퇴 완료');
-      await UserApi.instance.logout();
-      print('토큰 삭제 완료');
+      print('회원탈퇴 완료, 카카오 연동 해제 시도');
+      try {
+        await UserApi.instance.unlink();
+        print('연결 끊기 성공, SDK에서 토큰 삭제');
+        Navigator.pushNamed(context, '/');
+      } catch (error) {
+        print('연결 끊기 실패 $error');
+      }
     } else {
       // 회원가입이 실패한 경우
       print('회원탈퇴 실패: ${response.body}');
