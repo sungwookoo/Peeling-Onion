@@ -148,7 +148,7 @@ class DraggableOnion extends StatelessWidget {
   Widget build(BuildContext context) {
     return Draggable<int>(
       // 전달할 데이터 (양파 번호)
-      data: _onions.elementAt(globalIndex).onionId,
+      data: _onions.elementAt(globalIndex).id,
       // 드래그 할 때 양파 이미지만 투명해지게 이동하기. 이후 예쁘게 수정 예정
       feedback: SizedBox(
         width: 100,
@@ -187,7 +187,7 @@ class OneOnion extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(_onions.elementAt(globalIndex).onionName),
+        Text(_onions.elementAt(globalIndex).name),
         Image.asset('assets/images/onion_image.png'),
       ],
     );
