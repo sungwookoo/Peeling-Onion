@@ -51,8 +51,8 @@ public class OnionService {
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
         Onion onion = Onion.from(onionCreateRequest, userId);
         Onion newOnion = onionRepository.save(onion);
-
         List<Long> senderIds = onionCreateRequest.getUser_id_list();
+        senderIds.add(userId);  // 대표발신자가 맨 마지막에 존재.
         for(Long senderId : senderIds){
             sendOnionRepository.save(SendOnion.from(senderId, onionCreateRequest, newOnion));
         }
