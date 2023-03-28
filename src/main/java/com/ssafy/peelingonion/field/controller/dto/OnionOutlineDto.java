@@ -1,5 +1,6 @@
 package com.ssafy.peelingonion.field.controller.dto;
 
+import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,5 +48,17 @@ public class OnionOutlineDto {
 			.sender(name)
 			.is_single(onion.getIsSingle())
 			.build();
+	}
+
+	public static OnionOutlineDto from(ReceiveOnion receiveOnion, String name) {
+		Onion o = receiveOnion.getOnion();
+		return OnionOutlineDto.builder()
+				.id(o.getId())
+				.onion_name(o.getName())
+				.img_src(o.getImgSrc())
+				.receive_date(o.getSendDate())
+				.sender(name)
+				.is_single(o.getIsSingle())
+				.build();
 	}
 }

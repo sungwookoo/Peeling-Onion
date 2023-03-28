@@ -8,6 +8,7 @@ import com.ssafy.peelingonion.field.service.FieldService;
 import com.ssafy.peelingonion.field.service.exceptions.*;
 import com.ssafy.peelingonion.onion.domain.Onion;
 
+import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
