@@ -40,4 +40,10 @@ public class MyRecord {
 	@JoinColumn(name = "record_id")
 	private Record record;
 
+	public static MyRecord from(Record record, Long userId){
+		return MyRecord.builder()
+				.record(record)
+				.userId(userId)
+				.build();
+	}
 }

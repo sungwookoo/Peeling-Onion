@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
 import com.sun.istack.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -56,4 +57,14 @@ public class ReceiveOnion {
 	@JoinColumn(name = "onion_id")
 	private Onion onion;
 
+	public static ReceiveOnion from(Onion onion, Long userId, OnionCreateRequest onionCreateRequest) {
+		return ReceiveOnion.builder()
+				.onion(onion)
+				.fromUserId(userId)
+				.isReceived(Boolean.FALSE)
+				.isBookmarked(Boolean.FALSE)
+				.receiverNumber(onionCreateRequest.getReceiver_number())
+				.isChecked(Boolean.FALSE)
+				.build();
+	}
 }

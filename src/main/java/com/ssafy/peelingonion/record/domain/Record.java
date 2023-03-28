@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
 import com.ssafy.peelingonion.onion.domain.Message;
 
 import lombok.AllArgsConstructor;
@@ -51,4 +52,10 @@ public class Record {
 	@Builder.Default
 	private Set<MyRecord> myRecords = new LinkedHashSet<>();
 
+	public static Record from(MessageCreateRequest messageCreateRequest) {
+		return Record.builder()
+				.createdAt(Instant.now())
+				.fileSrc(messageCreateRequest.getFile_src())
+				.build();
+	}
 }
