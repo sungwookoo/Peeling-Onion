@@ -18,7 +18,7 @@ class _OnionOneScreenState extends State<OnionOneScreen> {
     return Scaffold(
       body: Row(
         children: [
-          OnionWithMessage(onion: widget.onion),
+          OnionWithMessage(onionId: widget.onion.id),
         ],
       ),
     );
