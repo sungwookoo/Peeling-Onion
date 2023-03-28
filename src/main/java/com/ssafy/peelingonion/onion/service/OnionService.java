@@ -49,37 +49,14 @@ public class OnionService {
     }
 
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
-        Onion onion = Onion.builder()
-                .name(onionCreateRequest.getName())
-                .imgSrc(onionCreateRequest.getImg_src())
-                .userId(userId)
-                .createdAt(Instant.now())
-                .latestModify(Instant.now())
-                .growDueDate(onionCreateRequest.getGrow_due_date())
-                .isDisabled(Boolean.FALSE)
-                .isSingle(onionCreateRequest.getIs_single())
-                .build();
+        Onion onion = Onion.from(onionCreateRequest, userId);
         Onion newOnion = onionRepository.save(onion);
 
         List<Long> senderIds = onionCreateRequest.getUser_id_list();
         for(Long senderId : senderIds){
-            SendOnion sendOnion = SendOnion.builder()
-                    .userId(senderId)
-                    .receiverNumber(onionCreateRequest.getReceiver_number())
-                    .isSended(Boolean.FALSE)
-                    .onion(newOnion)
-                    .build();
-            sendOnionRepository.save(sendOnion);
+            sendOnionRepository.save(SendOnion.from(senderId, onionCreateRequest, newOnion));
         }
-        // 양파생성시 받는 상대방에게도 양파를 만든다.
-        receiveOnionRepository.save(ReceiveOnion.builder()
-                .onion(onion)
-                .fromUserId(userId)
-                .isReceived(Boolean.FALSE)
-                .isBookmarked(Boolean.FALSE)
-                .receiverNumber(onionCreateRequest.getReceiver_number())
-                .isChecked(Boolean.FALSE)
-                .build());
+        receiveOnionRepository.save(ReceiveOnion.from(onion, userId, onionCreateRequest));
     }
 
     public List<SendOnion> findSendOnions(Long userId) {
@@ -87,31 +64,16 @@ public class OnionService {
     }
 
     public void recordMessage(MessageCreateRequest messageCreateRequest, Long userId) {
-        // 나의 녹음, 녹음, 메시지 저장해야한다.
-        // 녹음 생성
-        Record record = recordRepository.save(Record.builder()
-                .createdAt(Instant.now())
-                .fileSrc(messageCreateRequest.getFile_src())
-                .build());
-        // 나의 녹음
-        myRecordRepository.save(MyRecord.builder()
-                .record(record)
-                .userId(userId)
-                .build());
-        // 양파 기록 갱신
+        Record record = recordRepository.save(Record.from(messageCreateRequest));
+
+        myRecordRepository.save(MyRecord.from(record, userId));
+
         Onion onion = onionRepository.findById(messageCreateRequest.getId()).get();
         onion.setLatestModify(Instant.now());
         onionRepository.save(onion);
-        // 메세지 저장
-        messageRepository.save(Message.builder()
-                .userId(userId)
-                .onion(onionRepository.findById(messageCreateRequest.getId()).get())
-                .record(record)
-                .createdAt(Instant.now())
-                .content(messageCreateRequest.getContent())
-                .posRate(messageCreateRequest.getPos_rate())
-                .negRate(messageCreateRequest.getNeg_rate())
-                .build());
+
+        Onion oni = onionRepository.findById(messageCreateRequest.getId()).get();
+        messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
     }
 
     public void throwOnion(Long onionId){

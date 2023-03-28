@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
 import com.ssafy.peelingonion.record.domain.Record;
 import com.sun.istack.NotNull;
 
@@ -61,4 +62,15 @@ public class Message {
 	@JoinColumn(name = "onion_id")
 	private Onion onion;
 
+	public static Message from(Long userId, Onion oni, Record record, MessageCreateRequest messageCreateRequest) {
+		return Message.builder()
+				.userId(userId)
+				.onion(oni)
+				.record(record)
+				.createdAt(Instant.now())
+				.content(messageCreateRequest.getContent())
+				.posRate(messageCreateRequest.getPos_rate())
+				.negRate(messageCreateRequest.getNeg_rate())
+				.build();
+	}
 }

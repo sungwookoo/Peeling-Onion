@@ -12,8 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.ssafy.peelingonion.common.StringToInstant;
 import com.ssafy.peelingonion.field.domain.Storage;
 
+import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -81,4 +83,18 @@ public class Onion {
 	@ToString.Exclude
 	@Builder.Default
 	private Set<SendOnion> sendOnions = new LinkedHashSet<>();
+
+	public static Onion from(OnionCreateRequest onionCreateRequest, Long userId) {
+		Instant inst = StringToInstant.S2Ins(onionCreateRequest.getGrow_due_date());
+		return Onion.builder()
+				.name(onionCreateRequest.getName())
+				.imgSrc(onionCreateRequest.getImg_src())
+				.userId(userId)
+				.createdAt(Instant.now())
+				.latestModify(Instant.now())
+				.growDueDate(inst)
+				.isDisabled(Boolean.FALSE)
+				.isSingle(onionCreateRequest.getIs_single())
+				.build();
+	}
 }
