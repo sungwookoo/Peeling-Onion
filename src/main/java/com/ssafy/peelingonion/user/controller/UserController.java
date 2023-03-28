@@ -70,7 +70,7 @@ public class UserController {
 		if (userId.equals(UNAUTHORIZED_USER)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		return ResponseEntity.ok(userService.enrollUser(UserRequestDto.to(userRequestDto, userId)));
+		return ResponseEntity.ok(userService.enrollUser(UserRequestDto.to(userRequestDto, userId),token));
 	}
 
 	@PatchMapping("")
