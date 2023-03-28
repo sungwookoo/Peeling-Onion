@@ -14,8 +14,10 @@ class FieldOneScreenHere extends StatefulWidget {
 class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   @override
   Widget build(BuildContext context) {
+    // 밭 drag and drop 기능
     return LongPressDraggable(
       data: widget.field.id,
+      // drag 할 때 보이는 화면 (양파들은 표시할 필요 없을지도?)
       feedback: Opacity(
         opacity: 0.6,
         child: SizedBox(
@@ -23,9 +25,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
           width: (MediaQuery.of(context).size.width - 60) / 2,
           child: Center(
             child: Container(
-              // height: (MediaQuery.of(context).size.width - 60) / 2,
               height: 70,
-              // width: (MediaQuery.of(context).size.width - 60) / 2,
               width: 70,
               color: Colors.brown,
               child: Padding(
@@ -39,23 +39,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
                       style: const TextStyle(
                           fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                    // 밭 안의 양파들 출력
-                    // Wrap(
-                    //   spacing: 8,
-                    //   runSpacing: 8,
-                    //   children: widget.field.onions.map((onion) {
-                    //     return Column(
-                    //       children: [
-                    //         Text(
-                    //           onion.name,
-                    //           maxLines: 1,
-                    //           overflow: TextOverflow.ellipsis,
-                    //         ),
-                    //         Image.asset('assets/images/onion_image.png'),
-                    //       ],
-                    //     );
-                    //   }).toList(),
-                    // ),
+                    // 밭 안의 양파들 출력할 경우, 여기 코드 작성
                   ],
                 ),
               ),
@@ -63,6 +47,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
           ),
         ),
       ),
+      // feedback 이 나타날 위치
       feedbackOffset: const Offset(
         0,
         0,
@@ -72,6 +57,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   }
 }
 
+// 전체 화면으로 보이는 양파밭 1개의 코드
 class OneField extends StatelessWidget {
   const OneField({
     super.key,
