@@ -79,7 +79,7 @@ class _MakeFieldsState extends State<MakeFields> {
                                   .width, // 화면의 가로 길이만큼
                               height: MediaQuery.of(context).size.width,
                               alignment: Alignment.center,
-                              // 모달로 띄울 밭 1개
+                              // 모달로 띄울 밭 1개 (FieldOneScreen 클래스 사용)
                               child: FieldOneScreen(
                                 field: field,
                                 onValueChanged: _updateData,

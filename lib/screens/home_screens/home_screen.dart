@@ -117,7 +117,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                       itemBuilder: (BuildContext context, int itemIndex) {
                         int globalIndex = firstOnionIndex + itemIndex;
                         if (globalIndex < widget._onions.length) {
-                          // 양파 1개 (텍스트 + 이미지)
+                          // 양파 1개 (텍스트 + 이미지) (HomeOneOnion 클래스 사용)
                           return HomeOneOnion(
                             onions: widget._onions,
                             globalIndex: globalIndex,
