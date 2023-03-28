@@ -21,7 +21,7 @@ class _PackageScreenState extends State<PackageScreen> {
   @override
   void initState() {
     super.initState();
-    onions = OnionApiService.getGrowingOnionByUserId(widget.id);
+    onions = OnionApiService.getGrowingOnionByUserId();
   }
 
   @override
