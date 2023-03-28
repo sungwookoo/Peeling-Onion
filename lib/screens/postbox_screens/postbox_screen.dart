@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
+import 'package:front/screens/postbox_screens/postbox_widgets/show_growing_onions.dart';
 import '../../widgets/trash_can.dart';
 
-class HomeScreen extends StatefulWidget {
+class PackageScreen extends StatefulWidget {
+  // 우선 user id 하는 식. 이후 토큰으로 api 변경될 예정
   final int id = 1;
-  const HomeScreen({super.key});
+  const PackageScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<PackageScreen> createState() => _PackageScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  // 받아온 기르는 양파 정보들
+class _PackageScreenState extends State<PackageScreen> {
+  // 받아온 기르는 양파 정보들 (우선 홈 화면 api 연결.)
+  // 나중에 택배함 api 완성되면 연결
   late Future<List<CustomHomeOnion>> onions;
 
   @override
@@ -48,17 +50,11 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _displayOnionCreateModal(context);
-        },
-      ),
-      // bottomNavigationBar: const NavigateBar(),
     );
   }
 }
 
-// 양파들을 격자로 표시할 예정
+/*// 
 class ShowGrowingOnions extends StatefulWidget {
   final List<CustomHomeOnion> _onions;
 
@@ -104,8 +100,8 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        // mainAxisSpacing: 10,
-                        // crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
                       ),
                       itemBuilder: (BuildContext context, int itemIndex) {
                         int globalIndex = firstOnionIndex + itemIndex;
@@ -148,7 +144,7 @@ class DraggableOnion extends StatelessWidget {
   Widget build(BuildContext context) {
     return Draggable<int>(
       // 전달할 데이터 (양파 번호)
-      data: _onions.elementAt(globalIndex).id,
+      data: _onions.elementAt(globalIndex).onionId,
       // 드래그 할 때 양파 이미지만 투명해지게 이동하기. 이후 예쁘게 수정 예정
       feedback: SizedBox(
         width: 100,
@@ -187,19 +183,11 @@ class OneOnion extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(_onions.elementAt(globalIndex).name),
+        Text(_onions.elementAt(globalIndex).onionName),
         Image.asset('assets/images/onion_image.png'),
       ],
     );
   }
 }
 
-Future<void> _displayOnionCreateModal(
-  BuildContext context,
-) async {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return const OnionCreateDialog();
-      });
-}
+*/

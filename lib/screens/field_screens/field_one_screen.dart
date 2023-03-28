@@ -34,7 +34,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             crossAxisCount: 4,
             childAspectRatio: 1,
           ),
-          children: widget.field.onions.map((onion) {
+          children: widget.field.onionInfos.map((onion) {
             // 밭 하나하나가 drag target 이다 (양파 이동 시)
             return DragTarget<int>(
               onWillAccept: (data) {
@@ -53,41 +53,25 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                   direction: Axis.horizontal,
                   alignment: WrapAlignment.center,
                   children: [
+
                     Text(
                       onion.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    // 꾹 누르면 drag and drop 가능하게
-                    // 꾹 누를 때 모달이 사라지면 draggable 도 사라짐.
-                    // 꾹 누르면 아래에 밭들 이름이 나타나게 해서 이동하도록 수정
-                    LongPressDraggable<int>(
-                      data: onion.id,
-                      // 드래그 시작하면, 아래에 밭들 나타나게
-                      onDragStarted: () {
-                        setState(() {
-                          // widget.showDraggableRectangle = true;
-                          widget.onValueChanged(true);
-                        });
+                    // 꾹 누르면 이동/삭제 선택창이 나타나게
+                    // 이동 누르면 이전 창으로 가서, 밭을 선택할 수 있음
+                    GestureDetector(
+                      onLongPress: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OnionOneScreen(onion: onion),
+                          ),
+                        );
                       },
-                      onDragCompleted: () {
-                        setState(() {
-                          // widget.showDraggableRectangle = false;
-                          widget.onValueChanged(false);
-                        });
-                      },
-                      onDraggableCanceled: (_, __) {
-                        setState(() {
-                          // widget.showDraggableRectangle = false;
-                          widget.onValueChanged(false);
-                        });
-                      },
-                      feedback: const Text('양파 드래그 앤 드롭'),
-                      // 밭의 양파를 누르면, 양파 1개 화면으로 넘어감
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Image.asset('assets/images/onion_image.png'),
-                      ),
+                      child: Image.asset('assets/images/onion_image.png'),
                     ),
                   ],
                 );

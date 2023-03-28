@@ -16,7 +16,6 @@ class _OnionOneScreenState extends State<OnionOneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // 가능하면 다른 화면으로 넘어갈 수 있는 사이드바 같은 것도 추가
       body: Row(
         children: [
           OnionWithMessage(onion: widget.onion),
