@@ -21,7 +21,7 @@ class _RecordScreenState extends State<RecordScreen> {
   String _recordFilePath = '';
   String sttToken = '';
   String _sttMessage = '';
-  late Timer _timer;
+  Timer _timer = Timer(const Duration(days: 1), () {});
   var _time = 180;
 
   @override
@@ -150,7 +150,7 @@ class _RecordScreenState extends State<RecordScreen> {
       'Content-Type': 'application/json',
     };
 
-    String text = '싸늘하다. 가슴에 비수가 날아와 꽂힌다.';
+    String text = _sttMessage;
     final data = {'content': text};
 
     final response =

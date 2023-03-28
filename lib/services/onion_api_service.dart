@@ -29,6 +29,7 @@ class OnionApiService {
       List onions = jsonDecode(response.body);
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
+      print(response.statusCode);
       throw Exception('Failed to load home onions');
     }
   }
@@ -55,6 +56,44 @@ class OnionApiService {
   }
 
   // 양파 post (양파 생성)
+  static Future<void> createOnion({
+    required String onionName,
+    required String onionImage,
+    required String receiverNumber,
+    required String growDueDate,
+    required bool isSingle,
+    required List userList,
+  }) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    Map<String, dynamic> datas = {
+      'name': onionName,
+      'img_src': onionImage,
+      'receiver_number': receiverNumber,
+      'grow_due_date': growDueDate,
+      'is_single': isSingle,
+      'user_id_list': userList,
+    };
+    print(datas);
+
+    final data = jsonEncode(datas);
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/onion'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    );
+
+    if (response.statusCode == 201) {
+      print('생성 성공');
+    } else {
+      print('생성 실패');
+      print(response.body);
+    }
+  }
 
   // 양파 delete (양파 삭제)
   static Future<void> deleteOnionById(int onionId) async {

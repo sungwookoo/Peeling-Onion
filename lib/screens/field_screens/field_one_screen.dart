@@ -53,23 +53,22 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                   direction: Axis.horizontal,
                   alignment: WrapAlignment.center,
                   children: [
-
-                    Text(
-                      onion.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // Text(
+                    //   onion.name,
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
                     // 꾹 누르면 이동/삭제 선택창이 나타나게
                     // 이동 누르면 이전 창으로 가서, 밭을 선택할 수 있음
                     GestureDetector(
                       onLongPress: () {},
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OnionOneScreen(onion: onion),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => OnionOneScreen(onion: onion),
+                        //   ),
+                        // );
                       },
                       child: Image.asset('assets/images/onion_image.png'),
                     ),

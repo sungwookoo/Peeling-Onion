@@ -11,6 +11,9 @@ void main() async {
   await dotenv.load(fileName: ".env"); // 추가
   String? nativeAppKey = dotenv.env['nativeAppKey'];
   KakaoSdk.init(nativeAppKey: '$nativeAppKey');
+  final a = await KakaoSdk.origin;
+  print("@@@@@@@@@@@@@@@@@@@@@@@ $a");
+  print(a);
   runApp(ChangeNotifierProvider(
     create: (context) => UserIdModel(),
     child: const App(),

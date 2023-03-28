@@ -42,7 +42,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
           Navigator.pushNamed(context, '/home');
         } else {
           // 테스트용~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          Navigator.pushNamed(context, '/home');
+          Navigator.pushNamed(context, '/signin');
         }
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/screens/onion_create/invite_people.dart';
+import 'package:front/services/onion_api_service.dart';
 import 'package:intl/intl.dart';
 
 class OnionCreate extends StatefulWidget {
@@ -13,7 +14,7 @@ class OnionCreate extends StatefulWidget {
 }
 
 class _OnionCreateState extends State<OnionCreate> {
-  String _date = DateFormat.yMMMd().format(DateTime.now());
+  String _date = DateFormat('yyyy/MM/dd').format(DateTime.now());
   String _onionName = '';
   String _mobileNumber = '';
   List<Map> _withUser = [];
@@ -230,7 +231,7 @@ class _OnionCreateState extends State<OnionCreate> {
                                   );
                                   if (selectedDate != null) {
                                     setState(() {
-                                      _date = DateFormat.yMMMd()
+                                      _date = DateFormat('yyyy/MM/dd')
                                           .format(selectedDate);
                                     });
                                   }
@@ -250,26 +251,36 @@ class _OnionCreateState extends State<OnionCreate> {
                             onPressed: () async {
                               if (_onionFormKey.currentState!.validate()) {
                                 _onionFormKey.currentState!.save();
-                                if (_withUser.isEmpty) {
+                                if (_withUser.isEmpty && isTogether) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
                                             Text('함께 보낼 사람을 적어도 1명 선택해주세요!')),
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text('$_onionName/$_mobileNumber'),
-                                      behavior: SnackBarBehavior.floating,
-                                      // margin: const EdgeInsets.symmetric(
-                                      //   vertical: 50,
-                                      //   horizontal: 20,
-                                      // ),
-                                    ),
-                                  );
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text(
+                                  //         '$_onionName/$_mobileNumber/$_date'),
+                                  //     behavior: SnackBarBehavior.floating,
+                                  //     // margin: const EdgeInsets.symmetric(
+                                  //     //   vertical: 50,
+                                  //     //   horizontal: 20,
+                                  //     // ),
+                                  //   ),
+                                  // );
+                                  bool isSingle = !isTogether;
+
+                                  OnionApiService.createOnion(
+                                      onionName: _onionName,
+                                      onionImage:
+                                          'assets/images/customonion1.png',
+                                      receiverNumber: _mobileNumber,
+                                      growDueDate: _date,
+                                      isSingle: isSingle,
+                                      userList: _withUser);
+                                  Navigator.pop(context);
                                 }
-                                // Navigator.pop(context);
                               }
                             },
                             child: const Text('양파 만들기'),
