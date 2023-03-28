@@ -44,10 +44,21 @@ public class FieldService {
 			.build();
 		fieldRepository.save(field);
 		// myField 객체 생성 후, 저장
-		MyField myField = MyField.builder()
-			.userId(userId)
-			.field(field)
-			.build();
+		// default 밭 생성인 경우
+		MyField myField;
+		if (!myFieldRepository.existsByUserId(userId)) {
+			myField = MyField.builder()
+				.userId(userId)
+				.field(field)
+				.isDefault(true)
+				.build();
+		} else { // 추가적인 밭 생성인 경우
+			myField = MyField.builder()
+				.userId(userId)
+				.field(field)
+				.isDefault(false)
+				.build();
+		}
 		myFieldRepository.save(myField);
 		return field;
 	}
@@ -80,6 +91,9 @@ public class FieldService {
 		return fieldRepository.save(field);
 	}
 
+	// 밭 삭제시 관계테이블에 대한 고려가 이루어져야 한다.
+	// 현재 해당 부분이 고려되어 있지 않다. 수정해야함.
+	// 또한 밭 관련 전체 로직에 대한 검증이 필요함.
 	public void deleteField(Long fieldId) {
 		Field field = fieldRepository.findById(fieldId).get();
 		field.setIsDisabled(Boolean.TRUE);
@@ -104,7 +118,7 @@ public class FieldService {
 		}
 	}
 
-	public List<Storage> findStorages(Long fieldId){
+	public List<Storage> findStorages(Long fieldId) {
 		return storageRepository.findAllByFieldId(fieldId);
 	}
 
