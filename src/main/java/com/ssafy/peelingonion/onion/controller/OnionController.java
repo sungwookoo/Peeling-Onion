@@ -2,7 +2,6 @@ package com.ssafy.peelingonion.onion.controller;
 
 import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.field.controller.dto.OnionOutlineDto;
-import com.ssafy.peelingonion.field.service.FieldService;
 import com.ssafy.peelingonion.field.service.exceptions.FieldNotFoundException;
 import com.ssafy.peelingonion.onion.controller.dto.*;
 import com.ssafy.peelingonion.onion.domain.Message;
