@@ -39,4 +39,8 @@ public class MyField {
 	@ManyToOne
 	@JoinColumn(name = "field_id")
 	private Field field;
+
+	@Column(name = "is_default")
+	private Boolean isDefault;
+
 }
