@@ -18,7 +18,7 @@ public class FieldReadResponse {
 	public Long id;
 	public String name;
 	public Instant created_at;
-	public List<OnionOutlineDto> onion_infos;
+//	public List<OnionOutlineDto> onion_infos;
 
 	public static FieldReadResponse from(Field field) {
 		return FieldReadResponse.builder()
