@@ -45,12 +45,7 @@ public class FieldController {
         if(authorizeService.isAuthorization(userId)) {
             try {
                 Field field = fieldService.createField(fieldCreateRequest, userId);
-                FieldCreateResponse fieldCreateResponse = FieldCreateResponse.builder()
-                        .id(field.getId())
-                        .name(field.getName())
-                        .created_at(field.getCreatedAt())
-                        .build();
-                return ResponseEntity.ok(fieldCreateResponse);
+                return ResponseEntity.ok(FieldCreateResponse.from(field));
             } catch(FieldNotCreatedException e){
                 log.info(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
@@ -74,12 +69,7 @@ public class FieldController {
                 List<Field> fields = fieldService.readAllFields(userId);
                 List<FieldReadResponse> fieldReadResponses = new ArrayList<>();
                 for(Field field : fields){
-                    FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
-                            .id(field.getId())
-                            .name(field.getName())
-                            .created_at(field.getCreatedAt())
-                            .build();
-                    fieldReadResponses.add(fieldReadResponse);
+                    fieldReadResponses.add(FieldReadResponse.from(field));
                 }
                 return ResponseEntity.ok(fieldReadResponses);
             } catch(FieldAllNotFoundException e){
@@ -109,15 +99,7 @@ public class FieldController {
                 for(Storage storage : storages){
                     Onion fieldOnion = storage.getOnion();
                     String userName = fieldService.getNameByUserId(userId);
-                    OnionOutlineDto onionOutlineDto = OnionOutlineDto.builder()
-                            .id(fieldOnion.getId())
-                            .onion_name(fieldOnion.getName())
-                            .img_src(fieldOnion.getImgSrc())
-                            .receive_date(fieldOnion.getSendDate())
-                            .sender(userName)
-                            .is_single(fieldOnion.getIsSingle())
-                            .build();
-                    onionInfos.add(onionOutlineDto);
+                    onionInfos.add(OnionOutlineDto.from(fieldOnion, userName));
                 }
                 return ResponseEntity.ok(onionInfos);
             } catch(FieldNotFoundException e){
@@ -145,12 +127,7 @@ public class FieldController {
         if(authorizeService.isAuthorization(userId)){
             try {
                 Field field = fieldService.updateField(fieldId, fieldUpdateRequest.getName());
-                FieldReadResponse fieldReadResponse = FieldReadResponse.builder()
-                        .id(field.getId())
-                        .name(field.getName())
-                        .created_at((field.getCreatedAt()))
-                        .build();
-                return ResponseEntity.ok(fieldReadResponse);
+                return ResponseEntity.ok(FieldReadResponse.from(field));
             } catch(FieldNotUpdatedException e){
                 log.info(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
