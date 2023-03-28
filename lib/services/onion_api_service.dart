@@ -13,8 +13,7 @@ class OnionApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 기르는 양파 get (홈 화면에 띄울 양파 정보)
-  static Future<List<CustomHomeOnion>> getGrowingOnionByUserId(
-      int userId) async {
+  static Future<List<CustomHomeOnion>> getGrowingOnionByUserId() async {
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -66,7 +65,7 @@ class OnionApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    if (response.statusCode == 204) {
+    if (response.statusCode == 200) {
       // On success, do something
     } else {
       throw Exception('Failed to delete onion');
