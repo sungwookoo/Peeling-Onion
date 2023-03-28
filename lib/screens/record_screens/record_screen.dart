@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:front/services/stt_api_service.dart';
@@ -140,6 +141,28 @@ class _RecordScreenState extends State<RecordScreen> {
     super.dispose();
   }
 
+  Future<void> getSentiment() async {
+    final url = Uri.parse(
+        'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze');
+    final Map<String, String> header = {
+      'X-NCP-APIGW-API-KEY-ID': dotenv.get('sentimentId'),
+      'X-NCP-APIGW-API-KEY': dotenv.get('sentimentKey'),
+      'Content-Type': 'application/json',
+    };
+
+    String text = '싸늘하다. 가슴에 비수가 날아와 꽂힌다.';
+    final data = {'content': text};
+
+    final response =
+        await http.post(url, headers: header, body: jsonEncode(data));
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      print(result);
+    } else {
+      print(jsonDecode(response.body));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -200,6 +223,12 @@ class _RecordScreenState extends State<RecordScreen> {
                         color: Colors.red,
                         size: 70,
                       ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  getSentiment();
+                },
+                child: const Text('감정분석 요청'),
               )
             ],
           ),
