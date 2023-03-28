@@ -23,6 +23,12 @@ class _MakeFieldsState extends State<MakeFields> {
   // 양파를 drag 한 상태인지 판단하는 변수 (true 면 아래 밭 선택 창 표시)
   ValueNotifier<bool> showDraggableRectangle = ValueNotifier<bool>(false);
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   void _updateData(bool newData) {
     setState(() {
       showDraggableRectangle.value = newData;
@@ -76,7 +82,6 @@ class _MakeFieldsState extends State<MakeFields> {
                               // 모달로 띄울 밭 1개
                               child: FieldOneScreen(
                                 field: field,
-                                fields: widget._fields,
                                 onValueChanged: _updateData,
                               ),
                             ),
@@ -89,36 +94,6 @@ class _MakeFieldsState extends State<MakeFields> {
                   }).toList(),
                 ),
               ),
-              // 밭 선택 창 띄우기 (이후 수정 예정)
-              ValueListenableBuilder<bool>(
-                valueListenable: showDraggableRectangle,
-                builder: (BuildContext context, bool value, Widget? child) {
-                  if (value) {
-                    return Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: widget._fields
-                              .map((field) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      height: 50,
-                                      color: Colors.red,
-                                      child: Text(field.name),
-                                    ),
-                                  ))
-                              .toList(),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              )
             ],
           );
         },
