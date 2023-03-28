@@ -1,31 +1,16 @@
+server:
+  port: 8080
+
+logging:
+  level:
+    root:
+      DEBUG
+
 spring:
   cloud:
     gateway:
       routes:
-        - id: user-service-test
-          uri: https://test.user.ssafy.shop
-          predicates:
-            - Host=test.api.ssafy.shop
-            - Path=/user/**
-          filters:
-            - RewritePath=/(?<segment>.*), /$\{segment}
-
-        - id: user-service-prod
-          uri: https://user.ssafy.shop
-          predicates:
-            - Host=api.ssafy.shop
-            - Path=/user/**
-          filters:
-            - RewritePath=/(?<segment>.*), /$\{segment}
-
-        - id: alarm-service-test
-          uri: https://test.alarm.ssafy.shop
-          predicates:
-            - Host=test.api.ssafy.shop
-            - Path=/alarm/**
-          filters:
-            - RewritePath=/(?<segment>.*), /$\{segment}
-
+        #  prod
         - id: alarm-service-prod
           uri: https://alarm.ssafy.shop
           predicates:
@@ -34,11 +19,11 @@ spring:
           filters:
             - RewritePath=/(?<segment>.*), /$\{segment}
 
-        - id: biz-service-test
-          uri: https://test.biz.ssafy.shop
+        - id: auth-service-prod
+          uri: https://auth.ssafy.shop
           predicates:
-            - Host=test.api.ssafy.shop
-            - Path=/onion/**
+            - Host=api.ssafy.shop
+            - Path=/auth/**
           filters:
             - RewritePath=/(?<segment>.*), /$\{segment}
 
@@ -50,6 +35,31 @@ spring:
           filters:
             - RewritePath=/(?<segment>.*), /$\{segment}
 
+        - id: field-service-prod
+          uri: https://biz.ssafy.shop
+          predicates:
+            - Host=api.ssafy.shop
+            - Path=/field/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}
+
+        - id: user-service-prod
+          uri: https://user.ssafy.shop
+          predicates:
+            - Host=api.ssafy.shop
+            - Path=/user/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}
+
+        # beta
+        - id: alarm-service-test
+          uri: https://test.alarm.ssafy.shop
+          predicates:
+            - Host=test.api.ssafy.shop
+            - Path=/alarm/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}\
+
         - id: auth-service-test
           uri: https://test.auth.ssafy.shop
           predicates:
@@ -58,10 +68,26 @@ spring:
           filters:
             - RewritePath=/(?<segment>.*), /$\{segment}
 
-        - id: auth-service-prod
-          uri: https://auth.ssafy.shop
+        - id: biz-service-test
+          uri: https://test.biz.ssafy.shop
           predicates:
-            - Host=api.ssafy.shop
-            - Path=/auth/**
+            - Host=test.api.ssafy.shop
+            - Path=/onion/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}
+
+        - id: field-service-test
+          uri: https://test.biz.ssafy.shop
+          predicates:
+            - Host=test.api.ssafy.shop
+            - Path=/field/**
+          filters:
+            - RewritePath=/(?<segment>.*), /$\{segment}
+
+        - id: user-service-test
+          uri: https://test.user.ssafy.shop
+          predicates:
+            - Host=test.api.ssafy.shop
+            - Path=/user/**
           filters:
             - RewritePath=/(?<segment>.*), /$\{segment}
