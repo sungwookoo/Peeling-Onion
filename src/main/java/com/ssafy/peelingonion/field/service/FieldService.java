@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
+import com.ssafy.peelingonion.onion.domain.ReceiveOnionRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +28,10 @@ public class FieldService {
 	private final FieldRepository fieldRepository;
 	private final MyFieldRepository myFieldRepository;
 	private final StorageRepository storageRepository;
-
 	public FieldService(FieldRepository fieldRepository,
-		MyFieldRepository myFieldRepository,
-		StorageRepository storageRepository) {
+						MyFieldRepository myFieldRepository,
+						StorageRepository storageRepository,
+						ReceiveOnionRepository receiveOnionRepository) {
 		this.fieldRepository = fieldRepository;
 		this.myFieldRepository = myFieldRepository;
 		this.storageRepository = storageRepository;

@@ -109,6 +109,10 @@ public class OnionService {
         return receiveOnionRepository.save(receiveOnion);
     }
 
+    public List<ReceiveOnion> findBookmarkedOnions(Long userId){
+        return receiveOnionRepository.findByUserIdAndIsBookmarked(userId, Boolean.TRUE);
+    }
+
     public void bookmarkOnion(Long onionId) {
         Onion onion = onionRepository.findById(onionId).get();
         ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);

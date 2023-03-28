@@ -1,6 +1,9 @@
 package com.ssafy.peelingonion.onion.controller;
 
 import com.ssafy.peelingonion.common.service.AuthorizeService;
+import com.ssafy.peelingonion.field.controller.dto.OnionOutlineDto;
+import com.ssafy.peelingonion.field.service.FieldService;
+import com.ssafy.peelingonion.field.service.exceptions.FieldNotFoundException;
 import com.ssafy.peelingonion.onion.controller.dto.*;
 import com.ssafy.peelingonion.onion.domain.Message;
 import com.ssafy.peelingonion.onion.domain.Onion;
@@ -91,6 +94,33 @@ public class OnionController {
     }
 
     /**
+     * 즐겨찾기한 양파들을 확인하는 것
+     * @param token 로그인 유저의 토큰
+     * @return 즐겨찾기한 양파들의 대략 정보
+     */
+    @GetMapping("/bookmarked")
+    public ResponseEntity<List<OnionOutlineDto>> readBookmarkedOnions(
+            @RequestHeader("Authorization") String token) {
+        final Long userId = authorizeService.getAuthorization(token);
+        if(authorizeService.isAuthorization(userId)){
+            try {
+                List<OnionOutlineDto> onionOutlineDtos = new ArrayList<>();
+                List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(userId);
+                String userName = onionService.getNameByUserId(userId);
+                for(ReceiveOnion receiveOnion : receiveOnions) {
+                    onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
+                }
+                return ResponseEntity.ok(onionOutlineDtos);
+            } catch(FieldNotFoundException e){
+                log.info(e.getMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+        }
+    }
+
+    /**
      * 받은 양파에 즐겨찾기 하는 API(Put)
      * @param token 로그인 유저의 토큰
      * @param onionId 북마크 할 양파의 id
@@ -135,7 +165,7 @@ public class OnionController {
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+            return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
     }
 
