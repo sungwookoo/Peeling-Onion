@@ -17,3 +17,4 @@ settings:
   cross-origin: "*"
 
 authServer: https://auth.ssafy.shop
+bizServer: https://biz.ssafy.shop

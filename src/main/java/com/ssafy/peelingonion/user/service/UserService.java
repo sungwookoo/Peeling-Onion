@@ -1,14 +1,19 @@
 package com.ssafy.peelingonion.user.service;
 
+import static com.ssafy.peelingonion.common.ConstValues.*;
+
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.peelingonion.user.controller.dto.FieldCreateRequest;
 import com.ssafy.peelingonion.user.domain.User;
 import com.ssafy.peelingonion.user.domain.UserRepository;
 import com.ssafy.peelingonion.user.service.exceptions.UserNotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
@@ -38,7 +43,7 @@ public class UserService {
 		userRepository.save(des);
 	}
 
-	public Long enrollUser(User user) {
+	public Long enrollUser(User user, String token) {
 		// 이미 회원인경우,
 		if (userRepository.existsById(user.getId())) {
 			User base = userRepository.findById(user.getId()).get();
@@ -52,6 +57,23 @@ public class UserService {
 		} else { // 신규 가입자인 경우
 			user.setId(null); // autoincrement를 활용하기 위해 null 처리
 			User newUser = userRepository.save(user);
+
+			try {
+				BIZ_SERVER_CLIENT.post()
+					.uri(CREATE_FILED_URI)
+					.header("Authorization", token)
+					.bodyValue(FieldCreateRequest.builder()
+						.name("기본")
+						.build())
+					.retrieve()
+					.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+					.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+					.bodyToMono(Void.class)
+					.block();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+
 			return newUser.getId();
 		}
 	}
