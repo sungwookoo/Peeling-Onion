@@ -36,7 +36,7 @@ class OnionApiService {
   // 택배함 get (유저가 받은 택배함 양파 정보 조회)
 
   // 양파 get (양파 1개 조회. 연결된 message들 포함)
-  static Future<CustomOnion> getOnionById(int onionId) async {
+  static Future<CustomOnionByOnionId> getOnionById(int onionId) async {
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -47,7 +47,8 @@ class OnionApiService {
       },
     );
     if (response.statusCode == 200) {
-      CustomOnion onion = jsonDecode(response.body);
+      CustomOnionByOnionId onion =
+          CustomOnionByOnionId.fromJson(jsonDecode(response.body));
       return onion;
     } else {
       throw Exception('Failed to load onion');
@@ -70,6 +71,24 @@ class OnionApiService {
       // On success, do something
     } else {
       throw Exception('Failed to delete onion');
+    }
+  }
+
+  // 양파의 메시지 get
+  static Future<CustomMessage> getMessage(int messageId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/onion/message/$messageId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      CustomMessage message = CustomMessage.fromJson(jsonDecode(response.body));
+      return message;
+    } else {
+      throw Exception('Failed to get message');
     }
   }
 }
