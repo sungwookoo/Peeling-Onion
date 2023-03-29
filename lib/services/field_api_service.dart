@@ -25,7 +25,7 @@ class FieldApiService {
     );
     // 요청 성공
     if (response.statusCode == 200) {
-      List fields = jsonDecode(response.body);
+      List fields = jsonDecode(utf8.decode(response.bodyBytes));
       return fields.map((field) => CustomField.fromJson(field)).toList();
     }
     // 요청 실패
@@ -36,20 +36,21 @@ class FieldApiService {
   static Future<CustomField> createField(String fieldName) async {
     final accessToken = await Token.then((value) => value?.accessToken);
     print('$fieldName: $accessToken');
-    final response = await http.post(
-      Uri.parse('$baseUrl/field'),
-      headers: <String, String>{
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: <String, String>{
-        'name': fieldName,
-      },
-    );
+    final response = await http.post(Uri.parse('$baseUrl/field'),
+        headers: <String, String>{
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': fieldName,
+        }));
     // 요청 성공
     if (response.statusCode == 200) {
-      CustomField field = jsonDecode(response.body);
+      CustomField field =
+          CustomField.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return field;
     } else {
+      print(response.statusCode);
       throw Exception('Failed to load fields');
     }
   }
@@ -84,7 +85,7 @@ class FieldApiService {
     );
     // 요청 성공
     if (response.statusCode == 200) {
-      List onions = jsonDecode(response.body);
+      List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions
           .map((onion) => CustomOnionFromField.fromJson(onion))
           .toList();

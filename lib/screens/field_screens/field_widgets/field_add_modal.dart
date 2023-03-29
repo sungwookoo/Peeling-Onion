@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/services/field_api_service.dart';
 
 // 모달로 밭 이름 입력받아서 추가 밭 생성 (이후 밭 이름 안겹치게 유효성 검사 하기)
 // 문자 변수
@@ -8,7 +7,7 @@ TextEditingController textFieldController = TextEditingController();
 // 문자 포함하는 모달 출력 함수
 Future<void> displayTextInputDialog(
   BuildContext context,
-  Function addOne,
+  Function addField,
 ) async {
   return showDialog(
     context: context,
@@ -47,12 +46,14 @@ Future<void> displayTextInputDialog(
                   // text input 값
                   String text = textFieldController.text;
                   // 예외 처리
+
                   if (text.isEmpty) {
                     return;
                   }
-                  FieldApiService.createField(text);
+                  print('전송이 됩니다.');
+                  // FieldApiService.createField(text);
                   Navigator.pop(context);
-                  addOne(text);
+                  addField(text);
                 },
               ),
             ],
