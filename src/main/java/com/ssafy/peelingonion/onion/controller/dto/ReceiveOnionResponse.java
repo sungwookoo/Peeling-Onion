@@ -1,5 +1,7 @@
 package com.ssafy.peelingonion.onion.controller.dto;
 
+import com.ssafy.peelingonion.onion.domain.Onion;
+import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +22,16 @@ public class ReceiveOnionResponse {
     public Boolean is_single;
     public Instant created_at;
     public Instant grow_due_date;
+    public static ReceiveOnionResponse from(ReceiveOnion receiveOnion, String userName){
+        Onion o = receiveOnion.getOnion();
+        return ReceiveOnionResponse.builder()
+                .id(o.getId())
+                .name(o.getImgSrc())
+                .receive_date(o.getSendDate())
+                .sender(userName)
+                .is_single(o.getIsSingle())
+                .created_at(o.getCreatedAt())
+                .grow_due_date(o.getGrowDueDate())
+                .build();
+    }
 }

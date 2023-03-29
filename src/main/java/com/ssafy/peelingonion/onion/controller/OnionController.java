@@ -260,16 +260,7 @@ public class OnionController {
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(userId);
                 String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions){
-                    ReceiveOnionResponse receiveOnionResponse = ReceiveOnionResponse.builder()
-                            .id(receiveOnion.getOnion().getId())
-                            .name(receiveOnion.getOnion().getImgSrc())
-                            .receive_date(receiveOnion.getOnion().getSendDate())
-                            .sender(userName)
-                            .is_single(receiveOnion.getOnion().getIsSingle())
-                            .created_at(receiveOnion.getOnion().getCreatedAt())
-                            .grow_due_date(receiveOnion.getOnion().getGrowDueDate())
-                            .build();
-                    receiveOnionResponses.add(receiveOnionResponse);
+                    receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, userName));
                 }
                 return ResponseEntity.ok(receiveOnionResponses);
             } catch (ReceiveOnionNotFoundException e) {
@@ -296,15 +287,7 @@ public class OnionController {
             try {
                 Message message = onionService.findMessageById(messageId);
                 String userName = onionService.getNameByUserId(userId);
-                MessageDetailResponse messageDetailResponse = MessageDetailResponse.builder()
-                        .id(messageId)
-                        .sender(userName)
-                        .created_at(message.getCreatedAt())
-                        .pos_rate(message.getPosRate())
-                        .neg_rate(message.getNegRate())
-                        .file_src(message.getRecord().getFileSrc())
-                        .build();
-                return ResponseEntity.ok(messageDetailResponse);
+                return ResponseEntity.ok(MessageDetailResponse.from(messageId, userName, message));
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
