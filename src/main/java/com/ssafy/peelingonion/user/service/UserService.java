@@ -51,12 +51,15 @@ public class UserService {
 			return optUser.get().getId();
 		} else { // 비회원인경우
 			Optional<User> isUnActiveUser = userRepository.findByKakaoId(user.getKakaoId());
-			if (isUnActiveUser.isPresent()) {
+			if (isUnActiveUser.isPresent()) { // 비활성 유저였다면
 				User unActiveUser = isUnActiveUser.get();
 				unActiveUser.setActivate(true);
+				unActiveUser.setNickname(user.getNickname());
+				unActiveUser.setMobileNumber(user.getMobileNumber());
+				unActiveUser.setImgSrc(user.getImgSrc());
 				userRepository.save(unActiveUser);
 				return unActiveUser.getId();
-			} else {
+			} else { // 신규유저
 				user.setId(null); // autoincrement를 활용하기 위해 null 처리
 				User newUser = userRepository.save(user);
 				try {
