@@ -87,29 +87,37 @@ class _MypageScreenState extends State<MypageScreen> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
     return Scaffold(
-        body: Column(
-      children: [
-        const Text('여긴 마이페이지 입니다.'),
-        Text('$userId'),
-        ElevatedButton(
-          onPressed: () async {
-            logOut(context);
-          },
-          child: const Text('로그아웃'),
+        body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 40,
+            ),
+            const Text('여긴 마이페이지 입니다.'),
+            Text('$userId'),
+            ElevatedButton(
+              onPressed: () async {
+                logOut(context);
+              },
+              child: const Text('로그아웃'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                signOut();
+              },
+              child: const Text('회원탈퇴'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                shareMessage();
+              },
+              child: const Text('공유하기'),
+            ),
+          ],
         ),
-        ElevatedButton(
-          onPressed: () async {
-            signOut();
-          },
-          child: const Text('회원탈퇴'),
-        ),
-        ElevatedButton(
-          onPressed: () async {
-            shareMessage();
-          },
-          child: const Text('공유하기'),
-        ),
-      ],
+      ),
     ));
   }
 }

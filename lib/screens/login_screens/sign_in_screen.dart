@@ -25,6 +25,9 @@ class _SigninScreenState extends State<SigninScreen> {
 
   String? _nicknameValidationMessage;
   String? _phoneValidationMessage;
+  String? _prevNicknameText;
+  String? _authCodeValidationMessage;
+
   bool _isNicknameValid = true;
   bool _isPhoneValid = true;
   bool _nicknameChanged = true;
@@ -35,9 +38,17 @@ class _SigninScreenState extends State<SigninScreen> {
   void initState() {
     super.initState();
     _nicknameController.addListener(() {
+      if (_nicknameController.text != _prevNicknameText) {
+        setState(() {
+          _nicknameChanged = true;
+          _nicknameValidationMessage = '닉네임 중복 확인을 해주세요.';
+          _prevNicknameText = _nicknameController.text;
+        });
+      }
+    });
+    _authCodeController.addListener(() {
       setState(() {
-        _nicknameChanged = true;
-        _nicknameValidationMessage = '닉네임 중복 확인을 해주세요.';
+        _authCodeValidationMessage = null;
       });
     });
   }
@@ -150,6 +161,8 @@ class _SigninScreenState extends State<SigninScreen> {
         setState(() {
           _verificationId = verificationId;
           _isAuthCodeSent = true;
+
+          _checkNickname();
         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {
@@ -165,11 +178,20 @@ class _SigninScreenState extends State<SigninScreen> {
     if (_authCodeController.text == '') {
       setState(() {
         _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
       });
       return;
     }
 
     FirebaseAuth auth = FirebaseAuth.instance;
+    // _verificationId 변수가 null일 경우를 체크하는 코드 추가
+    if (_verificationId == null) {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '인증번호를 먼저 전송해주세요.';
+      });
+      return;
+    }
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: _verificationId!, smsCode: _authCodeController.text);
 
@@ -181,6 +203,7 @@ class _SigninScreenState extends State<SigninScreen> {
     } catch (e) {
       setState(() {
         _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
       });
     }
   }
@@ -330,27 +353,36 @@ class _SigninScreenState extends State<SigninScreen> {
                     if (_phoneValidationMessage != null)
                       Text(_phoneValidationMessage!),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _authCodeController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: '인증번호',
-                        hintText: '6자리 숫자',
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.check,
-                            color: _isAuthCodeValid ? Colors.green : Colors.red,
+                    if (_isAuthCodeSent)
+                      Column(
+                        children: [
+                          TextFormField(
+                            controller: _authCodeController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: '인증번호',
+                              hintText: '6자리 숫자',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.check,
+                                  color: _isAuthCodeValid
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                                onPressed: _checkAuthCode,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '인증번호를 입력해주세요.';
+                              }
+                              return null;
+                            },
                           ),
-                          onPressed: _checkAuthCode,
-                        ),
+                          if (_authCodeValidationMessage != null)
+                            Text(_authCodeValidationMessage!),
+                        ],
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '인증번호를 입력해주세요.';
-                        }
-                        return null;
-                      },
-                    ),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -363,6 +395,11 @@ class _SigninScreenState extends State<SigninScreen> {
                               : null,
                           child: const Text('회원가입 완료'),
                         ),
+                        IconButton(
+                          onPressed: () =>
+                              {Navigator.pushNamed(context, '/home')},
+                          icon: const Icon(Icons.home),
+                        )
                       ],
                     ),
                   ],
