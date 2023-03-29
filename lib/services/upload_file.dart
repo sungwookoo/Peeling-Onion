@@ -7,6 +7,7 @@ class UploadApiService {
   final SimpleS3 _simpleS3 = SimpleS3();
 
   Future<String> uploadRecord(File recordFile) async {
+    print(recordFile);
     String result = await _simpleS3.uploadFile(
         recordFile,
         dotenv.get('s3Bucket'),
