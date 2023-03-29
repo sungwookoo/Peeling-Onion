@@ -37,6 +37,7 @@ class CustomMessage {
   final String content;
   final double posRate;
   final double negRate;
+  final double neuRate;
   final String fileSrc;
 
   CustomMessage.fromJson(Map<String, dynamic> json)
@@ -46,6 +47,7 @@ class CustomMessage {
         content = json['content'],
         posRate = json['pos_rate'],
         negRate = json['neg_rate'],
+        neuRate = json['neu_rate'],
         fileSrc = json['file_src'];
 }
 

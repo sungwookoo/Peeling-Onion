@@ -33,10 +33,12 @@ class _RecordScreenState extends State<RecordScreen> {
   bool _isfirst = true;
   bool _isThinking = false;
   bool _isListening = false;
+  late int _onionId;
 
   @override
   void initState() {
     initializer();
+    _onionId = widget.onion.id;
     super.initState();
     _myRecorder.openRecorder();
   }
@@ -183,10 +185,17 @@ class _RecordScreenState extends State<RecordScreen> {
     }
   }
 
-  Future<void> saveRecord() async {
+  Future<String> saveRecord() async {
     final file = File(_recordFilePath);
     String resultRecordUrl = await UploadApiService().uploadRecord(file);
-    print(resultRecordUrl);
+    return resultRecordUrl;
+  }
+
+  void saveRecordMessage() async {
+    String recordUrl = await saveRecord();
+    var result = UploadApiService().saveMessage(
+        _onionId, recordUrl, _positive, _negative, _neutral, _sttMessage);
+    print(result);
   }
 
   @override
@@ -215,35 +224,35 @@ class _RecordScreenState extends State<RecordScreen> {
                       )),
                       height: 320,
                       width: 350,
-                      child: const Padding(
-                        padding: EdgeInsets.all(30),
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '양파 이름 : ',
-                              style: TextStyle(
+                              '양파 이름 : ${widget.onion.name}',
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 15,
                             ),
                             Text(
-                              'To. ',
-                              style: TextStyle(
+                              'To. ${widget.onion.receiverNumber.substring(0, 3)}-${widget.onion.receiverNumber.substring(3, 7)}-${widget.onion.receiverNumber.substring(7)}',
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 15,
                             ),
                             Text(
-                              'DueDate : ',
-                              style: TextStyle(
+                              'DueDate : ${widget.onion.growDueDate.substring(0, 10)}',
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -388,7 +397,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      saveRecord();
+                      saveRecordMessage();
                     },
                     child: const Text('저장'),
                   ),
