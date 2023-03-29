@@ -71,8 +71,8 @@ public class FieldService {
 		List<Field> fields = new ArrayList<>();
 		if(!myFields.isEmpty()) {
 			for (MyField myField : myFields) {
-				Optional<Field> field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE);
-				field.ifPresent(fields::add);
+				fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE)
+						.ifPresent(fields::add);
 			}
 		}
 		return fields;
