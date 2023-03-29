@@ -24,6 +24,7 @@ public class MessageDetailResponse {
         return MessageDetailResponse.builder()
                 .id(messageId)
                 .sender(userName)
+                .content(message.getContent())
                 .created_at(message.getCreatedAt())
                 .pos_rate(message.getPosRate())
                 .neg_rate(message.getNegRate())
