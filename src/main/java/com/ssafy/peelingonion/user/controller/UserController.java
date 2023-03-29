@@ -2,10 +2,12 @@ package com.ssafy.peelingonion.user.controller;
 
 import static com.ssafy.peelingonion.common.ConstValues.*;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,11 +37,14 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 	private final UserService userService;
 	private final AuthorizeService authorizeService;
+	private final RedisTemplate<Long, String> redisTemplate;
 
 	@Autowired
-	public UserController(UserService userService, AuthorizeService authorizeService) {
+	public UserController(UserService userService, AuthorizeService authorizeService,
+		RedisTemplate<Long, String> redisTemplate) {
 		this.userService = userService;
 		this.authorizeService = authorizeService;
+		this.redisTemplate = redisTemplate;
 	}
 
 	@GetMapping("")
@@ -71,7 +76,7 @@ public class UserController {
 		if (userId.equals(UNAUTHORIZED_USER)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		return ResponseEntity.ok(userService.enrollUser(UserRequestDto.to(userRequestDto, userId),token));
+		return ResponseEntity.ok(userService.enrollUser(UserRequestDto.to(userRequestDto, userId), token));
 	}
 
 	@PatchMapping("")
@@ -134,6 +139,27 @@ public class UserController {
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
+	}
+
+	@GetMapping("/fcm/{userId}")
+	public ResponseEntity<String> getUserFCMToken(@PathVariable Long userId) {
+		String requestToken = redisTemplate.opsForValue().get(userId);
+		if (null == requestToken) {
+			requestToken = "";
+		}
+		return ResponseEntity.ok(requestToken);
+	}
+
+	@PostMapping("/fcm/{fcm}")
+	public ResponseEntity<String> setUserFCMToken(@RequestHeader("Authorization") String token,
+		@PathVariable String fcm) {
+		final Long userId = authorizeService.getAuthorization(token);
+		if (authorizeService.isAuthorization(userId)) {
+			Duration expirationTime = Duration.ofDays(7); // 7일까지만 저장
+			redisTemplate.opsForValue().set(userId, fcm, expirationTime);
+			return ResponseEntity.ok("OK");
+		}
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 	}
 
 	// Gateway Test

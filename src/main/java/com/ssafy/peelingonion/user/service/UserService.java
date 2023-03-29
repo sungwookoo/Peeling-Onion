@@ -34,13 +34,13 @@ public class UserService {
 	}
 
 	public void modifyUser(User src, User des) {
-		if (null != src.getNickname())
-			des.setNickname(src.getNickname());
-		if (null != src.getMobileNumber())
-			des.setMobileNumber(src.getMobileNumber());
-		if (null != src.getImgSrc())
-			des.setImgSrc(src.getImgSrc());
-		userRepository.save(des);
+		if (null != des.getNickname())
+			src.setNickname(des.getNickname());
+		if (null != des.getMobileNumber())
+			src.setMobileNumber(des.getMobileNumber());
+		if (null != des.getImgSrc())
+			src.setImgSrc(des.getImgSrc());
+		userRepository.save(src);
 	}
 
 	public Long enrollUser(User user, String token) {
