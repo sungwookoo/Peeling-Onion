@@ -25,8 +25,6 @@ public class AuthService {
 	}
 
 	public Long validateCodeOnKakao(String token) {
-		boolean flag = false;
-
 		KakaoDto kakaoDto = KakaoDto.builder().id(-1L).build();
 		try {
 			kakaoDto = client.get()
@@ -40,10 +38,16 @@ public class AuthService {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
-		return kakaoDto.getId();
+		if (kakaoDto==null)
+			return -1L;
+		else
+			return kakaoDto.getId();
 	}
 
 	public Long findUserId(Long kakaoId) {
-		return userRepository.findByKakaoId(kakaoId).orElse(User.builder().id(NON_MEMBER).build()).getId();
+		User user = userRepository.findByKakaoId(kakaoId).orElse(User.builder().id(NON_MEMBER).build());
+		if (user.getActivate().booleanValue())
+			return user.getId();
+		return NON_MEMBER;
 	}
 }
