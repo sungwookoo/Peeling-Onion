@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.peelingonion.user.controller.dto.FieldCreateRequest;
 import com.ssafy.peelingonion.user.domain.User;
@@ -44,6 +45,7 @@ public class UserService {
 		userRepository.save(src);
 	}
 
+	@Transactional
 	public Long enrollUser(User user, String token) {
 		Optional<User> optUser = userRepository.findById(user.getId());
 		// 이미 회원인경우,
