@@ -68,16 +68,16 @@ public class OnionService {
 
         myRecordRepository.save(MyRecord.from(record, userId));
 
-        Onion onion = onionRepository.findById(messageCreateRequest.getId()).get();
+        Onion onion = onionRepository.findById(messageCreateRequest.getId()).orElseThrow();
         onion.setLatestModify(Instant.now());
         onionRepository.save(onion);
 
-        Onion oni = onionRepository.findById(messageCreateRequest.getId()).get();
+        Onion oni = onionRepository.findById(messageCreateRequest.getId()).orElseThrow();
         messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
     }
 
     public void throwOnion(Long onionId){
-        Onion onion = onionRepository.findById(onionId).get();
+        Onion onion = onionRepository.findById(onionId).orElseThrow();
         // getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
         if(onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled()){
             // 양파의 전송일 추가하기
@@ -99,11 +99,11 @@ public class OnionService {
     }
 
     public Onion findOnionById(Long onionId){
-        return onionRepository.findById(onionId).get();
+        return onionRepository.findById(onionId).orElseThrow();
     }
 
     public ReceiveOnion findReceiveOnionByOnionId(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).get();
+        Onion onion = onionRepository.findById(onionId).orElseThrow();
         ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
         receiveOnion.setIsChecked(Boolean.TRUE);
         return receiveOnionRepository.save(receiveOnion);
@@ -114,7 +114,7 @@ public class OnionService {
     }
 
     public void bookmarkOnion(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).get();
+        Onion onion = onionRepository.findById(onionId).orElseThrow();
         ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
         if(receiveOnion.getIsBookmarked()) {
             receiveOnion.setIsBookmarked(Boolean.FALSE);
@@ -125,20 +125,20 @@ public class OnionService {
     }
 
     public void deleteOnion(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).get();
+        Onion onion = onionRepository.findById(onionId).orElseThrow();
         onion.setIsDisabled(Boolean.TRUE);
         onionRepository.save(onion);
     }
 
     public void transferOnion(Long fromFId, Long toFId, Long onionId) {
-        Storage storage = storageRepository.findByFieldIdAndOnionId(fromFId, onionId).get();
-        Field toField = fieldRepository.findById(toFId).get();
+        Storage storage = storageRepository.findByFieldIdAndOnionId(fromFId, onionId).orElseThrow();
+        Field toField = fieldRepository.findById(toFId).orElseThrow();
         storage.setField(toField);
         storageRepository.save(storage);
     }
 
     public Message findMessageById(Long messageId){
-        return messageRepository.findById(messageId).get();
+        return messageRepository.findById(messageId).orElseThrow();
     }
 
     public String getNameByUserId(Long userId) {
