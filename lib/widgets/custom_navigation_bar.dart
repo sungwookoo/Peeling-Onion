@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:front/screens/alarm_screens/alarm_screen.dart';
-import 'package:front/screens/record_screens/record_screen.dart';
 import '../screens/postbox_screens/postbox_screen.dart';
 import '../screens/home_screens/home_screen.dart';
 import '../screens/field_screens/field_screen.dart';
@@ -50,16 +49,16 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               );
             },
           ),
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RecordScreen(),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.voice_chat_outlined)),
+          // IconButton(
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(
+          //           builder: (context) => const RecordScreen(),
+          //         ),
+          //       );
+          //     },
+          //     icon: const Icon(Icons.voice_chat_outlined)),
         ],
       ),
       // 화면 내용
