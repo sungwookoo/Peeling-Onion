@@ -69,7 +69,8 @@ public class FieldController {
                 List<Field> fields = fieldService.readAllFields(userId);
                 List<FieldReadResponse> fieldReadResponses = new ArrayList<>();
                 for(Field field : fields){
-                    fieldReadResponses.add(FieldReadResponse.from(field));
+                    FieldReadResponse fieldReadResponse = FieldReadResponse.from(field);
+                    fieldReadResponses.add(fieldReadResponse);
                 }
                 return ResponseEntity.ok(fieldReadResponses);
             } catch(FieldAllNotFoundException e){
