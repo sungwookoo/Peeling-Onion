@@ -3,6 +3,7 @@ package com.ssafy.peelingonion.user.service;
 import static com.ssafy.peelingonion.common.ConstValues.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -44,37 +45,37 @@ public class UserService {
 	}
 
 	public Long enrollUser(User user, String token) {
+		Optional<User> optUser = userRepository.findById(user.getId());
 		// 이미 회원인경우,
-		if (userRepository.existsById(user.getId())) {
-			User base = userRepository.findById(user.getId()).get();
-			if (!base.getActivate().equals(true)) {
-				// 비활성 유저인경우
-				base.setActivate(true);
-				userRepository.save(base);
+		if (optUser.isPresent()) {
+			return optUser.get().getId();
+		} else { // 비회원인경우
+			Optional<User> isUnActiveUser = userRepository.findByKakaoId(user.getKakaoId());
+			if (isUnActiveUser.isPresent()) {
+				User unActiveUser = isUnActiveUser.get();
+				unActiveUser.setActivate(true);
+				userRepository.save(unActiveUser);
+				return unActiveUser.getId();
+			} else {
+				user.setId(null); // autoincrement를 활용하기 위해 null 처리
+				User newUser = userRepository.save(user);
+				try {
+					BIZ_SERVER_CLIENT.post()
+						.uri(CREATE_FILED_URI)
+						.header("Authorization", token)
+						.bodyValue(FieldCreateRequest.builder()
+							.name("기본")
+							.build())
+						.retrieve()
+						.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+						.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+						.bodyToMono(Void.class)
+						.block();
+				} catch (Exception e) {
+					log.error(e.getMessage());
+				}
+				return newUser.getId();
 			}
-
-			return base.getId();
-		} else { // 신규 가입자인 경우
-			user.setId(null); // autoincrement를 활용하기 위해 null 처리
-			User newUser = userRepository.save(user);
-
-			try {
-				BIZ_SERVER_CLIENT.post()
-					.uri(CREATE_FILED_URI)
-					.header("Authorization", token)
-					.bodyValue(FieldCreateRequest.builder()
-						.name("기본")
-						.build())
-					.retrieve()
-					.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
-					.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
-					.bodyToMono(Void.class)
-					.block();
-			} catch (Exception e) {
-				log.error(e.getMessage());
-			}
-
-			return newUser.getId();
 		}
 	}
 
