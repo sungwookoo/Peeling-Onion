@@ -36,20 +36,20 @@ class FieldApiService {
   static Future<CustomField> createField(String fieldName) async {
     final accessToken = await Token.then((value) => value?.accessToken);
     print('$fieldName: $accessToken');
-    final response = await http.post(
-      Uri.parse('$baseUrl/field'),
-      headers: <String, String>{
-        'Authorization': 'Bearer $accessToken',
-      },
-      body: <String, String>{
-        'name': fieldName,
-      },
-    );
+    final response = await http.post(Uri.parse('$baseUrl/field'),
+        headers: <String, String>{
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': fieldName,
+        }));
     // 요청 성공
     if (response.statusCode == 200) {
-      CustomField field = jsonDecode(response.body);
+      CustomField field = CustomField.fromJson(jsonDecode(response.body));
       return field;
     } else {
+      print(response.statusCode);
       throw Exception('Failed to load fields');
     }
   }
