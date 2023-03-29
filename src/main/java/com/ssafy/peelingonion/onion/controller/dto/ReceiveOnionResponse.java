@@ -26,7 +26,8 @@ public class ReceiveOnionResponse {
         Onion o = receiveOnion.getOnion();
         return ReceiveOnionResponse.builder()
                 .id(o.getId())
-                .name(o.getImgSrc())
+                .name(o.getName())
+                .img_src(o.getImgSrc())
                 .receive_date(o.getSendDate())
                 .sender(userName)
                 .is_single(o.getIsSingle())
