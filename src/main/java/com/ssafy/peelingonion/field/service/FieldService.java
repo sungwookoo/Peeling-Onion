@@ -5,6 +5,7 @@ import static com.ssafy.peelingonion.common.ConstValues.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
@@ -70,8 +71,8 @@ public class FieldService {
 		List<Field> fields = new ArrayList<>();
 		if(!myFields.isEmpty()) {
 			for (MyField myField : myFields) {
-				Field field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow();
-				fields.add(field);
+				Optional<Field> field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE);
+				field.ifPresent(fields::add);
 			}
 		}
 		return fields;
