@@ -229,6 +229,7 @@ class _SigninScreenState extends State<SigninScreen> {
     Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 
     final accessToken = await Token.then((value) => value?.accessToken);
+    print(accessToken);
 
     http.Response response = await http.post(
       Uri.parse('$baseUrl/user'),

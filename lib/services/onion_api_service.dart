@@ -23,11 +23,14 @@ class OnionApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
+    print(accessToken);
     // 요청에 따라 저장
     if (response.statusCode == 200) {
       List onions = jsonDecode(response.body);
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
+      print(response.statusCode);
+      print(response.body);
       throw Exception('Failed to get home_onions');
     }
   }
