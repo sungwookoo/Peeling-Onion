@@ -14,6 +14,7 @@ class OnionCreate extends StatefulWidget {
 }
 
 class _OnionCreateState extends State<OnionCreate> {
+  int _imageidx = 0;
   String _date = DateFormat('yyyy/MM/dd').format(DateTime.now());
   String _onionName = '';
   String _mobileNumber = '';
@@ -27,7 +28,8 @@ class _OnionCreateState extends State<OnionCreate> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-            image: AssetImage('assets/images/backfarm.png'), fit: BoxFit.fill),
+            image: AssetImage('assets/images/createbackground.jpg'),
+            fit: BoxFit.fill),
       ),
       child: GestureDetector(
         onTap: () {
@@ -43,19 +45,49 @@ class _OnionCreateState extends State<OnionCreate> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                const Column(
+                Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    Center(
-                      child: Image(
-                        image: AssetImage('assets/images/customonion1.png'),
-                        height: 350,
-                        fit: BoxFit.cover,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_imageidx == 0) {
+                                _imageidx = 2;
+                              } else {
+                                _imageidx--;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.keyboard_arrow_left),
+                          iconSize: 40,
+                        ),
+                        Image(
+                          image: AssetImage(
+                              'assets/images/customonion$_imageidx.png'),
+                          height: 280,
+                          width: 200,
+                          fit: BoxFit.cover,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _imageidx = (_imageidx + 1) % 3;
+                            });
+                          },
+                          icon: const Icon(Icons.keyboard_arrow_right),
+                          iconSize: 40,
+                        ),
+                      ],
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 Form(
                   key: _onionFormKey,
@@ -274,7 +306,7 @@ class _OnionCreateState extends State<OnionCreate> {
                                   OnionApiService.createOnion(
                                       onionName: _onionName,
                                       onionImage:
-                                          'assets/images/customonion1.png',
+                                          'assets/images/customonion$_imageidx.png',
                                       receiverNumber: _mobileNumber,
                                       growDueDate: _date,
                                       isSingle: isSingle,

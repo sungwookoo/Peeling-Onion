@@ -48,6 +48,7 @@ dependencies:
   dio: ^4.0.6
   provider: ^6.0.5
   carousel_slider: ^4.2.1
+  simple_s3: ^0.3.2
 
 dev_dependencies:
   flutter_test:
@@ -78,13 +79,18 @@ flutter:
     - assets/icons/mypage_icon.png
     - assets/icons/sprout_icon.png
     - assets/icons/noalarm.png
-    - assets/images/backfarm.png
+    - assets/images/createbackground.jpg
     - assets/images/onion_image.png
-    - assets/images/customonion1.png
+    - assets/images/customonion0.png
     - assets/images/letter.png
     - assets/images/letters.png
     - assets/images/shelf.png
-    - assets/images/background.jpg
+    - assets/images/wall_paper.jpg
+    - assets/images/onioninbottle.png
+    - assets/images/note.png
+    - assets/images/customonion1.png
+    - assets/images/customonion2.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
