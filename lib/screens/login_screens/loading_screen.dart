@@ -23,9 +23,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
     final userId = await UserApiService.checkSignin(context);
     if (userId != -1) {
-      // Navigator.pushNamed(context, '/home');
+      Navigator.pushNamed(context, '/home');
       // signin 테스트할 때
-      Navigator.pushNamed(context, '/signin');
+      // Navigator.pushNamed(context, '/signin');
     } else if (userId == -1) {
       Navigator.pushNamed(context, '/signin');
     }
@@ -40,11 +40,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
         // 가입 되어 있으면 userId를 반환받아서 상태 저장.
         // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
         final userId = await UserApiService.checkSignin(context);
+        print(userId);
         if (userId != -1) {
-          // Navigator.pushNamed(context, '/home');
+          Navigator.pushNamed(context, '/home');
         } else {
           // 테스트용~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          // Navigator.pushNamed(context, '/home');
+          Navigator.pushNamed(context, '/signin');
         }
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {
