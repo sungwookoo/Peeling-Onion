@@ -69,7 +69,8 @@ public class FieldService {
 		List<MyField> myFields = myFieldRepository.findAllByUserId(userId);
 		List<Field> fields = new ArrayList<>();
 		for (MyField myField : myFields) {
-			fields.add(fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow());
+			Field field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow();
+			fields.add(field);
 		}
 		return fields;
 	}
