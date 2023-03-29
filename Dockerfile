@@ -2,10 +2,10 @@
 FROM node:14
 
 # 작업 디렉토리를 설정합니다.
-WORKDIR /var/jenkins_home/workspace/react-main
+WORKDIR /var/jenkins_home/workspace/react-main/peeling-onion
 
 # 의존성 파일들을 컨테이너 안에 복사합니다.
-COPY package*.json ./
+COPY package*.json ../
 
 RUN ls -la
 
