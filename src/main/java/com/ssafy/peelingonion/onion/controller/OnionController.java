@@ -211,7 +211,7 @@ public class OnionController {
         if(authorizeService.isAuthorization(userId)){
             try {
                 onionService.recordMessage(messageCreateRequest, userId);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.status(HttpStatus.CREATED).build();
             } catch (MessageNotCreatedException e) {
                 log.error(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();

@@ -47,10 +47,13 @@ public class Message {
 	private String content;
 
 	@Column(name = "pos_rate")
-	private Double posRate;
+	private Integer posRate;
 
 	@Column(name = "neg_rate")
-	private Double negRate;
+	private Integer negRate;
+
+	@Column(name = "neu_rate")
+	private Integer neuRate;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -71,6 +74,7 @@ public class Message {
 				.content(messageCreateRequest.getContent())
 				.posRate(messageCreateRequest.getPos_rate())
 				.negRate(messageCreateRequest.getNeg_rate())
+				.neuRate(messageCreateRequest.getNeu_rate())
 				.build();
 	}
 }

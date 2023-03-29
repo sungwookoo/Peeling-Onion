@@ -66,10 +66,10 @@ public class OnionService {
     }
 
     public void recordMessage(MessageCreateRequest messageCreateRequest, Long userId) {
-        //***** 녹음되지 않았을 경우, 어떻게 처리하면 좋을까? *****//
         Record record = recordRepository.save(Record.from(messageCreateRequest));
         myRecordRepository.save(MyRecord.from(record, userId));
         Optional<Onion> opOnion = onionRepository.findById(messageCreateRequest.getId());
+        // 메시지를 저장할 때, 뭘해야하나???
         if(opOnion.isPresent()) {
             Onion onion = opOnion.get();
             onion.setLatestModify(Instant.now());

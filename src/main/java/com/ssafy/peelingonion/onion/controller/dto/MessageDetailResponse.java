@@ -17,8 +17,9 @@ public class MessageDetailResponse {
     public String sender;
     public Instant created_at;
     public String content;
-    public Double pos_rate;
-    public Double neg_rate;
+    public Integer pos_rate;
+    public Integer neg_rate;
+    public Integer neu_rate;
     public String file_src;
     public static MessageDetailResponse from(Long messageId, String userName, Message message) {
         return MessageDetailResponse.builder()
