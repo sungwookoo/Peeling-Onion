@@ -31,7 +31,6 @@ function App() {
     <figure id="splash-device">
       <div className="device-image ios">
         <div className="device">
-          {/* <span class="site-name"> Peeling Onion </span> */}
           <img src="https://picsum.photos/1500/2500" />
         </div>
       </div>
@@ -42,7 +41,6 @@ function App() {
             <span className="ellipsis book">메세지를 담은 양파를 보내 감동을 전달하세요</span>{" "}
             <br></br>
             <span className="m-3 ellipsis book">Send a message to convey your feelings</span>
-            {/* <span class="ellipsis site-name">Smiling Dog Yoga.</span> */}
           </div>
         </div>
         <a>
