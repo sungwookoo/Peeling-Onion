@@ -106,6 +106,7 @@ public class OnionService {
         Onion onion = onionRepository.findById(onionId).orElseThrow();
         ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
         receiveOnion.setIsChecked(Boolean.TRUE);
+        receiveOnionRepository.save(receiveOnion);
         return receiveOnionRepository.save(receiveOnion);
     }
 
