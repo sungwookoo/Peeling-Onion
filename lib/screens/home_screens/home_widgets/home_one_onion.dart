@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
+import 'package:front/screens/record_screens/record_screen.dart';
 import './show_delete_modal.dart';
 
 // 양파 1개 (이후 이곳의 onTap 속성에, 혜빈누나 작업물 붙일 예정)
@@ -21,6 +22,14 @@ class HomeOneOnion extends StatelessWidget {
       onLongPress: () {
         // 양파 1개 delete 함수
         showDeleteModal(context, _onions.elementAt(globalIndex), onDelete);
+      },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  RecordScreen(onion: _onions.elementAt(globalIndex))),
+        );
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
