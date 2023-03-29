@@ -36,6 +36,23 @@ class FieldApiService {
     throw Exception('Failed to load fields');
   }
 
+  // 밭 삭제 delete
+  static Future<void> deleteField(int fieldId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/field/$fieldId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // 요청 성공
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to load fields');
+    }
+  }
+
   // 밭 안의 양파들 정보 get
   static Future<List<CustomOnionFromField>> getOnionFromField(
       int fieldId) async {

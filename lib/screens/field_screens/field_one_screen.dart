@@ -24,6 +24,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
 
   late Future<List<CustomOnionFromField>> _onions;
 
+  // 시작할 때 받아옴
   @override
   void initState() {
     // TODO: implement initState
