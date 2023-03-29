@@ -5,6 +5,7 @@ import static com.ssafy.peelingonion.common.ConstValues.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
@@ -68,18 +69,13 @@ public class FieldService {
 	public List<Field> readAllFields(Long userId) {
 		List<MyField> myFields = myFieldRepository.findAllByUserId(userId);
 		List<Field> fields = new ArrayList<>();
-		for (MyField myField : myFields) {
-			Field field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow();
-			fields.add(field);
+		if(!myFields.isEmpty()) {
+			for (MyField myField : myFields) {
+				Optional<Field> field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE);
+				field.ifPresent(fields::add);
+			}
 		}
 		return fields;
-	}
-
-	public Field readField(Long fieldId) {
-		//**챌린지1 : userId, fieldId에 맞는 중개 테이블이 있는지 확인하고 로직을 진행해보는 것
-		//           -> 이 때 userId를 컨트롤러에서 받아와야한다.
-		//**챌린지2 : field entity가 없을 때, 예외처리하기
-		return fieldRepository.findById(fieldId).get();
 	}
 
 	public Field updateField(Long fieldId, String updateName) {

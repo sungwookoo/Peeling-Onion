@@ -42,5 +42,4 @@ public class MyField {
 
 	@Column(name = "is_default")
 	private Boolean isDefault;
-
 }
