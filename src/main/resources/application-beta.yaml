@@ -9,6 +9,9 @@ spring:
       maximum-pool-size: 200
   jpa:
     database: mysql
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   level:
