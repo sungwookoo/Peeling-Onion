@@ -15,45 +15,7 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   @override
   Widget build(BuildContext context) {
     // 밭 drag and drop 기능
-    return LongPressDraggable(
-      data: widget.field.id,
-      // drag 할 때 보이는 화면 (양파들은 표시할 필요 없을지도?)
-      feedback: Opacity(
-        opacity: 0.6,
-        child: SizedBox(
-          height: (MediaQuery.of(context).size.width - 60) / 2,
-          width: (MediaQuery.of(context).size.width - 60) / 2,
-          child: Center(
-            child: Container(
-              height: 70,
-              width: 70,
-              color: Colors.brown,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 밭 이름 표시
-                    Text(
-                      widget.field.name,
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    // 밭 안의 양파들 출력할 경우, 여기 코드 작성
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      // feedback 이 나타날 위치
-      feedbackOffset: const Offset(
-        0,
-        0,
-      ),
-      child: OneField(widget: widget),
-    );
+    return OneField(widget: widget);
   }
 }
 

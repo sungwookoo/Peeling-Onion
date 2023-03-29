@@ -24,6 +24,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
 
   late Future<List<CustomOnionFromField>> _onions;
 
+  // 시작할 때 받아옴
   @override
   void initState() {
     // TODO: implement initState
@@ -37,6 +38,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
       width: (MediaQuery.of(context).size.width - 60),
       height: (MediaQuery.of(context).size.width - 60),
       color: Colors.brown,
+      // _onions api 받아온 뒤 빌드
       child: FutureBuilder(
         future: _onions,
         builder: (context, AsyncSnapshot<dynamic> snapshot) {
@@ -45,13 +47,13 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                 snapshot.data as List<CustomOnionFromField>;
 
             return Center(
+              // 양파들을 격자로 표시
               child: GridView(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   childAspectRatio: 1,
                 ),
                 children: onionsData.map((onion) {
-                  // 밭 하나하나가 drag target 이다 (양파 이동 시)
                   return Wrap(
                     direction: Axis.horizontal,
                     alignment: WrapAlignment.center,

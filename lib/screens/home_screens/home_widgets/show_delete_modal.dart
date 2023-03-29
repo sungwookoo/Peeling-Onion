@@ -22,7 +22,7 @@ Future<void> showDeleteModal(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Delete Onion'),
+            Text(onion.name),
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {

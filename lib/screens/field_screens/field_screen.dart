@@ -32,6 +32,16 @@ class _FieldScreenState extends State<FieldScreen> {
     });
   }
 
+  // 밭 삭제하는 메서드
+  void _deleteField(int index) {
+    setState(() {
+      _fields = _fields.then((fields) {
+        fields.removeAt(index);
+        return fields;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,8 +56,10 @@ class _FieldScreenState extends State<FieldScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 밭들을 grid 로 출력
-                MakeFields(fields: fieldsData),
+                // 밭들을 grid 로 출력 (MakeField 클래스 사용)
+                MakeFields(
+                  fields: fieldsData,
+                ),
               ],
             );
           } else if (snapshot.hasError) {

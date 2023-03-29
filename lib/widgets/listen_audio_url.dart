@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 // 녹음 재생을 위한 위젯
 class ListenAudioUrl extends StatefulWidget {
   // url 저장할 변수
-  final String? urlPath;
+  final String urlPath;
   // 재생중인지 저장할 변수
   final ValueNotifier<bool> isPlayed;
 
@@ -30,6 +30,8 @@ class _ListenAudioUrlState extends State<ListenAudioUrl> {
     _playerListenerCallback = () => _toggleAudioPlayback();
     widget.isPlayed.addListener(_playerListenerCallback);
     _prepareAudio();
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@');
+    print(widget.urlPath);
   }
 
   // 위젯이 업데이트 되면 호출 (urlPath가 변경되면 _prepareAudio 호출)
@@ -52,10 +54,8 @@ class _ListenAudioUrlState extends State<ListenAudioUrl> {
   // 오디오 준비 (urlPath 가 올바른 url 형식이면)
   Future<void> _prepareAudio() async {
     try {
-      if (widget.urlPath != null) {
-        Uri.parse(widget.urlPath!);
-        await player.setSourceUrl(widget.urlPath!);
-      }
+      Uri.parse(widget.urlPath);
+      await player.setSourceUrl(widget.urlPath);
     } catch (e) {}
   }
 
