@@ -87,12 +87,10 @@ public class FieldService {
 		return fieldRepository.save(field);
 	}
 
-	// 밭 삭제시 관계테이블에 대한 고려가 이루어져야 한다.
-	// 현재 해당 부분이 고려되어 있지 않다. 수정해야함.
-	// 또한 밭 관련 전체 로직에 대한 검증이 필요함.
 	public void deleteField(Long fieldId) {
-		Field field = fieldRepository.findById(fieldId).get();
+		Field field = fieldRepository.findById(fieldId).orElseThrow();
 		field.setIsDisabled(Boolean.TRUE);
+		fieldRepository.save(field);
 	}
 
 	/**
