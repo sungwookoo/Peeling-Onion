@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:front/screens/postbox_screens/onion_one_screen.dart';
+import 'package:front/services/field_api_service.dart';
+import './onion_one_screen.dart';
 import '../../models/custom_models.dart';
 
-// 밭 1개를 출력하는 클래스
+// 밭 1개를 모달로 출력하는 클래스
 class FieldOneScreen extends StatefulWidget {
   final CustomField field;
-  final List<CustomField> fields;
   // late bool showDraggableRectangle;
   final Function(bool) onValueChanged;
 
@@ -13,7 +13,6 @@ class FieldOneScreen extends StatefulWidget {
     super.key,
     required this.field,
     required this.onValueChanged,
-    required this.fields,
   });
 
   @override
@@ -23,87 +22,66 @@ class FieldOneScreen extends StatefulWidget {
 class _FieldOneScreenState extends State<FieldOneScreen> {
   ValueNotifier<bool> showDraggableRectangle = ValueNotifier<bool>(false);
 
+  late Future<List<CustomOnionFromField>> _onions;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _onions = FieldApiService.getOnionFromField(widget.field.id);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       width: (MediaQuery.of(context).size.width - 60),
       height: (MediaQuery.of(context).size.width - 60),
       color: Colors.brown,
-      child: Center(
-        child: GridView(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 1,
-          ),
-          children: widget.field.onions.map((onion) {
-            // 밭 하나하나가 drag target 이다 (양파 이동 시)
-            return DragTarget<int>(
-              onWillAccept: (data) {
-                return true;
-              },
-              onAccept: (data) async {
-                // 밭 위치 조정 API 보내기 (data 는 onion Id)
-                int targetField = widget.field.id;
-              },
-              builder: (
-                BuildContext context,
-                List<dynamic> accepted,
-                List<dynamic> rejected,
-              ) {
-                return Wrap(
-                  direction: Axis.horizontal,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    Text(
-                      onion.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    // 꾹 누르면 drag and drop 가능하게
-                    // 꾹 누를 때 모달이 사라지면 draggable 도 사라짐.
-                    // 꾹 누르면 아래에 밭들 이름이 나타나게 해서 이동하도록 수정
-                    LongPressDraggable<int>(
-                      data: onion.id,
-                      // 드래그 시작하면, 아래에 밭들 나타나게
-                      onDragStarted: () {
-                        setState(() {
-                          // widget.showDraggableRectangle = true;
-                          widget.onValueChanged(true);
-                        });
-                      },
-                      onDragCompleted: () {
-                        setState(() {
-                          // widget.showDraggableRectangle = false;
-                          widget.onValueChanged(false);
-                        });
-                      },
-                      onDraggableCanceled: (_, __) {
-                        setState(() {
-                          // widget.showDraggableRectangle = false;
-                          widget.onValueChanged(false);
-                        });
-                      },
-                      feedback: const Text('양파 드래그 앤 드롭'),
-                      // 밭의 양파를 누르면, 양파 1개 화면으로 넘어감
-                      child: GestureDetector(
+      child: FutureBuilder(
+        future: _onions,
+        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            List<CustomOnionFromField> onionsData =
+                snapshot.data as List<CustomOnionFromField>;
+
+            return Center(
+              child: GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1,
+                ),
+                children: onionsData.map((onion) {
+                  // 밭 하나하나가 drag target 이다 (양파 이동 시)
+                  return Wrap(
+                    direction: Axis.horizontal,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      // 꾹 누르면 이동/삭제 선택창이 나타나게
+                      // 이동 누르면 이전 창으로 가서, 밭을 선택할 수 있음
+                      GestureDetector(
+                        onLongPress: () {},
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  OnionOneScreen(onion: onion),
+                                  OnionOneScreen(onionId: onion.id),
                             ),
                           );
                         },
                         child: Image.asset('assets/images/onion_image.png'),
                       ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                }).toList(),
+              ),
             );
-          }).toList(),
-        ),
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
       ),
     );
   }

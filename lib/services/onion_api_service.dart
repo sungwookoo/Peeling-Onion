@@ -3,16 +3,27 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:front/models/custom_models.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+
+Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 
 // 양파 api 요청들
 class OnionApiService {
+  // base url
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 기르는 양파 get (홈 화면에 띄울 양파 정보)
-  static Future<List<CustomHomeOnion>> getGrowingOnionByUserId(
-      int userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/onion/grow/$userId'));
+  static Future<List<CustomHomeOnion>> getGrowingOnionByUserId() async {
+    final accessToken = await Token.then((value) => value?.accessToken);
 
+    // get 요청 보내기
+    final response = await http.get(
+      Uri.parse('$baseUrl/onion/growing'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // 요청에 따라 저장
     if (response.statusCode == 200) {
       List onions = jsonDecode(response.body);
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
@@ -25,8 +36,15 @@ class OnionApiService {
 
   // 양파 get (양파 1개 조회. 연결된 message들 포함)
   static Future<CustomOnion> getOnionById(int onionId) async {
-    final response = await http.get(Uri.parse('$baseUrl/onion/$onionId'));
+    final accessToken = await Token.then((value) => value?.accessToken);
 
+    // get 요청 보내기
+    final response = await http.get(
+      Uri.parse('$baseUrl/onion/$onionId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
     if (response.statusCode == 200) {
       CustomOnion onion = jsonDecode(response.body);
       return onion;
@@ -38,4 +56,19 @@ class OnionApiService {
   // 양파 post (양파 생성)
 
   // 양파 delete (양파 삭제)
+  static Future<void> deleteOnionById(int onionId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/onion/$onionId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      // On success, do something
+    } else {
+      throw Exception('Failed to delete onion');
+    }
+  }
 }

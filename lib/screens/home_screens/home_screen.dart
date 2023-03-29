@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
+import './home_widgets/home_one_onion.dart';
 import '../../widgets/trash_can.dart';
 
 class HomeScreen extends StatefulWidget {
-  final int id = 1;
   const HomeScreen({super.key});
 
   @override
@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    onions = OnionApiService.getGrowingOnionByUserId(widget.id);
+    onions = OnionApiService.getGrowingOnionByUserId();
   }
 
   @override
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// 양파들을 격자로 표시할 예정
+// 양파들을 격자로 표시 (페이지 뷰 사용)
 class ShowGrowingOnions extends StatefulWidget {
   final List<CustomHomeOnion> _onions;
 
@@ -72,6 +72,15 @@ class ShowGrowingOnions extends StatefulWidget {
 }
 
 class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
+  late final List<CustomHomeOnion> _onions = widget._onions;
+
+  void _deleteOnion(int index) {
+    setState(() {
+      // Remove the onion from the list
+      _onions.removeAt(index);
+    });
+  }
+
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
@@ -104,15 +113,16 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        // mainAxisSpacing: 10,
-                        // crossAxisSpacing: 10,
                       ),
                       itemBuilder: (BuildContext context, int itemIndex) {
                         int globalIndex = firstOnionIndex + itemIndex;
                         if (globalIndex < widget._onions.length) {
-                          // 각 양파 1개 (텍스트 + 이미지)
-                          return DraggableOnion(
-                              onions: widget._onions, globalIndex: globalIndex);
+                          // 양파 1개 (텍스트 + 이미지)
+                          return HomeOneOnion(
+                            onions: widget._onions,
+                            globalIndex: globalIndex,
+                            onDelete: () => _deleteOnion(globalIndex),
+                          );
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -129,67 +139,6 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
           ),
         );
       },
-    );
-  }
-}
-
-// 양파 drag & drop 기능
-class DraggableOnion extends StatelessWidget {
-  const DraggableOnion({
-    super.key,
-    required List<CustomHomeOnion> onions,
-    required this.globalIndex,
-  }) : _onions = onions;
-
-  final List<CustomHomeOnion> _onions;
-  final int globalIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Draggable<int>(
-      // 전달할 데이터 (양파 번호)
-      data: _onions.elementAt(globalIndex).onionId,
-      // 드래그 할 때 양파 이미지만 투명해지게 이동하기. 이후 예쁘게 수정 예정
-      feedback: SizedBox(
-        width: 100,
-        height: 100,
-        child: Center(
-          child: Transform.scale(
-            scale: 1.2,
-            child: Opacity(
-              opacity: 0.6,
-              child: Image.asset('assets/images/onion_image.png'),
-            ),
-          ),
-        ),
-      ),
-      // 드래그할 때 보일 양파 이미지
-      childWhenDragging: OneOnion(onions: _onions, globalIndex: globalIndex),
-      // 겉으로 보일 양파
-      child: OneOnion(onions: _onions, globalIndex: globalIndex),
-    );
-  }
-}
-
-// 양파 1개
-class OneOnion extends StatelessWidget {
-  const OneOnion({
-    super.key,
-    required List<CustomHomeOnion> onions,
-    required this.globalIndex,
-  }) : _onions = onions;
-
-  final List<CustomHomeOnion> _onions;
-  final int globalIndex;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(_onions.elementAt(globalIndex).onionName),
-        Image.asset('assets/images/onion_image.png'),
-      ],
     );
   }
 }
