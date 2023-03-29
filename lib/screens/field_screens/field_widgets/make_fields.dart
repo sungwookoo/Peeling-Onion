@@ -29,10 +29,8 @@ class _MakeFieldsState extends State<MakeFields> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _fields = widget._fields;
-    print(context);
   }
 
   void _updateData(bool newData) {

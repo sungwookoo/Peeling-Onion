@@ -48,11 +48,8 @@ Future<void> displayTextInputDialog(
                   String text = textFieldController.text;
                   // 예외 처리
                   if (text.isEmpty) {
-                    print('공백');
                     return;
                   }
-                  print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-                  print('$text @@@@@@@@@@@@@');
                   FieldApiService.createField(text);
                   Navigator.pop(context);
                   addOne(text);

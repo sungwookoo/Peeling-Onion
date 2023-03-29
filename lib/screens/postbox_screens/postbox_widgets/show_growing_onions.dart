@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/screens/postbox_screens/postbox_widgets/draggable_onion.dart';
 
-//
+// 택배함에서 기르는 양파들 보여주는 클래스
 class ShowGrowingOnions extends StatefulWidget {
   final List<CustomHomeOnion> _onions;
 
@@ -55,7 +55,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                         int globalIndex = firstOnionIndex + itemIndex;
                         if (globalIndex < widget._onions.length) {
                           // 각 양파 1개 (텍스트 + 이미지)
-                          return DraggableOnion(
+                          return PostboxOneOnion(
                               onions: widget._onions, globalIndex: globalIndex);
                         } else {
                           return const SizedBox.shrink();

@@ -50,7 +50,6 @@ class FieldApiService {
       CustomField field = jsonDecode(response.body);
       return field;
     } else {
-      print(response.statusCode);
       throw Exception('Failed to load fields');
     }
   }

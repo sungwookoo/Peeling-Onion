@@ -19,9 +19,7 @@ class _OnionOneScreenState extends State<OnionOneScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    print('양파 상세 페이지 시작');
     onion = OnionApiService.getOnionById(widget.onionId);
   }
 
