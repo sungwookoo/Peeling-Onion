@@ -94,8 +94,8 @@ public class OnionService {
         }
     }
 
-    public List<ReceiveOnion> findReceiveOnions(Long userId){
-        return receiveOnionRepository.findALlByUserIdAndIsReceivedAndIsChecked(userId, Boolean.TRUE, Boolean.FALSE);
+    public List<ReceiveOnion> findReceiveOnions(String receiverNumber){
+        return receiveOnionRepository.findAllByReceiverNumberAndIsReceivedAndIsChecked(receiverNumber, Boolean.TRUE, Boolean.FALSE);
     }
 
     public Onion findOnionById(Long onionId){
@@ -145,6 +145,20 @@ public class OnionService {
         try {
             return USER_SERVER_CLIENT.get()
                     .uri("/user/" + userId.toString() + "/nickname")
+                    .retrieve()
+                    .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+                    .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public String getMobileNumberByUserId(Long userId) {
+        try {
+            return USER_SERVER_CLIENT.get()
+                    .uri("/user/" + userId.toString() + "/mobile")
                     .retrieve()
                     .onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
                     .onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))

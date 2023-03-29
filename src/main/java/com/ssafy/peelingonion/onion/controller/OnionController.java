@@ -257,7 +257,7 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)) {
             try {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
-                List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(userId);
+                List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(onionService.getMobileNumberByUserId(userId));
                 String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions){
                     receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, userName));

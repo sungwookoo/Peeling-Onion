@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ReceiveOnionRepository extends JpaRepository<ReceiveOnion, Long> {
     ReceiveOnion findByOnion(Onion onion);
-    List<ReceiveOnion> findALlByUserIdAndIsReceivedAndIsChecked(Long userId, Boolean isReceived, Boolean isChecked);
+    List<ReceiveOnion> findAllByReceiverNumberAndIsReceivedAndIsChecked(String receiveNumber, Boolean isReceived, Boolean isChecked);
 
     List<ReceiveOnion> findByUserIdAndIsBookmarked(Long userId, Boolean isBookmarked);
 }
