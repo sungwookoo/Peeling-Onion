@@ -357,7 +357,9 @@ class _RecordScreenState extends State<RecordScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     child: const Text('취소'),
                   ),
                   ElevatedButton(
