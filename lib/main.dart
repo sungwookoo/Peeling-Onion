@@ -13,10 +13,12 @@ void main() async {
   await dotenv.load(fileName: ".env"); // 추가
   String? nativeAppKey = dotenv.env['nativeAppKey'];
   KakaoSdk.init(nativeAppKey: '$nativeAppKey');
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(ChangeNotifierProvider(
     create: (context) => UserIdModel(),
     child: const App(),

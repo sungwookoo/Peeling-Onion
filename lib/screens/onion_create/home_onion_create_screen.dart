@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front/screens/onion_create/invite_people.dart';
+import 'package:front/services/onion_api_service.dart';
 import 'package:intl/intl.dart';
 
 class OnionCreate extends StatefulWidget {
@@ -13,7 +14,8 @@ class OnionCreate extends StatefulWidget {
 }
 
 class _OnionCreateState extends State<OnionCreate> {
-  String _date = DateFormat.yMMMd().format(DateTime.now());
+  int _imageidx = 0;
+  String _date = DateFormat('yyyy/MM/dd').format(DateTime.now());
   String _onionName = '';
   String _mobileNumber = '';
   List<Map> _withUser = [];
@@ -26,7 +28,8 @@ class _OnionCreateState extends State<OnionCreate> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-            image: AssetImage('assets/images/backfarm.png'), fit: BoxFit.fill),
+            image: AssetImage('assets/images/createbackground.jpg'),
+            fit: BoxFit.fill),
       ),
       child: GestureDetector(
         onTap: () {
@@ -42,19 +45,49 @@ class _OnionCreateState extends State<OnionCreate> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                const Column(
+                Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
-                    Center(
-                      child: Image(
-                        image: AssetImage('assets/images/customonion1.png'),
-                        height: 350,
-                        fit: BoxFit.cover,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_imageidx == 0) {
+                                _imageidx = 2;
+                              } else {
+                                _imageidx--;
+                              }
+                            });
+                          },
+                          icon: const Icon(Icons.keyboard_arrow_left),
+                          iconSize: 40,
+                        ),
+                        Image(
+                          image: AssetImage(
+                              'assets/images/customonion$_imageidx.png'),
+                          height: 280,
+                          width: 200,
+                          fit: BoxFit.cover,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _imageidx = (_imageidx + 1) % 3;
+                            });
+                          },
+                          icon: const Icon(Icons.keyboard_arrow_right),
+                          iconSize: 40,
+                        ),
+                      ],
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 30,
                 ),
                 Form(
                   key: _onionFormKey,
@@ -230,7 +263,7 @@ class _OnionCreateState extends State<OnionCreate> {
                                   );
                                   if (selectedDate != null) {
                                     setState(() {
-                                      _date = DateFormat.yMMMd()
+                                      _date = DateFormat('yyyy/MM/dd')
                                           .format(selectedDate);
                                     });
                                   }
@@ -250,26 +283,36 @@ class _OnionCreateState extends State<OnionCreate> {
                             onPressed: () async {
                               if (_onionFormKey.currentState!.validate()) {
                                 _onionFormKey.currentState!.save();
-                                if (_withUser.isEmpty) {
+                                if (_withUser.isEmpty && isTogether) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                         content:
                                             Text('함께 보낼 사람을 적어도 1명 선택해주세요!')),
                                   );
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text('$_onionName/$_mobileNumber'),
-                                      behavior: SnackBarBehavior.floating,
-                                      // margin: const EdgeInsets.symmetric(
-                                      //   vertical: 50,
-                                      //   horizontal: 20,
-                                      // ),
-                                    ),
-                                  );
+                                  // ScaffoldMessenger.of(context).showSnackBar(
+                                  //   SnackBar(
+                                  //     content: Text(
+                                  //         '$_onionName/$_mobileNumber/$_date'),
+                                  //     behavior: SnackBarBehavior.floating,
+                                  //     // margin: const EdgeInsets.symmetric(
+                                  //     //   vertical: 50,
+                                  //     //   horizontal: 20,
+                                  //     // ),
+                                  //   ),
+                                  // );
+                                  bool isSingle = !isTogether;
+
+                                  OnionApiService.createOnion(
+                                      onionName: _onionName,
+                                      onionImage:
+                                          'assets/images/customonion$_imageidx.png',
+                                      receiverNumber: _mobileNumber,
+                                      growDueDate: _date,
+                                      isSingle: isSingle,
+                                      userList: _withUser);
+                                  Navigator.pop(context);
                                 }
-                                // Navigator.pop(context);
                               }
                             },
                             child: const Text('양파 만들기'),

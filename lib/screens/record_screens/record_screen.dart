@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:front/services/stt_api_service.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../services/upload_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RecordScreen extends StatefulWidget {
@@ -21,8 +22,14 @@ class _RecordScreenState extends State<RecordScreen> {
   String _recordFilePath = '';
   String sttToken = '';
   String _sttMessage = '';
-  late Timer _timer;
+  Timer _timer = Timer(const Duration(days: 1), () {});
   var _time = 180;
+  late int _positive;
+  late int _negative;
+  late int _neutral;
+  bool _isfirst = true;
+  bool _isThinking = false;
+  bool _isListening = false;
 
   @override
   void initState() {
@@ -49,6 +56,8 @@ class _RecordScreenState extends State<RecordScreen> {
       codec: Codec.pcm16WAV,
     );
     setState(() {
+      _isfirst = false;
+      _isThinking = true;
       _recordFilePath = filePath;
     });
   }
@@ -58,6 +67,7 @@ class _RecordScreenState extends State<RecordScreen> {
     final sttText = await sendSttRequest();
     setState(() {
       _sttMessage = sttText;
+      _isThinking = false;
     });
   }
 
@@ -68,6 +78,7 @@ class _RecordScreenState extends State<RecordScreen> {
       },
       'use_multi_channel': false,
       'use_itn': false,
+      'paragraph_splitter': {'min': 1, 'max': 50},
     };
 
     var configData = jsonEncode(config);
@@ -90,8 +101,10 @@ class _RecordScreenState extends State<RecordScreen> {
           List t = getResult['results']['utterances'];
           if (t.isEmpty) {
             return '어떤 말도 하지 않으셨어요!';
+          } else {
+            await getSentiment(t[0]['msg']);
+            return t[0]['msg'];
           }
-          return t[0]['msg'];
         }
       }
     } else {
@@ -141,7 +154,7 @@ class _RecordScreenState extends State<RecordScreen> {
     super.dispose();
   }
 
-  Future<void> getSentiment() async {
+  Future<void> getSentiment(String message) async {
     final url = Uri.parse(
         'https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze');
     final Map<String, String> header = {
@@ -150,17 +163,27 @@ class _RecordScreenState extends State<RecordScreen> {
       'Content-Type': 'application/json',
     };
 
-    String text = '싸늘하다. 가슴에 비수가 날아와 꽂힌다.';
+    String text = message;
     final data = {'content': text};
 
     final response =
         await http.post(url, headers: header, body: jsonEncode(data));
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      print(result);
+      setState(() {
+        _positive = result['document']['confidence']['positive'].round();
+        _negative = result['document']['confidence']['negative'].round();
+        _neutral = result['document']['confidence']['neutral'].round();
+      });
     } else {
-      print(jsonDecode(response.body));
+      throw Exception('감정 분석에 실패했어요');
     }
+  }
+
+  Future<void> saveRecord() async {
+    final file = File(_recordFilePath);
+    String resultRecordUrl = await UploadApiService().uploadRecord(file);
+    print(resultRecordUrl);
   }
 
   @override
@@ -171,7 +194,7 @@ class _RecordScreenState extends State<RecordScreen> {
           constraints: const BoxConstraints.expand(),
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/background.jpg'),
+              image: AssetImage('assets/images/wall_paper.jpg'),
               fit: BoxFit.fill,
             ),
           ),
@@ -180,56 +203,194 @@ class _RecordScreenState extends State<RecordScreen> {
               const SizedBox(
                 height: 30,
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black45,
-                ),
-                height: 300,
-                width: 350,
-                child: Text(_sttMessage),
-              ),
-              const Image(
-                image: AssetImage('assets/images/customonion1.png'),
-                height: 300,
-              ),
-              Text('여기에 저장 : $_recordFilePath'),
-              if (_myRecorder.isRecording)
-                Text('${_time ~/ 60} : ${_time % 60}'),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_myRecorder.isRecording) {
-                    _stopTimer();
-                    await stopRecording();
-                    setState(() {});
-                  } else {
-                    _startTimer();
-                    await startRecording();
-                    setState(() {});
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    side: const BorderSide(width: 2),
-                    backgroundColor: const Color(0xFFFDFDF5),
-                    fixedSize: const Size(100, 100)),
-                child: _myRecorder.isRecording
-                    ? const Icon(
-                        Icons.stop,
-                        color: Colors.red,
-                        size: 70,
-                      )
-                    : const Icon(
-                        Icons.fiber_manual_record,
-                        color: Colors.red,
-                        size: 70,
+              _isfirst
+                  ? Container(
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/images/note.png'),
+                        fit: BoxFit.fill,
+                      )),
+                      height: 320,
+                      width: 350,
+                      child: const Padding(
+                        padding: EdgeInsets.all(30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '양파 이름 : ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'To. ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              'DueDate : ',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
+                    )
+                  : Container(
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage('assets/images/note.png'),
+                        fit: BoxFit.fill,
+                      )),
+                      height: 320,
+                      width: 350,
+                      child: Padding(
+                        padding: const EdgeInsets.all(30),
+                        child: _isThinking
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (_isListening)
+                                    const Text(
+                                      '양파가 듣고 있습니다.',
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  if (_isListening)
+                                    Text(
+                                      '${_time ~/ 60} : ${_time % 60}',
+                                      style: const TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  if (!_isListening)
+                                    const Text(
+                                      '녹음된 메시지를 분석하고 있습니다.',
+                                      style: TextStyle(
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (_sttMessage != '어떤 말도 하지 않으셨어요!')
+                                    const Text(
+                                      '녹음된 메시지',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(_sttMessage),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  if (_sttMessage != '어떤 말도 하지 않으셨어요!')
+                                    Text(
+                                        '긍정 : $_positive%, 부정 : $_negative%, 중립 : $_neutral%'),
+                                ],
+                              ),
+                      )),
+              const SizedBox(
+                height: 20,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  getSentiment();
-                },
-                child: const Text('감정분석 요청'),
-              )
+              const SizedBox(
+                width: 350,
+                height: 250,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      child: Image(
+                        image: AssetImage(
+                          'assets/images/shelf.png',
+                        ),
+                        height: 60,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 40,
+                      child: Image(
+                        image: AssetImage('assets/images/onioninbottle.png'),
+                        height: 220,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  OutlinedButton(
+                    onPressed: () {},
+                    child: const Text('취소'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_myRecorder.isRecording) {
+                        _stopTimer();
+                        setState(() {
+                          _isListening = false;
+                        });
+                        await stopRecording();
+                        setState(() {});
+                      } else {
+                        setState(() {
+                          _isListening = true;
+                        });
+                        _startTimer();
+                        await startRecording();
+                        setState(() {});
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        side: const BorderSide(width: 2),
+                        backgroundColor: const Color(0xFFFDFDF5),
+                        fixedSize: const Size(100, 100)),
+                    child: _myRecorder.isRecording
+                        ? const Icon(
+                            Icons.stop,
+                            color: Colors.red,
+                            size: 70,
+                          )
+                        : const Icon(
+                            Icons.fiber_manual_record,
+                            color: Colors.red,
+                            size: 70,
+                          ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      saveRecord();
+                    },
+                    child: const Text('저장'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
