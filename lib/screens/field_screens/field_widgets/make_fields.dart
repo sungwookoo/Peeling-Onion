@@ -1,19 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:front/screens/field_screens/field_one_screen.dart';
 import '../../../models/custom_models.dart';
+import 'package:front/services/field_api_service.dart';
+import '../field_one_screen.dart';
 import '../field_widgets/field_one_screen_here.dart';
 
 // 밭 Grid 로 출력
 class MakeFields extends StatefulWidget {
+  final List<CustomField> _fields;
+  // final VoidCallback onDelete;
+
   const MakeFields({
     super.key,
     required List<CustomField> fields,
     // this.draggedOnionId,
   }) : _fields = fields;
-
-  final List<CustomField> _fields;
 
   @override
   State<MakeFields> createState() => _MakeFieldsState();
@@ -23,9 +25,24 @@ class _MakeFieldsState extends State<MakeFields> {
   // 양파를 drag 한 상태인지 판단하는 변수 (true 면 아래 밭 선택 창 표시)
   ValueNotifier<bool> showDraggableRectangle = ValueNotifier<bool>(false);
 
+  late final List<CustomField> _fields;
+
+  @override
+  void initState() {
+    super.initState();
+    _fields = widget._fields;
+  }
+
   void _updateData(bool newData) {
     setState(() {
       showDraggableRectangle.value = newData;
+    });
+  }
+
+  // 밭 삭제하는 메서드
+  void _deleteField(int fieldId) {
+    setState(() {
+      _fields.removeWhere((field) => field.id == fieldId);
     });
   }
 
@@ -49,80 +66,81 @@ class _MakeFieldsState extends State<MakeFields> {
               widget._fields.sublist(startIndex, endIndex);
 
           // 현재 페이지의 밭들을 UI 에 표시
-          return Stack(
-            children: [
-              Container(
-                alignment: Alignment.topCenter,
-                child: Wrap(
-                  spacing: 20,
-                  runSpacing: 20,
-                  // 각 밭들을 한 번씩 return 해서 children 에 담음
-                  children: pageFields.map((field) {
-                    return SizedBox(
-                      width: (MediaQuery.of(context).size.width - 60) / 2,
-                      height: (MediaQuery.of(context).size.width - 60) / 2,
-                      // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
-                      child: GestureDetector(
-                        onTap: () {
-                          // 밭 모달 띄우기
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => Container(
-                              width: MediaQuery.of(context)
-                                  .size
-                                  .width, // 화면의 가로 길이만큼
-                              height: MediaQuery.of(context).size.width,
-                              alignment: Alignment.center,
-                              // 모달로 띄울 밭 1개
-                              child: FieldOneScreen(
-                                field: field,
-                                fields: widget._fields,
-                                onValueChanged: _updateData,
-                              ),
-                            ),
-                          );
-                        },
-                        // 전체 밭 화면에서 나타나게 할 밭 1개
-                        child: FieldOneScreenHere(field: field),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ),
-              // 밭 선택 창 띄우기 (이후 수정 예정)
-              ValueListenableBuilder<bool>(
-                valueListenable: showDraggableRectangle,
-                builder: (BuildContext context, bool value, Widget? child) {
-                  if (value) {
-                    return Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: widget._fields
-                              .map((field) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      height: 50,
-                                      color: Colors.red,
-                                      child: Text(field.name),
-                                    ),
-                                  ))
-                              .toList(),
+          return Container(
+            alignment: Alignment.topCenter,
+            child: Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              // 각 밭들을 한 번씩 return 해서 children 에 담음
+              children: pageFields.map((field) {
+                return SizedBox(
+                  width: (MediaQuery.of(context).size.width - 60) / 2,
+                  height: (MediaQuery.of(context).size.width - 60) / 2,
+                  // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
+                  child: GestureDetector(
+                    onLongPress: () {
+                      _showDeleteModal(
+                          context, field, () => _deleteField(field.id));
+                    },
+                    onTap: () {
+                      // 밭 모달 띄우기
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => Container(
+                          width:
+                              MediaQuery.of(context).size.width, // 화면의 가로 길이만큼
+                          height: MediaQuery.of(context).size.width,
+                          alignment: Alignment.center,
+                          // 모달로 띄울 밭 1개 (FieldOneScreen 클래스 사용)
+                          child: FieldOneScreen(
+                            field: field,
+                            onValueChanged: _updateData,
+                          ),
                         ),
-                      ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              )
-            ],
+                      );
+                    },
+                    // 전체 밭 화면에서 나타나게 할 밭 1개
+                    child: FieldOneScreenHere(field: field),
+                  ),
+                );
+              }).toList(),
+            ),
           );
         },
       ),
     );
   }
+}
+
+// 밭 삭제 popup 창
+Future<void> _showDeleteModal(
+    BuildContext context, CustomField field, VoidCallback onDelete) async {
+  // final RenderObject? renderObject =
+  //     context.findAncestorRenderObjectOfType<RenderObject>();
+  // final Offset position =
+  //     renderObject?.localToGlobal(Offset.zero) ?? Offset.zero;
+
+  return showMenu(
+    context: context,
+    position: const RelativeRect.fromLTRB(0, 0, 0, 0),
+    items: [
+      PopupMenuItem(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(field.name),
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: () {
+                FieldApiService.deleteField(field.id);
+                onDelete();
+
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

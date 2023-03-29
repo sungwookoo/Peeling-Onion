@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/services/field_api_service.dart';
 
 // 모달로 밭 이름 입력받아서 추가 밭 생성 (이후 밭 이름 안겹치게 유효성 검사 하기)
 // 문자 변수
@@ -49,6 +50,7 @@ Future<void> displayTextInputDialog(
                   if (text.isEmpty) {
                     return;
                   }
+                  FieldApiService.createField(text);
                   Navigator.pop(context);
                   addOne(text);
                 },

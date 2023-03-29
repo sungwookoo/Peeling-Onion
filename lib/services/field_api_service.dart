@@ -14,7 +14,7 @@ class FieldApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   // 밭 전체 조회 get
-  static Future<List<CustomField>> getFieldsById(int userId) async {
+  static Future<List<CustomField>> getFieldsByUser() async {
     final accessToken = await Token.then((value) => value?.accessToken);
     // get 요청 보내기
     final response = await http.get(
@@ -23,10 +23,6 @@ class FieldApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-    print('$baseUrl/field');
-    print(accessToken);
-    print(response.statusCode);
     // 요청 성공
     if (response.statusCode == 200) {
       List fields = jsonDecode(response.body);
@@ -34,5 +30,66 @@ class FieldApiService {
     }
     // 요청 실패
     throw Exception('Failed to load fields');
+  }
+
+  // 밭 생성 create
+  static Future<CustomField> createField(String fieldName) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+    print('$fieldName: $accessToken');
+    final response = await http.post(
+      Uri.parse('$baseUrl/field'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: <String, String>{
+        'name': fieldName,
+      },
+    );
+    // 요청 성공
+    if (response.statusCode == 200) {
+      CustomField field = jsonDecode(response.body);
+      return field;
+    } else {
+      throw Exception('Failed to load fields');
+    }
+  }
+
+  // 밭 삭제 delete
+  static Future<void> deleteField(int fieldId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/field/$fieldId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // 요청 성공
+    if (response.statusCode == 200) {
+    } else {
+      throw Exception('Failed to load fields');
+    }
+  }
+
+  // 밭 안의 양파들 정보 get
+  static Future<List<CustomOnionFromField>> getOnionFromField(
+      int fieldId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/field/$fieldId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // 요청 성공
+    if (response.statusCode == 200) {
+      List onions = jsonDecode(response.body);
+      return onions
+          .map((onion) => CustomOnionFromField.fromJson(onion))
+          .toList();
+    } else {
+      throw Exception('Failed to load fields');
+    }
   }
 }
