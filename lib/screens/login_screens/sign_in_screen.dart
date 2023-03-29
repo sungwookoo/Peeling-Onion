@@ -5,6 +5,14 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'dart:convert';
 import 'dart:core'; // RegExp를 사용하기 위해 추가
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:front/user_provider.dart';
+
+class CustomUser {
+  final int? userId;
+
+  CustomUser.fromJson(Map<String, dynamic> json) : userId = json['user_id'];
+}
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -244,6 +252,9 @@ class _SigninScreenState extends State<SigninScreen> {
     if (response.statusCode == 200) {
       // 성공적으로 회원가입이 완료된 경우
       print(response.body);
+      CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
+      Provider.of<UserIdModel>(context, listen: false)
+          .setUserId(customUser.userId);
       print('회원가입 완료');
       Navigator.pushNamed(context, '/home');
     } else {
