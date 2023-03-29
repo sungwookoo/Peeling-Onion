@@ -25,7 +25,7 @@ class FieldApiService {
     );
     // 요청 성공
     if (response.statusCode == 200) {
-      List fields = jsonDecode(response.body);
+      List fields = jsonDecode(utf8.decode(response.bodyBytes));
       return fields.map((field) => CustomField.fromJson(field)).toList();
     }
     // 요청 실패
@@ -46,7 +46,8 @@ class FieldApiService {
         }));
     // 요청 성공
     if (response.statusCode == 200) {
-      CustomField field = CustomField.fromJson(jsonDecode(response.body));
+      CustomField field =
+          CustomField.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return field;
     } else {
       print(response.statusCode);
@@ -84,7 +85,7 @@ class FieldApiService {
     );
     // 요청 성공
     if (response.statusCode == 200) {
-      List onions = jsonDecode(response.body);
+      List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions
           .map((onion) => CustomOnionFromField.fromJson(onion))
           .toList();
