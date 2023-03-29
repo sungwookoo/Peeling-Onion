@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'dart:convert';
 import 'dart:core'; // RegExp를 사용하기 위해 추가
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -20,11 +21,37 @@ class _SigninScreenState extends State<SigninScreen> {
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _authCodeController = TextEditingController();
+  String? _verificationId;
 
   String? _nicknameValidationMessage;
   String? _phoneValidationMessage;
+  String? _prevNicknameText;
+  String? _authCodeValidationMessage;
+
   bool _isNicknameValid = true;
-  final bool _isPhoneValid = true;
+  bool _isPhoneValid = true;
+  bool _nicknameChanged = true;
+  bool _isAuthCodeSent = false;
+  bool _isAuthCodeValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nicknameController.addListener(() {
+      if (_nicknameController.text != _prevNicknameText) {
+        setState(() {
+          _nicknameChanged = true;
+          _nicknameValidationMessage = '닉네임 중복 확인을 해주세요.';
+          _prevNicknameText = _nicknameController.text;
+        });
+      }
+    });
+    _authCodeController.addListener(() {
+      setState(() {
+        _authCodeValidationMessage = null;
+      });
+    });
+  }
 
   Future<void> _checkNickname() async {
     // 닉네임이 공백인 경우
@@ -50,7 +77,9 @@ class _SigninScreenState extends State<SigninScreen> {
     Future<OAuthToken?> Token = DefaultTokenManager().getToken();
     final accessToken = await Token.then((value) => value?.accessToken);
 
+    print(_nicknameController.text);
     // API 요청을 사용해 닉네임 중복 여부 확인
+    print('$baseUrl/user/nickname/duplicate/${_nicknameController.text}');
     try {
       final response = await http.get(
         Uri.parse(
@@ -62,14 +91,16 @@ class _SigninScreenState extends State<SigninScreen> {
 
       print(response.statusCode);
       if (response.statusCode == 200) {
+        print(response.body);
+        String responseBody = response.body;
+        bool isNicknameAvailable = responseBody.toLowerCase() == 'false';
         setState(() {
-          _isNicknameValid = true;
-          _nicknameValidationMessage = '사용할 수 있는 닉네임입니다.';
-        });
-      } else if (response.statusCode == 201) {
-        setState(() {
-          _isNicknameValid = false;
-          _nicknameValidationMessage = '이미 존재하는 닉네임입니다.';
+          _isNicknameValid = isNicknameAvailable;
+          _nicknameValidationMessage =
+              isNicknameAvailable ? '사용할 수 있는 닉네임입니다.' : '이미 존재하는 닉네임입니다.';
+          if (isNicknameAvailable) {
+            _nicknameChanged = false;
+          }
         });
       } else {
         setState(() {
@@ -78,11 +109,18 @@ class _SigninScreenState extends State<SigninScreen> {
         });
       }
     } catch (error) {
-      print('error발생! $error');
+      print('error발생!! $error');
     }
   }
 
   Future<void> _sendAuthCode() async {
+    if (_phoneNumberController.text == '') {
+      setState(() {
+        _isPhoneValid = false;
+        _phoneValidationMessage = '전화번호를 입력해주세요.';
+      });
+      return;
+    }
     RegExp regExp = RegExp(r'^\d{11}$');
     if (!regExp.hasMatch(_phoneNumberController.text)) {
       setState(() {
@@ -102,6 +140,72 @@ class _SigninScreenState extends State<SigninScreen> {
     // });
 
     // print(result);
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    String phoneNumber = _phoneNumberController.text;
+    String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'^0'), '+82');
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: formattedPhoneNumber, // 입력받은 전화번호
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // 자동 인증이 완료된 경우
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // 인증 실패
+        print(e.message);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // 인증 코드가 전송된 경우
+        setState(() {
+          _verificationId = verificationId;
+          _isAuthCodeSent = true;
+
+          _checkNickname();
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // 타임아웃 처리
+        setState(() {
+          _verificationId = verificationId;
+        });
+      },
+    );
+  }
+
+  Future<void> _checkAuthCode() async {
+    if (_authCodeController.text == '') {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
+      });
+      return;
+    }
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    // _verificationId 변수가 null일 경우를 체크하는 코드 추가
+    if (_verificationId == null) {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '인증번호를 먼저 전송해주세요.';
+      });
+      return;
+    }
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId!, smsCode: _authCodeController.text);
+
+    try {
+      await auth.signInWithCredential(credential);
+      setState(() {
+        _isAuthCodeValid = true;
+      });
+    } catch (e) {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
+      });
+    }
   }
 
   Future<void> _completeSignUp() async {
@@ -140,6 +244,7 @@ class _SigninScreenState extends State<SigninScreen> {
       // 성공적으로 회원가입이 완료된 경우
       print(response.body);
       print('회원가입 완료');
+      Navigator.pushNamed(context, '/home');
     } else {
       // 회원가입이 실패한 경우
       print('회원가입 실패: ${response.body}');
@@ -211,7 +316,9 @@ class _SigninScreenState extends State<SigninScreen> {
                         labelText: '닉네임',
                         hintText: '8자 이내의 한글 혹은 영문',
                         suffixIcon: IconButton(
-                          icon: const Icon(Icons.check),
+                          icon: _nicknameChanged
+                              ? const Icon(Icons.check, color: Colors.red)
+                              : const Icon(Icons.check, color: Colors.green),
                           onPressed: _checkNickname,
                         ),
                       ),
@@ -231,9 +338,9 @@ class _SigninScreenState extends State<SigninScreen> {
                       decoration: InputDecoration(
                         labelText: '전화번호',
                         hintText: '숫자 11자리',
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.message),
+                        suffixIcon: ElevatedButton(
                           onPressed: _sendAuthCode,
+                          child: Text(_isAuthCodeSent ? '재인증하기' : '인증하기'),
                         ),
                       ),
                       validator: (value) {
@@ -246,30 +353,53 @@ class _SigninScreenState extends State<SigninScreen> {
                     if (_phoneValidationMessage != null)
                       Text(_phoneValidationMessage!),
                     const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _authCodeController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: '인증번호',
-                        hintText: '6자리 숫자',
+                    if (_isAuthCodeSent)
+                      Column(
+                        children: [
+                          TextFormField(
+                            controller: _authCodeController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: '인증번호',
+                              hintText: '6자리 숫자',
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.check,
+                                  color: _isAuthCodeValid
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                                onPressed: _checkAuthCode,
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return '인증번호를 입력해주세요.';
+                              }
+                              return null;
+                            },
+                          ),
+                          if (_authCodeValidationMessage != null)
+                            Text(_authCodeValidationMessage!),
+                        ],
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return '인증번호를 입력해주세요.';
-                        }
-                        return null;
-                      },
-                    ),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: _isNicknameValid && _isPhoneValid
+                          onPressed: _isNicknameValid &&
+                                  _isPhoneValid &&
+                                  _isAuthCodeValid
                               ? _completeSignUp
                               : null,
                           child: const Text('회원가입 완료'),
                         ),
+                        IconButton(
+                          onPressed: () =>
+                              {Navigator.pushNamed(context, '/home')},
+                          icon: const Icon(Icons.home),
+                        )
                       ],
                     ),
                   ],
