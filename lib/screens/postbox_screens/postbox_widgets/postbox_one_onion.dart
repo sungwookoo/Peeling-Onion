@@ -6,11 +6,11 @@ import '../onion_one_screen.dart';
 class PostboxOneOnion extends StatelessWidget {
   const PostboxOneOnion({
     super.key,
-    required List<CustomHomeOnion> onions,
+    required List<CustomOnionByOnionId> onions,
     required this.globalIndex,
   }) : _onions = onions;
 
-  final List<CustomHomeOnion> _onions;
+  final List<CustomOnionByOnionId> _onions;
   final int globalIndex;
 
   @override
@@ -36,11 +36,11 @@ class PostboxOneOnion extends StatelessWidget {
 class OneOnion extends StatelessWidget {
   const OneOnion({
     super.key,
-    required List<CustomHomeOnion> onions,
+    required List<CustomOnionByOnionId> onions,
     required this.globalIndex,
   }) : _onions = onions;
 
-  final List<CustomHomeOnion> _onions;
+  final List<CustomOnionByOnionId> _onions;
   final int globalIndex;
 
   @override

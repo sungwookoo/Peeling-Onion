@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
-import 'package:front/screens/postbox_screens/postbox_widgets/draggable_onion.dart';
+import '../postbox_widgets/postbox_one_onion.dart';
 
 // 택배함에서 기르는 양파들 보여주는 클래스
 class ShowGrowingOnions extends StatefulWidget {
-  final List<CustomHomeOnion> _onions;
+  final List<CustomOnionByOnionId> _onions;
 
   const ShowGrowingOnions({
     super.key,
-    required List<CustomHomeOnion> onions,
+    required List<CustomOnionByOnionId> onions,
   }) : _onions = onions;
 
   @override
