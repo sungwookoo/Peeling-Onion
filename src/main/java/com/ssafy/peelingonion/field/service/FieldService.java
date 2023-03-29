@@ -66,16 +66,10 @@ public class FieldService {
 	}
 
 	public List<Field> readAllFields(Long userId) {
-		// userId로 MyField 리스트를 찾기
 		List<MyField> myFields = myFieldRepository.findAllByUserId(userId);
 		List<Field> fields = new ArrayList<>();
-		// 해당 리스트로부터 Field 리스트를 찾기
 		for (MyField myField : myFields) {
-			Field field = fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow();
-			// 해당 필드 disalbed 체크하기(false면 리스트에 넣기)
-			if (field.getIsDisabled() == Boolean.FALSE) {
-				fields.add(field);
-			}
+			fields.add(fieldRepository.findByIdAndIsDisabled(myField.getField().getId(), Boolean.FALSE).orElseThrow());
 		}
 		return fields;
 	}

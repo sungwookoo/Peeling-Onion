@@ -23,12 +23,6 @@ public class OnionOutlineDto {
 	public String sender; // 대표 발신자
 	public Boolean is_single; // True : 혼자보내는 것, False : 모아보내는 것
 
-	/**
-	 * 생성자 이름이 지정되지 않음.
-	 * 별도로 지정이 필요함.
-	 * @param onion
-	 * @return
-	 */
 	public static OnionOutlineDto from(Onion onion) {
 		return OnionOutlineDto.builder()
 			.id(onion.getId())
