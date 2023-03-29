@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: d8e9ca7e5d1983365c277f12c21b4362df6cf659c99af146ad4d04eb33033013
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.6"
   firebase_auth:
     dependency: "direct main"
     description:
@@ -233,14 +241,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.2"
-  file_picker:
-    dependency: "direct main"
-    description:
-      name: file_picker
-      sha256: d8e9ca7e5d1983365c277f12c21b4362df6cf659c99af146ad4d04eb33033013
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.2.6"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -357,6 +357,22 @@ packages:
     description:
       name: kakao_flutter_sdk_common
       sha256: "76eccd72a4e94db9c6be69b670477528d958d2bf38f50a2158dfd306640c7abf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.2"
+  kakao_flutter_sdk_share:
+    dependency: "direct main"
+    description:
+      name: kakao_flutter_sdk_share
+      sha256: "36c04d94c63207b922c15dbf1b99811f750c1b335c12b8215a76e2496c4c6a42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.2"
+  kakao_flutter_sdk_template:
+    dependency: transitive
+    description:
+      name: kakao_flutter_sdk_template
+      sha256: "2a0e09ea127e0c10629e9a6ccc9711efaf3328b6fe015b93e1437f0844df51d5"
       url: "https://pub.dev"
     source: hosted
     version: "1.4.2"

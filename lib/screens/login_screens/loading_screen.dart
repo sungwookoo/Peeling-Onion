@@ -23,9 +23,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
     final userId = await UserApiService.checkSignin(context);
     if (userId != -1) {
-      // 테스트 중. 완료되면 둘이 바꿀 것.
-      // Navigator.pushNamed(context, '/home');
-      Navigator.pushNamed(context, '/signin');
+      Navigator.pushNamed(context, '/home');
+      // signin 테스트할 때
+      // Navigator.pushNamed(context, '/signin');
     } else if (userId == -1) {
       Navigator.pushNamed(context, '/signin');
     }
