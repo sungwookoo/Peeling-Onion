@@ -28,6 +28,7 @@ class OnionApiService {
       List onions = jsonDecode(response.body);
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
+      print(response.statusCode);
       throw Exception('Failed to load home onions');
     }
   }
