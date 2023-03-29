@@ -7,5 +7,7 @@ import java.util.List;
 public interface MyFieldRepository extends JpaRepository<MyField, Long> {
 	List<MyField> findAllByUserId(Long userid);
 
+	MyField findByUserIdAndIsDefault(Long userId, Boolean isDefault);
+
 	boolean existsByUserId(Long userId);
 }

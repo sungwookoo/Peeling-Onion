@@ -73,7 +73,7 @@ public class OnionController {
             try {
                 Onion onion = onionService.findOnionById(onionId);
                 if(onion.getIsDisabled() != Boolean.TRUE) {
-                    ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(onionId);
+                    ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(userId, onionId);
                     List<Long> messageIdList = new ArrayList<>();
                     Set<Message> messages = onion.getMessages();
                     String userName = onionService.getNameByUserId(userId);
@@ -258,9 +258,9 @@ public class OnionController {
             try {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(onionService.getMobileNumberByUserId(userId));
-                String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions){
-                    receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, userName));
+                    String senderName = onionService.getNameByUserId(receiveOnion.getUserId());
+                    receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, senderName));
                 }
                 return ResponseEntity.ok(receiveOnionResponses);
             } catch (ReceiveOnionNotFoundException e) {
