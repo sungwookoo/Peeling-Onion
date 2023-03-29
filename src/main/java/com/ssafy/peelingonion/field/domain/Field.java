@@ -51,5 +51,4 @@ public class Field {
 	@ToString.Exclude
 	@Builder.Default
 	private Set<MyField> myFields = new LinkedHashSet<>();
-
 }
