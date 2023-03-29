@@ -29,23 +29,24 @@ function App() {
 
   return (
     <figure id="splash-device">
-      <div class="device-image ios">
-        <div class="device">
+      <div className="device-image ios">
+        <div className="device">
           {/* <span class="site-name"> Peeling Onion </span> */}
           <img src="https://picsum.photos/1500/2500" />
         </div>
       </div>
       <figcaption id="splash-message">
-        <div class="message">
-          <span class="app-icon"></span>
-          <div class="copy">
-            <span class="ellipsis book">메세지를 담은 양파를 보내 감동을 전달하세요</span> <br></br>
-            <span class="m-3 ellipsis book">Send a message to convey your feelings</span>
+        <div className="message">
+          <span className="app-icon"></span>
+          <div className="copy">
+            <span className="ellipsis book">메세지를 담은 양파를 보내 감동을 전달하세요</span>{" "}
+            <br></br>
+            <span className="m-3 ellipsis book">Send a message to convey your feelings</span>
             {/* <span class="ellipsis site-name">Smiling Dog Yoga.</span> */}
           </div>
         </div>
         <a>
-          <button class="yanolja" onClick={handleClick}>
+          <button className="yanolja" onClick={handleClick}>
             Get our Peeling Onion App
           </button>
         </a>

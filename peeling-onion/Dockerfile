@@ -7,8 +7,6 @@ WORKDIR /var/jenkins_home/workspace/react-main/peeling-onion
 # 의존성 파일들을 컨테이너 안에 복사합니다.
 COPY package*.json ./
 
-RUN ls
-
 # npm을 사용하여 패키지를 설치합니다.
 RUN npm install
 
