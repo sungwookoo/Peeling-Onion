@@ -29,7 +29,6 @@ public class SendOnionResponse {
                 .name(o.getName())
                 .img_src(o.getImgSrc())
                 .created_at(o.getCreatedAt())
-                .lastest_modified(o.getLatestModify())
                 .grow_due_date(o.getGrowDueDate())
                 .is_single(o.getIsSingle())
                 .receiver_number(s.getReceiverNumber())

@@ -29,6 +29,7 @@ public class MessageDetailResponse {
                 .created_at(message.getCreatedAt())
                 .pos_rate(message.getPosRate())
                 .neg_rate(message.getNegRate())
+                .neu_rate(message.getNeuRate())
                 .file_src(message.getRecord().getFileSrc())
                 .build();
     }
