@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:front/models/custom_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:front/services/stt_api_service.dart';
@@ -11,7 +12,9 @@ import '../../services/upload_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class RecordScreen extends StatefulWidget {
-  const RecordScreen({super.key});
+  final CustomHomeOnion onion;
+
+  const RecordScreen({super.key, required this.onion});
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
