@@ -22,14 +22,14 @@ public class ReceiveOnionResponse {
     public Boolean is_single;
     public Instant created_at;
     public Instant grow_due_date;
-    public static ReceiveOnionResponse from(ReceiveOnion receiveOnion, String userName){
+    public static ReceiveOnionResponse from(ReceiveOnion receiveOnion, String senderName){
         Onion o = receiveOnion.getOnion();
         return ReceiveOnionResponse.builder()
                 .id(o.getId())
                 .name(o.getName())
                 .img_src(o.getImgSrc())
                 .receive_date(o.getSendDate())
-                .sender(userName)
+                .sender(senderName)
                 .is_single(o.getIsSingle())
                 .created_at(o.getCreatedAt())
                 .grow_due_date(o.getGrowDueDate())

@@ -51,5 +51,4 @@ public class Storage {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "field_id")
 	private Field field;
-
 }

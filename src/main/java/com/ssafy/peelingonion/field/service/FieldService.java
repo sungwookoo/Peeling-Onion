@@ -85,7 +85,7 @@ public class FieldService {
 	}
 
 	public void deleteField(Long fieldId) {
-		Field field = fieldRepository.findById(fieldId).orElseThrow();
+		Field field = fieldRepository.findById(fieldId).get();
 		field.setIsDisabled(Boolean.TRUE);
 		fieldRepository.save(field);
 	}

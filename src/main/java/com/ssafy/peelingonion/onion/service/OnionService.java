@@ -1,9 +1,6 @@
 package com.ssafy.peelingonion.onion.service;
 
-import com.ssafy.peelingonion.field.domain.Field;
-import com.ssafy.peelingonion.field.domain.FieldRepository;
-import com.ssafy.peelingonion.field.domain.Storage;
-import com.ssafy.peelingonion.field.domain.StorageRepository;
+import com.ssafy.peelingonion.field.domain.*;
 import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
 import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
 import com.ssafy.peelingonion.onion.domain.*;
@@ -17,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 import static com.ssafy.peelingonion.common.ConstValues.USER_SERVER_CLIENT;
 
@@ -30,14 +28,17 @@ public class OnionService {
     private final ReceiveOnionRepository receiveOnionRepository;
     private final FieldRepository fieldRepository;
     private final StorageRepository storageRepository;
+    private final MyFieldRepository myFieldRepository;
 
-    public OnionService(OnionRepository onionRepository, SendOnionRepository sendOnionRepository,
+    public OnionService(OnionRepository onionRepository,
+                        SendOnionRepository sendOnionRepository,
                         RecordRepository recordRepository,
                         MyRecordRepository myRecordRepository,
                         MessageRepository messageRepository,
                         ReceiveOnionRepository receiveOnionRepository,
                         FieldRepository fieldRepository,
-                        StorageRepository storageRepository) {
+                        StorageRepository storageRepository,
+                        MyFieldRepository myFieldRepository) {
         this.onionRepository = onionRepository;
         this.sendOnionRepository = sendOnionRepository;
         this.recordRepository = recordRepository;
@@ -46,6 +47,7 @@ public class OnionService {
         this.receiveOnionRepository = receiveOnionRepository;
         this.fieldRepository = fieldRepository;
         this.storageRepository = storageRepository;
+        this.myFieldRepository = myFieldRepository;
     }
 
     public void createOnion(OnionCreateRequest onionCreateRequest, Long userId){
@@ -65,32 +67,35 @@ public class OnionService {
 
     public void recordMessage(MessageCreateRequest messageCreateRequest, Long userId) {
         Record record = recordRepository.save(Record.from(messageCreateRequest));
-
         myRecordRepository.save(MyRecord.from(record, userId));
-
-        Onion onion = onionRepository.findById(messageCreateRequest.getId()).orElseThrow();
-        onion.setLatestModify(Instant.now());
-        onionRepository.save(onion);
-
-        Onion oni = onionRepository.findById(messageCreateRequest.getId()).orElseThrow();
-        messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
+        Optional<Onion> opOnion = onionRepository.findById(messageCreateRequest.getId());
+        // 메시지를 저장할 때, 뭘해야하나???
+        if(opOnion.isPresent()) {
+            Onion onion = opOnion.get();
+            onion.setLatestModify(Instant.now());
+            Onion oni = onionRepository.save(onion);
+            messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
+        }
     }
 
     public void throwOnion(Long onionId){
-        Onion onion = onionRepository.findById(onionId).orElseThrow();
-        // getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
-        if(onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled()){
-            // 양파의 전송일 추가하기
-            onion.setSendDate(Instant.now());
-            onionRepository.save(onion);
-            // 내가 만든 양파에서 해당 양파 전송여부 true
-            SendOnion sendOnion = sendOnionRepository.findByOnion(onion);
-            sendOnion.setIsSended(Boolean.TRUE);
-            sendOnionRepository.save(sendOnion);
-            // 내가 받은 양파에서 수신 여부 true
-            ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
-            receiveOnion.setIsReceived(Boolean.TRUE);
-            receiveOnionRepository.save(receiveOnion);
+        Optional<Onion> opOnion = onionRepository.findById(onionId);
+        if(opOnion.isPresent()) {
+            Onion onion = opOnion.get();
+            // getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
+            if(onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled()){
+                // 양파의 전송일 추가하기
+                onion.setSendDate(Instant.now());
+                onionRepository.save(onion);
+                // 내가 만든 양파에서 해당 양파 전송여부 true
+                SendOnion sendOnion = sendOnionRepository.findByOnion(onion);
+                sendOnion.setIsSended(Boolean.TRUE);
+                sendOnionRepository.save(sendOnion);
+                // 내가 받은 양파에서 수신 여부 true
+                ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
+                receiveOnion.setIsReceived(Boolean.TRUE);
+                receiveOnionRepository.save(receiveOnion);
+            }
         }
     }
 
@@ -99,15 +104,36 @@ public class OnionService {
     }
 
     public Onion findOnionById(Long onionId){
-        return onionRepository.findById(onionId).orElseThrow();
+        Optional<Onion> opOnion = onionRepository.findById(onionId);
+        // ***** 에러처리를 이렇게 하는게 맞나??!! *****//
+        return opOnion.orElseGet(() -> Onion.builder()
+                .id(1000000L)
+                .build());
     }
 
-    public ReceiveOnion findReceiveOnionByOnionId(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).orElseThrow();
-        ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
-        receiveOnion.setIsChecked(Boolean.TRUE);
-        receiveOnionRepository.save(receiveOnion);
-        return receiveOnionRepository.save(receiveOnion);
+    public ReceiveOnion findReceiveOnionByOnionId(Long onionId, Long userId) {
+        Optional<Onion> opOnion = onionRepository.findById(onionId);
+        if(opOnion.isPresent()) {
+            ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(opOnion.get());
+            if(!receiveOnion.getIsChecked()) {
+                receiveOnion.setIsChecked(Boolean.TRUE);
+                MyField myField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
+                Onion o = receiveOnion.getOnion();
+                storageRepository.save(Storage
+                        .builder()
+                        .field(myField.getField())
+                        .onion(o)
+                        .createdAt(o.getCreatedAt())
+                        .isBookmarked(Boolean.FALSE)
+                        .build());
+                return receiveOnionRepository.save(receiveOnion);
+            }
+            return receiveOnion;
+        }
+        // 만약 해당 아이디의 양파가 없다면, (그럴 일은 없지만, 버린다.)
+        return ReceiveOnion.builder()
+                .id(100000000L)
+                .build();
     }
 
     public List<ReceiveOnion> findBookmarkedOnions(Long userId){
@@ -115,31 +141,46 @@ public class OnionService {
     }
 
     public void bookmarkOnion(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).orElseThrow();
-        ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
-        if(receiveOnion.getIsBookmarked()) {
-            receiveOnion.setIsBookmarked(Boolean.FALSE);
-        } else {
-            receiveOnion.setIsBookmarked(Boolean.TRUE);
+        Optional<Onion> opOnion = onionRepository.findById(onionId);
+        if(opOnion.isPresent()){
+            Onion onion = opOnion.get();
+            ReceiveOnion receiveOnion = receiveOnionRepository.findByOnionId(onionId);
+            if(receiveOnion.getIsBookmarked()) {
+                receiveOnion.setIsBookmarked(Boolean.FALSE);
+            } else {
+                receiveOnion.setIsBookmarked(Boolean.TRUE);
+            }
+            receiveOnionRepository.save(receiveOnion);
         }
-        receiveOnionRepository.save(receiveOnion);
+
+
     }
 
     public void deleteOnion(Long onionId) {
-        Onion onion = onionRepository.findById(onionId).orElseThrow();
-        onion.setIsDisabled(Boolean.TRUE);
-        onionRepository.save(onion);
+        // ***** 만약 없다면 ***** //
+        Optional<Onion> opOnion = onionRepository.findById(onionId);
+        if(opOnion.isPresent()){
+            Onion onion = opOnion.get();
+            onion.setIsDisabled(Boolean.TRUE);
+            onionRepository.save(onion);
+        }
     }
 
     public void transferOnion(Long fromFId, Long toFId, Long onionId) {
-        Storage storage = storageRepository.findByFieldIdAndOnionId(fromFId, onionId).orElseThrow();
-        Field toField = fieldRepository.findById(toFId).orElseThrow();
-        storage.setField(toField);
-        storageRepository.save(storage);
+        Optional<Storage> opStorage = storageRepository.findByFieldIdAndOnionId(fromFId, onionId);
+        Optional<Field> opToField = fieldRepository.findById(toFId);
+        if(opStorage.isPresent() && opToField.isPresent()) {
+            Storage storage = opStorage.get();
+            storage.setField(opToField.get());
+            storageRepository.save(storage);
+        }
     }
 
     public Message findMessageById(Long messageId){
-        return messageRepository.findById(messageId).orElseThrow();
+        Optional<Message> opMessage = messageRepository.findById(messageId);
+        return opMessage.orElseGet(() -> Message.builder()
+                .id(10000000L)
+                .build());
     }
 
     public String getNameByUserId(Long userId) {

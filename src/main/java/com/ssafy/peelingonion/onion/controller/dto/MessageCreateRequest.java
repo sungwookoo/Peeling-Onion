@@ -12,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class MessageCreateRequest {
     public Long id;
     public String content;
-    public Double pos_rate;
-    public Double neg_rate;
+    public Integer pos_rate;
+    public Integer neg_rate;
+    public Integer neu_rate;
     public String file_src;
 }
