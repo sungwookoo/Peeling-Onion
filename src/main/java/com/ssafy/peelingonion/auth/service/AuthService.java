@@ -45,7 +45,7 @@ public class AuthService {
 	}
 
 	public Long findUserId(Long kakaoId) {
-		User user = userRepository.findByKakaoId(kakaoId).orElse(User.builder().id(NON_MEMBER).build());
+		User user = userRepository.findByKakaoId(kakaoId).orElse(User.builder().id(NON_MEMBER).activate(false).build());
 		if (user.getActivate().booleanValue())
 			return user.getId();
 		return NON_MEMBER;
