@@ -94,9 +94,8 @@ public class UserController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/{userId}")
-	public ResponseEntity<String> removeUserInfomation(@RequestHeader("Authorization") String token,
-		@PathVariable Long uid) {
+	@DeleteMapping("")
+	public ResponseEntity<String> removeUserInfomation(@RequestHeader("Authorization") String token) {
 		final Long userId = authorizeService.getAuthorization(token);
 		if (authorizeService.isAuthorization(userId)) {
 			try {
