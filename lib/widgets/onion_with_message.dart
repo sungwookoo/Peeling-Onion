@@ -34,8 +34,6 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     if (widget.onion.messageIdList.isNotEmpty) {
       int audioId = widget.onion.messageIdList.elementAt(index);
       messageData = OnionApiService.getMessage(audioId);
-      print('잘 들어옴');
-      print('$audioId');
     } else {
       messageData = OnionApiService.getMessage(1);
     }

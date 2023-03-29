@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import '../onion_one_screen.dart';
 
-// drag & drop 가능한 양파 구현
-class DraggableOnion extends StatelessWidget {
-  const DraggableOnion({
+// 택배함 양파 1개 출력
+class PostboxOneOnion extends StatelessWidget {
+  const PostboxOneOnion({
     super.key,
     required List<CustomHomeOnion> onions,
     required this.globalIndex,
@@ -15,7 +15,7 @@ class DraggableOnion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 양파를 클릭하면 양파 상세 페이지로, 꾹 누르면 삭제
+    // 양파를 클릭하면 양파 상세 페이지로, 꾹 누르면 삭제창 뜨게
     return GestureDetector(
       // 양파 클릭하면 상세 페이지로.
       onTap: () {

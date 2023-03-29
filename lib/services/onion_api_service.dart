@@ -28,8 +28,7 @@ class OnionApiService {
       List onions = jsonDecode(response.body);
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
-      print(response.statusCode);
-      throw Exception('Failed to load home onions');
+      throw Exception('Failed to get home_onions');
     }
   }
 
@@ -51,7 +50,7 @@ class OnionApiService {
           CustomOnionByOnionId.fromJson(jsonDecode(response.body));
       return onion;
     } else {
-      throw Exception('Failed to load onion');
+      throw Exception('Failed to get onion');
     }
   }
 
@@ -68,7 +67,6 @@ class OnionApiService {
       },
     );
     if (response.statusCode == 200) {
-      // On success, do something
     } else {
       throw Exception('Failed to delete onion');
     }
