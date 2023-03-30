@@ -35,6 +35,7 @@ public class OnionService {
 	private final StorageRepository storageRepository;
 	private final MyFieldRepository myFieldRepository;
 
+	private final long DEAD_TIME = 60 * 60 * 24 * 3L;
 	public OnionService(OnionRepository onionRepository,
 		SendOnionRepository sendOnionRepository,
 		RecordRepository recordRepository,
@@ -110,28 +111,61 @@ public class OnionService {
 		}
 	}
 
-	//    public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
-	//        Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
-	//        // 키우는 기간이 3일 미만인 양파의 경우
-	//        // 양파 생성 due date에서 양파 생성일을 빼기
-	//        Instant createdTime = onion.getCreatedAt();
-	//        Instant growDueDate = onion.getCreatedAt();
-	//        Instant lastModified = onion.getLatestModify();
-	//        long growTime = createdTime.until(growDueDate, ChronoUnit.SECONDS);
-	//        // 키우는 기간이 3일 이상인 경우
-	//        if(growTime >= 259200) {
-	//
-	//
-	//
-	//        } else {
-	//            // 키우는 기간이 3일 미만인 경우
-	//            // 만약
-	//        }
-	//    }
+	public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+		// 이미 썪어있다면 썪은 여부는 판단이 불가능하다.
+		Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
+		// 키우는 기간이 3일 미만인 양파의 경우
+		// 양파 생성 due date에서 양파 생성일을 빼기
+		Instant createdTime = onion.getCreatedAt();
+		Instant growDueDate = onion.getGrowDueDate();
+		Instant lastModified = onion.getLatestModify();
+		long growTime = createdTime.until(growDueDate, ChronoUnit.SECONDS);
+		// 1. 키우는 기간이 3일 이상인 경우
+		if(growTime >= DEAD_TIME) {
+			// 1-1. 지금이 growDueDate를 넘었다면 -> 보낼 수도 있음
+			if(Instant.now().isAfter(growDueDate)) {
+				// 1-1-1. lastModified가 growDueDate차이가 3일이 넘기면 썪음
+				if(lastModified.until(growDueDate, ChronoUnit.SECONDS) >= DEAD_TIME) {
+					isDeadAndTime2Go.put("isDead", true);
+					isDeadAndTime2Go.put("time2Go", false);
+				// 1-1-2. lastModified가 growDueDate차이가 3일 안이면 안썪음
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+				}
+				// 1-2. 아직 growDueDate를 넘기지 않았다면 -> 못보냄, 썪음 여부만 판단
+			} else {
+				// 1-2-1. lastModified가 3일이 지났다면 -> 썪음
+				if(lastModified.until(growDueDate, ChronoUnit.SECONDS) >= DEAD_TIME) {
+					isDeadAndTime2Go.put("isDead", true);
+				// 1-2-2. lastModified가 3일이 지나지 않았다면 -> 썪지 않음
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+				}
+				isDeadAndTime2Go.put("time2Go", false);
+			}
 
-	//    public boolean checkTime2Go(Onion onion) {
-	//
-	//    }
+			// 2. 키우는 기간이 3일 미만인 경우
+		} else {
+			// 2-1.지금이 growDueDate를 넘었다면
+			if(Instant.now().isAfter(growDueDate)) {
+				// 2-1-1. 만약 onion에 메시지가 있다면 보낼 수 있음
+				if(!onion.getMessages().isEmpty()) {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+					// 2-1-2. onion에 메세지가 없다면 썪었고, 보낼 수 없음
+				} else {
+					isDeadAndTime2Go.put("isDead", true);
+					isDeadAndTime2Go.put("time2Go", false);
+				}
+				// 2-2. 아직 growDueDate를 못넘겼다면 -> 안썪음, 보낼 수 없음
+			} else {
+				isDeadAndTime2Go.put("isDead", false);
+				isDeadAndTime2Go.put("time2Go", false);
+			}
+		}
+		return isDeadAndTime2Go;
+	}
 
 	public void throwOnion(Long onionId) {
 		Optional<Onion> opOnion = onionRepository.findById(onionId);
