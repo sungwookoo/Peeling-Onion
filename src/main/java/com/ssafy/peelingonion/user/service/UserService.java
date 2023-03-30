@@ -45,7 +45,6 @@ public class UserService {
 		userRepository.save(src);
 	}
 
-	@Transactional
 	public Long enrollUser(User user, String token) {
 		Optional<User> optUser = userRepository.findById(user.getId());
 		// 이미 회원인경우,
@@ -77,7 +76,7 @@ public class UserService {
 						.bodyToMono(Void.class)
 						.block();
 				} catch (Exception e) {
-					log.error(e.getMessage());
+					log.error("{}",e.getMessage());
 				}
 				return newUser.getId();
 			}
