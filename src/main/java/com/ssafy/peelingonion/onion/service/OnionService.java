@@ -80,22 +80,22 @@ public class OnionService {
         }
     }
 
-    public List<Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
-        // 키우는 기간이 3일 미만인 양파의 경우
-        // 양파 생성 due date에서 양파 생성일을 빼기
-        long growTime = onion.getCreatedAt().until(onion.getGrowDueDate(), ChronoUnit.SECONDS);
-        // 키우는 기간이 3일 이상인 경우
-        if(growTime >= 259200) {
-
-        } else {
-            // 키우는 기간이 3일 미만인 경우
-            // 만약
-        }
-    }
-
-    public boolean checkTime2Go(Onion onion) {
-
-    }
+//    public List<Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+//        // 키우는 기간이 3일 미만인 양파의 경우
+//        // 양파 생성 due date에서 양파 생성일을 빼기
+//        long growTime = onion.getCreatedAt().until(onion.getGrowDueDate(), ChronoUnit.SECONDS);
+//        // 키우는 기간이 3일 이상인 경우
+//        if(growTime >= 259200) {
+//
+//        } else {
+//            // 키우는 기간이 3일 미만인 경우
+//            // 만약
+//        }
+//    }
+//
+//    public boolean checkTime2Go(Onion onion) {
+//
+//    }
 
     public void throwOnion(Long onionId){
         Optional<Onion> opOnion = onionRepository.findById(onionId);
