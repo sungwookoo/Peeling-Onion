@@ -16,15 +16,23 @@ class CustomHomeOnion {
   final int id;
   final String name;
   final String imgSrc;
+  final String createdAt;
   final String growDueDate;
+  final bool isSingle;
   final String receiverNumber;
+  final bool isDead;
+  final bool isTime2go;
 
   CustomHomeOnion.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         imgSrc = json['img_src'],
+        createdAt = json['created_at'],
         growDueDate = json['grow_due_date'],
-        receiverNumber = json['receiver_number'];
+        isSingle = json['is_single'],
+        receiverNumber = json['receiver_number'],
+        isDead = json['is_dead'],
+        isTime2go = json['is_time2go'];
 }
 
 // 택배함 화면에서의 양파 모델 ()
@@ -49,7 +57,7 @@ class CustomMessage {
         fileSrc = json['file_src'];
 }
 
-// 양파 1개 모델 (메시지들은 messageIdList 로 받음)
+// 양파 1개 모델 (메시지들은 messageIdList 로 받음. 양파 받 출력할 때 사용)
 class CustomOnionByOnionId {
   final int id;
   final String name;
