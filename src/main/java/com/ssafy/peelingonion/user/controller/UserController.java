@@ -68,7 +68,7 @@ public class UserController {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Long> enrollUserInfomation(@RequestHeader("Authorization") String token,
+	public ResponseEntity<UserExitstInfoDto> enrollUserInfomation(@RequestHeader("Authorization") String token,
 		@RequestBody UserRequestDto userRequestDto) {
 		final Long userId = authorizeService.getAuthorization(token);
 		log.info("token :" + token);
@@ -76,7 +76,7 @@ public class UserController {
 		if (userId.equals(UNAUTHORIZED_USER)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		return ResponseEntity.ok(userService.enrollUser(UserRequestDto.to(userRequestDto, userId), token));
+		return ResponseEntity.ok(UserExitstInfoDto.from(userService.enrollUser(UserRequestDto.to(userRequestDto, userId), token)));
 	}
 
 	@PatchMapping("")
