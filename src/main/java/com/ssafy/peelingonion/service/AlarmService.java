@@ -105,7 +105,6 @@ public class AlarmService {
 					.builder()
 					.title(title)
 					.body(body)
-					.type(Integer.parseInt(title))
 					.image(null)
 					.build()
 				)
