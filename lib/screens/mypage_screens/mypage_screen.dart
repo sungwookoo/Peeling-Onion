@@ -17,11 +17,87 @@ class MypageScreen extends StatefulWidget {
 class _MypageScreenState extends State<MypageScreen> {
   static String? baseUrl = dotenv.env['baseUrl'];
   late Future<Map<String, dynamic>> userInfo; // userInfo 변수 선언
+  String? _nicknameValidationMessage;
+  String? _prevNicknameText;
+  bool _nicknameChanged = true;
+  bool _isNicknameValid = true;
+
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _nicknameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     getInfo();
+    _nicknameController.addListener(() {
+      if (_nicknameController.text != _prevNicknameText) {
+        setState(() {
+          _nicknameChanged = true;
+          _nicknameValidationMessage = '닉네임 중복 확인을 해주세요.';
+          _prevNicknameText = _nicknameController.text;
+        });
+      }
+    });
+  }
+
+  Future<void> _checkNickname() async {
+    // 닉네임이 공백인 경우
+    if (_nicknameController.text == '') {
+      setState(() {
+        _isNicknameValid = false;
+        _nicknameValidationMessage = '닉네임을 입력해주세요.';
+      });
+      return;
+    }
+
+    // 정규식을 사용해 8자 이내의 한글 혹은 영문만 허용
+    RegExp regExp =
+        RegExp(r'^[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AFa-zA-Z]{1,8}$');
+    if (!regExp.hasMatch(_nicknameController.text)) {
+      setState(() {
+        _isNicknameValid = false;
+        _nicknameValidationMessage = '닉네임은 8자 이내의 한글 혹은 영문만 입력 가능합니다.';
+      });
+      return;
+    }
+
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    print(_nicknameController.text);
+    // API 요청을 사용해 닉네임 중복 여부 확인
+    print('$baseUrl/user/nickname/duplicate/${_nicknameController.text}');
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/user/nickname/duplicate/${_nicknameController.text}'),
+        headers: <String, String>{
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        print(response.body);
+        String responseBody = response.body;
+        bool isNicknameAvailable = responseBody.toLowerCase() == 'false';
+        setState(() {
+          _isNicknameValid = isNicknameAvailable;
+          _nicknameValidationMessage =
+              isNicknameAvailable ? '사용할 수 있는 닉네임입니다.' : '이미 존재하는 닉네임입니다.';
+          if (isNicknameAvailable) {
+            _nicknameChanged = false;
+          }
+        });
+      } else {
+        setState(() {
+          _isNicknameValid = false;
+          _nicknameValidationMessage = '잘못된 요청입니다..';
+        });
+      }
+    } catch (error) {
+      print('error발생!! $error');
+    }
   }
 
   void getInfo() async {
@@ -151,6 +227,38 @@ class _MypageScreenState extends State<MypageScreen> {
                               ],
                             ),
                             // const NicknameForm(),
+                            if (true)
+                              Form(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextFormField(
+                                      controller: _nicknameController,
+                                      decoration: InputDecoration(
+                                        labelText: '닉네임',
+                                        hintText: '8자 이내의 한글 혹은 영문',
+                                        suffixIcon: IconButton(
+                                          icon: _nicknameChanged
+                                              ? const Icon(Icons.check,
+                                                  color: Colors.red)
+                                              : const Icon(Icons.check,
+                                                  color: Colors.green),
+                                          onPressed: _checkNickname,
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return '닉네임을 입력해주세요.';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    if (_nicknameValidationMessage != null)
+                                      Text(_nicknameValidationMessage!),
+                                  ],
+                                ),
+                              ),
                             const SizedBox(
                               height: 15,
                             ),
