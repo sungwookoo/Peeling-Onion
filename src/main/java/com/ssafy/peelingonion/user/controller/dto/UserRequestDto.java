@@ -24,7 +24,7 @@ public class UserRequestDto {
 			.kakaoId(userRequestDto.kakaoId)
 			.nickname(userRequestDto.nickname)
 			.imgSrc(userRequestDto.img_src)
-			.createdAt(Instant.now())
+			.createdAt(Instant.now().plusSeconds(60*60*9))
 			.activate(true)
 			.mobileNumber(userRequestDto.mobile_number)
 			.build();
@@ -35,7 +35,7 @@ public class UserRequestDto {
 			.kakaoId(userRequestDto.kakaoId)
 			.nickname(userRequestDto.nickname)
 			.imgSrc(userRequestDto.img_src)
-			.createdAt(Instant.now())
+			.createdAt(Instant.now().plusSeconds(60*60*9))
 			.activate(true)
 			.mobileNumber(userRequestDto.mobile_number)
 			.build();
