@@ -78,6 +78,17 @@ public class OnionService {
         }
     }
 
+//    public boolean checkOnionIsDead(Onion onion) {
+//        // 키우는 기간이 3일 미만인 양파의 경우
+////        if(onion.getCreatedAt())
+//
+//        // 키우는 기간이 3일 이상인 양파의 경우
+//    }
+//
+//    public boolean checkTime2Go(Onion onion) {
+//
+//    }
+
     public void throwOnion(Long onionId){
         Optional<Onion> opOnion = onionRepository.findById(onionId);
         if(opOnion.isPresent()) {

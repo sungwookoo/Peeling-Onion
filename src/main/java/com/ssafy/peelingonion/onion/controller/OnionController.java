@@ -183,8 +183,11 @@ public class OnionController {
                 List<SendOnion> sendOnions = onionService.findSendOnions(userId);
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
                 for(SendOnion sendOnion : sendOnions){
+                    Onion onion = sendOnion.getOnion();
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion));
+                        boolean isDead = onionService.checkOnionIsDead(onion);
+                        boolean isTime2Go = onionService.checkTime2Go(onion);
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);
