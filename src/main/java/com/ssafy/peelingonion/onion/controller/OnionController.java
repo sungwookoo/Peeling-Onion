@@ -186,10 +186,11 @@ public class OnionController {
                 for(SendOnion sendOnion : sendOnions){
                     Onion onion = sendOnion.getOnion();
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
-                        boolean isDead, isTime2Go;
+                        boolean isDead, isTime2Go, isWatered;
                         isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
                         isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
+                        isWatered = onionService.checkOnionIsWatered(onion);
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go, isWatered));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);

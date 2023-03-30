@@ -111,6 +111,21 @@ public class OnionService {
 		}
 	}
 
+	public boolean checkOnionIsWatered(Onion onion) {
+		Instant lastModified = onion.getLatestModify();
+		// 1. 메세지가 없다면 그냥 추가하면 된다.
+		if(onion.getMessages().isEmpty()) {
+			return false;
+		// 2. 메세지가 있다면
+		} else {
+			// 2-1. lastModified의 날짜를 가져와서 오늘 날짜와 비교
+			// 오늘 == 수정일 -> isWatered: true/ 아니면 false
+			Date dateNow = Date.from(Instant.now().plusSeconds(60*60*9));
+			Date dateModified = Date.from(lastModified);
+			return dateNow.equals(dateModified);
+		}
+	}
+
 	public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
 		// 이미 썪어있다면 썪은 여부는 판단이 불가능하다.
 		Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
