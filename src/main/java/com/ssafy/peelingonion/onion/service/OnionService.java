@@ -130,10 +130,11 @@ public class OnionService {
 
     public Onion findOnionById(Long onionId){
         Optional<Onion> opOnion = onionRepository.findById(onionId);
-        // ***** 에러처리를 이렇게 하는게 맞나??!! *****//
-        return opOnion.orElseGet(() -> Onion.builder()
-                .id(1000000L)
-                .build());
+        if(opOnion.isPresent()) {
+            return opOnion.get();
+        } else {
+            throw new IllegalArgumentException("해당 양파가 없음");
+        }
     }
 
     public ReceiveOnion findReceiveOnionByOnionId(Long onionId, Long userId) {
