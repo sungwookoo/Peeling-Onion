@@ -85,7 +85,7 @@ public class OnionController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             } catch (Exception e){
                 log.error(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
