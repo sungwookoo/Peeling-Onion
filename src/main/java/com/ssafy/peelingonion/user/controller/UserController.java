@@ -150,6 +150,15 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/mobile/{mobileNumber}")
+	public ResponseEntity<Long> getUserId(@PathVariable String mobileNumber) {
+		try {
+			return ResponseEntity.ok(userService.getUserId(mobileNumber));
+		} catch (UserNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		}
+	}
+
 	@GetMapping("/fcm/{userId}")
 	public ResponseEntity<String> getUserFCMToken(@PathVariable Long userId) {
 		String requestToken = redisTemplate.opsForValue().get(userId);

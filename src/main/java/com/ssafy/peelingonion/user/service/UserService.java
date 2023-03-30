@@ -95,4 +95,12 @@ public class UserService {
 		User user = userRepository.findById(userId).orElse(User.builder().nickname("").build());
 		return userRepository.findTop10ByNicknameContainsAndNicknameNotLike(keyword, user.getNickname());
 	}
+
+	public Long getUserId(String mobileNumber) {
+		Optional<User> optUser = userRepository.findByMobileNumber(mobileNumber);
+		if (optUser.isPresent()) {
+			return optUser.get().getId();
+		} else
+			return -1L;
+	}
 }

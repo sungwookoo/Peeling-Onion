@@ -5,7 +5,7 @@ server:
 
 logging:
   level:
-    root: debug
+    root: info
 
 spring:
   jwt:

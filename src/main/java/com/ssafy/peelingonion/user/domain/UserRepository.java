@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findTop10ByNicknameContainsAndNicknameNotLike(String keyword, String notInclude);
 
 	Optional<User> findByKakaoId(Long kakaoId);
+
+	Optional<User> findByMobileNumber(String mobileNumber);
 }
