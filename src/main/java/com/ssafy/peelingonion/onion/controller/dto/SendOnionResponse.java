@@ -24,18 +24,21 @@ public class SendOnionResponse {
     public String receiver_number;
     public boolean is_dead;
     public boolean is_time2go;
-    public static SendOnionResponse from(SendOnion s, boolean isDead, boolean isTime2Go){
+    public boolean is_watered;
+    public static SendOnionResponse from(SendOnion s, boolean isDead, boolean isTime2Go, boolean isWatered){
         Onion o = s.getOnion();
         return SendOnionResponse.builder()
                 .id(o.getId())
                 .name(o.getName())
                 .img_src(o.getImgSrc())
                 .created_at(o.getCreatedAt())
+                .lastest_modified(o.getLatestModify())
                 .grow_due_date(o.getGrowDueDate())
                 .is_single(o.getIsSingle())
                 .receiver_number(s.getReceiverNumber())
                 .is_dead(isDead)
                 .is_time2go(isTime2Go)
+                .is_watered(isWatered)
                 .build();
     }
 }
