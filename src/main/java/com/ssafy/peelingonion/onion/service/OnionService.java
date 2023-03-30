@@ -143,16 +143,22 @@ public class OnionService {
             ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(opOnion.get());
             if(!receiveOnion.getIsChecked()) {
                 receiveOnion.setIsChecked(Boolean.TRUE);
-                MyField myField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
-                Onion o = receiveOnion.getOnion();
-                storageRepository.save(Storage
-                        .builder()
-                        .field(myField.getField())
-                        .onion(o)
-                        .createdAt(o.getCreatedAt())
-                        .isBookmarked(Boolean.FALSE)
-                        .build());
-                return receiveOnionRepository.save(receiveOnion);
+                Optional<MyField> opMyField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
+                if(opMyField.isPresent()) {
+                    Onion o = receiveOnion.getOnion();
+                    MyField myField = opMyField.get();
+                    storageRepository.save(Storage
+                            .builder()
+                            .field(myField.getField())
+                            .onion(o)
+                            .createdAt(o.getCreatedAt())
+                            .isBookmarked(Boolean.FALSE)
+                            .build());
+                    return receiveOnionRepository.save(receiveOnion);
+                }
+                else {
+                    throw new IllegalStateException("해당 유저의 기본 필드가 없습니다.")
+                }
             }
             return receiveOnion;
         }
