@@ -62,6 +62,7 @@ public class OnionController {
      * 택배함 화면 or 밭에서 양파 세부사항 읽기(아이디까지 받아옴)
      * @param token 로그인 유저의 토큰
      * @param onionId 택배함에서 선택한 양파의 id
+     *                선택한 양파가 is_received인지 확인해야한다.
      * @return 양파의 정보들과 안에 들어있는 메시지 아이디(-> 메세지 읽을 때 따로)
      */
     @GetMapping("/{onionId}")
@@ -180,6 +181,7 @@ public class OnionController {
 //        final Long userId = authorizeService.getAuthorization(token);
 //        if(authorizeService.isAuthorization(userId)){
 //            try {
+    // 만약 썪은거라면 그냥 썪은 채로 출력
 //                List<SendOnion> sendOnions = onionService.findSendOnions(userId);
 //                List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
 //                for(SendOnion sendOnion : sendOnions){

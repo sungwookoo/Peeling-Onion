@@ -141,33 +141,38 @@ public class OnionService {
         Optional<Onion> opOnion = onionRepository.findById(onionId);
         // 양파가 존재하는 경우
         if(opOnion.isPresent()) {
-            ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(opOnion.get());
-            // 양파가 체크 안되있는 경우 -> 택배함, 읽고 체크해주고, 새롭게 store을 만들어야한다.(기본밭으로)
-            if(!receiveOnion.getIsChecked()) {
-                receiveOnion.setIsChecked(Boolean.TRUE);
-                Optional<MyField> opMyField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
-                // 기본밭을 찾는데 있다면
-                if(opMyField.isPresent()) {
-                    Onion o = receiveOnion.getOnion();
-                    MyField myField = opMyField.get();
-                    storageRepository.save(Storage
-                            .builder()
-                            .field(myField.getField())
-                            .onion(o)
-                            .createdAt(o.getCreatedAt())
-                            .isBookmarked(Boolean.FALSE)
-                            .build());
-                    return receiveOnionRepository.save(receiveOnion);
+            Optional<ReceiveOnion> opReceiveOnion = receiveOnionRepository.findByOnionIdAndIsReceived(opOnion.get().getId(), Boolean.TRUE);
+            // 받은 양파가 없다면
+            if(opReceiveOnion.isPresent()) {
+                ReceiveOnion receiveOnion = opReceiveOnion.get();
+                // 양파가 체크 안되있는 경우 -> 택배함, 읽고 체크해주고, 새롭게 store을 만들어야한다.(기본밭으로)
+                if(!receiveOnion.getIsChecked()) {
+                    receiveOnion.setIsChecked(Boolean.TRUE);
+                    Optional<MyField> opMyField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
+                    // 기본밭을 찾는데 있다면
+                    if(opMyField.isPresent()) {
+                        Onion o = receiveOnion.getOnion();
+                        MyField myField = opMyField.get();
+                        storageRepository.save(Storage
+                                .builder()
+                                .field(myField.getField())
+                                .onion(o)
+                                .createdAt(o.getCreatedAt())
+                                .isBookmarked(Boolean.FALSE)
+                                .build());
+                        return receiveOnionRepository.save(receiveOnion);
+                    }
+                    throw new IllegalStateException("기본밭이 없는경우");
+                } else {
+                    // 양파가 체크 되어 있는 경우 -> 밭에서 확인하는 경우
+                    return receiveOnion;
                 }
-                throw new IllegalStateException("기본밭이 없는경우");
+            } else {
+                throw new IllegalStateException("양파는 있는데, 받은 양파가 조회가 안됨");
             }
-            // 양파가 체크 되어 있는 경우 -> 밭에서 확인하는 경우
-            return receiveOnion;
         }
         // 만약 해당 아이디의 양파가 없다면, (그럴 일은 없지만, 버린다.)
-        return ReceiveOnion.builder()
-                .id(100000000L)
-                .build();
+        throw new IllegalStateException("해당 양파가 없음");
     }
 
     public List<ReceiveOnion> findBookmarkedOnions(Long userId){
