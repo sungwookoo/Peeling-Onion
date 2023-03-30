@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/screens/record_screens/record_screen.dart';
-import './show_delete_modal.dart';
+import '../../../widgets/show_delete_modal.dart';
 
 // 양파 1개 (이후 이곳의 onTap 속성에, 혜빈누나 작업물 붙일 예정)
 class HomeOneOnion extends StatelessWidget {

@@ -3,7 +3,6 @@ import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import './home_widgets/home_one_onion.dart';
-import '../../widgets/trash_can.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,12 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
               List<CustomHomeOnion> onionsData =
                   snapshot.data as List<CustomHomeOnion>;
               // 양파들 출력
-              return Stack(
-                children: [
-                  ShowGrowingOnions(onions: onionsData),
-                  const TrashCan(kind: 'onion'),
-                ],
-              );
+              return ShowGrowingOnions(onions: onionsData);
             } else if (snapshot.hasError) {
               return Text('에러: ${snapshot.error}');
             }
@@ -84,9 +78,38 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
+  double onionMaxHeight = 210;
 
   @override
   Widget build(BuildContext context) {
+    // 선반이 비어있으면, 빈 선반 표시
+    if (widget._onions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // Display 3 shelves
+          children: List.generate(
+            3,
+            (shelfIndex) {
+              // Display each shelf
+              return SizedBox(
+                height: onionMaxHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Display shelf image
+                    Image.asset(
+                      'assets/images/shelf.png',
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
     // 양파 수가 많으면, 페이지 넘겨서 확인
     return PageView.builder(
       itemCount: numOfPages,
@@ -104,35 +127,39 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
-                return Column(
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: onionsPerShelf,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
+                return SizedBox(
+                  height: onionMaxHeight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: onionsPerShelf,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ),
+                        itemBuilder: (BuildContext context, int itemIndex) {
+                          int globalIndex = firstOnionIndex + itemIndex;
+                          if (globalIndex < widget._onions.length) {
+                            // 양파 1개 (텍스트 + 이미지) (HomeOneOnion 클래스 사용)
+                            return HomeOneOnion(
+                              onions: widget._onions,
+                              globalIndex: globalIndex,
+                              onDelete: () => _deleteOnion(globalIndex),
+                            );
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
                       ),
-                      itemBuilder: (BuildContext context, int itemIndex) {
-                        int globalIndex = firstOnionIndex + itemIndex;
-                        if (globalIndex < widget._onions.length) {
-                          // 양파 1개 (텍스트 + 이미지) (HomeOneOnion 클래스 사용)
-                          return HomeOneOnion(
-                            onions: widget._onions,
-                            globalIndex: globalIndex,
-                            onDelete: () => _deleteOnion(globalIndex),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                    // 선반 1개 이미지
-                    Image.asset(
-                      'assets/images/shelf.png',
-                    ),
-                  ],
+                      // 선반 1개 이미지
+                      Image.asset(
+                        'assets/images/shelf.png',
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

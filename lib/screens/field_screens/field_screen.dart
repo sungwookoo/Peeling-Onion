@@ -26,9 +26,14 @@ class _FieldScreenState extends State<FieldScreen> {
   }
 
   // 밭 추가하는 메서드 (이후 api 연결할 것)
-  void addOne(fieldName) {
-    setState(() {
-      // 이후 여기는 수정. api 받아오도록.
+  void addField(fieldName) {
+    FieldApiService.createField(fieldName).then((createdField) {
+      setState(() {
+        _fields = _fields.then((fields) {
+          fields.add(createdField);
+          return fields;
+        });
+      });
     });
   }
 
@@ -72,7 +77,7 @@ class _FieldScreenState extends State<FieldScreen> {
       // 밭 추가하는 버튼, 모달로 띄움(이후 디자인 따라 수정할 예정)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          displayTextInputDialog(context, addOne);
+          displayTextInputDialog(context, addField);
         },
         child: const Text('밭 추가'),
       ),

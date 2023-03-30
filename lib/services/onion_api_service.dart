@@ -26,7 +26,7 @@ class OnionApiService {
     print(accessToken);
     // 요청에 따라 저장
     if (response.statusCode == 200) {
-      List onions = jsonDecode(response.body);
+      List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
       print(response.statusCode);
@@ -48,7 +48,7 @@ class OnionApiService {
     );
     // 요청에 따라 저장
     if (response.statusCode == 200) {
-      List onions = jsonDecode(response.body);
+      List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions
           .map((onion) => CustomOnionByOnionId.fromJson(onion))
           .toList();
@@ -70,8 +70,8 @@ class OnionApiService {
       },
     );
     if (response.statusCode == 200) {
-      CustomOnionByOnionId onion =
-          CustomOnionByOnionId.fromJson(jsonDecode(response.body));
+      CustomOnionByOnionId onion = CustomOnionByOnionId.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
       return onion;
     } else {
       throw Exception('Failed to get onion');
@@ -145,7 +145,8 @@ class OnionApiService {
       },
     );
     if (response.statusCode == 200) {
-      CustomMessage message = CustomMessage.fromJson(jsonDecode(response.body));
+      CustomMessage message =
+          CustomMessage.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return message;
     } else {
       throw Exception('Failed to get message');

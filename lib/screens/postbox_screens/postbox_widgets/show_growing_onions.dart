@@ -19,9 +19,38 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
-
+  // 각 양파 1개의 최대 높이를 지정함
+  double onionMaxHeight = 210;
   @override
   Widget build(BuildContext context) {
+    // 선반이 비어있으면, 빈 선반 표시
+    if (widget._onions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // Display 3 shelves
+          children: List.generate(
+            3,
+            (shelfIndex) {
+              // Display each shelf
+              return SizedBox(
+                height: onionMaxHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Display shelf image
+                    Image.asset(
+                      'assets/images/shelf.png',
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+    }
     // 양파 수가 많으면, 페이지 넘겨서 확인
     return PageView.builder(
       itemCount: numOfPages,
@@ -39,34 +68,38 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
-                return Column(
-                  children: [
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: onionsPerShelf,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
+                return SizedBox(
+                  height: onionMaxHeight,
+                  child: Column(
+                    children: [
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: onionsPerShelf,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                        ),
+                        itemBuilder: (BuildContext context, int itemIndex) {
+                          int globalIndex = firstOnionIndex + itemIndex;
+                          if (globalIndex < widget._onions.length) {
+                            // 각 양파 1개 (텍스트 + 이미지)
+                            return PostboxOneOnion(
+                                onions: widget._onions,
+                                globalIndex: globalIndex);
+                          } else {
+                            return const SizedBox.shrink();
+                          }
+                        },
                       ),
-                      itemBuilder: (BuildContext context, int itemIndex) {
-                        int globalIndex = firstOnionIndex + itemIndex;
-                        if (globalIndex < widget._onions.length) {
-                          // 각 양파 1개 (텍스트 + 이미지)
-                          return PostboxOneOnion(
-                              onions: widget._onions, globalIndex: globalIndex);
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
-                    // 선반 1개 이미지
-                    Image.asset(
-                      'assets/images/shelf.png',
-                    ),
-                  ],
+                      // 선반 1개 이미지
+                      Image.asset(
+                        'assets/images/shelf.png',
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
