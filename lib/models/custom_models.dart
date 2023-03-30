@@ -79,11 +79,20 @@ class CustomField {
   final int id;
   final String name;
   final String createdAt;
+  CustomField({required this.id, required this.name, required this.createdAt});
 
   CustomField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         createdAt = json['created_at'];
+
+  CustomField copyWith({int? id, String? name, String? createdAt}) {
+    return CustomField(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
 
 // 밭 1개의 양파 정보 모델
