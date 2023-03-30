@@ -85,6 +85,7 @@ flutter:
     - assets/icons/mypage_icon.png
     - assets/icons/sprout_icon.png
     - assets/icons/noalarm.png
+    - assets/images/backfarm.png
     - assets/images/createbackground.jpg
     - assets/images/onion_image.png
     - assets/images/customonion0.png
