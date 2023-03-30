@@ -70,10 +70,9 @@ class OnionApiService {
       CustomOnionByOnionId onion = CustomOnionByOnionId.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       return onion;
+    } else if (response.statusCode == 404) {
+      throw Exception('접근할 수 없는 양파입니다');
     } else {
-      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
-      print('$onionId');
-      print(response.statusCode);
       throw Exception('Failed to get onion');
     }
   }
@@ -149,6 +148,7 @@ class OnionApiService {
           CustomMessage.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return message;
     } else {
+      print(response.statusCode);
       throw Exception('Failed to get message');
     }
   }
