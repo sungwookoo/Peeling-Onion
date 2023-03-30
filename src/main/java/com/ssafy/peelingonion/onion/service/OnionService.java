@@ -139,11 +139,14 @@ public class OnionService {
 
     public ReceiveOnion findReceiveOnionByOnionId(Long onionId, Long userId) {
         Optional<Onion> opOnion = onionRepository.findById(onionId);
+        // 양파가 존재하는 경우
         if(opOnion.isPresent()) {
             ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(opOnion.get());
+            // 양파가 체크 안되있는 경우 -> 택배함, 읽고 체크해주고, 새롭게 store을 만들어야한다.(기본밭으로)
             if(!receiveOnion.getIsChecked()) {
                 receiveOnion.setIsChecked(Boolean.TRUE);
                 Optional<MyField> opMyField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
+                // 기본밭을 찾는데 있다면
                 if(opMyField.isPresent()) {
                     Onion o = receiveOnion.getOnion();
                     MyField myField = opMyField.get();
@@ -156,10 +159,9 @@ public class OnionService {
                             .build());
                     return receiveOnionRepository.save(receiveOnion);
                 }
-                else {
-                    throw new IllegalStateException("해당 유저의 기본 필드가 없습니다.")
-                }
+                throw new IllegalStateException("기본밭이 없는경우");
             }
+            // 양파가 체크 되어 있는 경우 -> 밭에서 확인하는 경우
             return receiveOnion;
         }
         // 만약 해당 아이디의 양파가 없다면, (그럴 일은 없지만, 버린다.)
@@ -193,7 +195,7 @@ public class OnionService {
                 onion.setIsDisabled(Boolean.TRUE);
                 onionRepository.save(onion);
             } else {
-                throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.") ;
+                throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.");
             }
         }
         throw new IllegalStateException("없는 양파입니다.");
