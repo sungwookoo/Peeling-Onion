@@ -23,11 +23,14 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'com.h2database:h2:1.4.200'
+
+	// FCM
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	implementation group: 'com.squareup.okhttp3', name:'okhttp', version:'4.2.2'
 
 	// JWT
 	implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
@@ -35,7 +38,6 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
 
 	compileOnly 'org.projectlombok:lombok'
 
