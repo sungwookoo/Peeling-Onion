@@ -188,7 +188,7 @@ public class OnionController {
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
                         boolean isDead, isTime2Go;
                         isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
-                        isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("Time2Go");
+                        isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
                         sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
                     }
                 }
