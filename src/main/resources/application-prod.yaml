@@ -19,3 +19,4 @@ settings:
 
 authServer: https://auth.ssafy.shop
 userServer: https://user.ssafy.shop
+alarmServer: https://alarm.ssafy.shop
