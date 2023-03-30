@@ -74,7 +74,7 @@ class _MypageScreenState extends State<MypageScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(30.0),
           child: Center(
             child: FutureBuilder<Map<String, dynamic>>(
               future: userInfo, // userInfo 변수 사용
@@ -96,9 +96,72 @@ class _MypageScreenState extends State<MypageScreen> {
                           color: Color(0xffA1D57A),
                         ),
                       ),
-                      Text('$userId'),
-                      Text('$nickname'),
-                      Text('$phoneNumber'),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // SizedBox(
+                          //   width: 60,
+                          // ),
+                          Text(
+                            "회원정보수정",
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: 270,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  '닉네임 :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                                const Text(
+                                  // '$nickname',
+                                  '가가가가가가가가',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    logOut(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    minimumSize: const Size(40, 30),
+                                  ),
+                                  child: const Text('수정'),
+                                )
+                              ],
+                            ),
+                            // const NicknameForm(),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Text('$userId'),
+                            Text('$phoneNumber'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 100,
+                      ),
                       ElevatedButton(
                         onPressed: () async {
                           logOut(context);
