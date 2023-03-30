@@ -133,7 +133,7 @@ public class OnionService {
         if(opOnion.isPresent()) {
             return opOnion.get();
         } else {
-            return throw new IllegalArgumentException("해당 값이 없음");
+            throw new IllegalArgumentException("해당 양파가 없음");
         }
     }
 
