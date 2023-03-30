@@ -1,5 +1,5 @@
 # Node.js 이미지를 기반으로 새 이미지를 생성합니다.
-FROM node:14
+FROM node:16.15.0 as build-stage
 
 # 작업 디렉토리를 설정합니다.
 WORKDIR /var/jenkins_home/workspace/react-main/peeling-onion
