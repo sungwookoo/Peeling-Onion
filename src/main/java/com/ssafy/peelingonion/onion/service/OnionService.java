@@ -13,8 +13,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.ssafy.peelingonion.common.ConstValues.USER_SERVER_CLIENT;
 
@@ -78,16 +80,22 @@ public class OnionService {
         }
     }
 
-//    public boolean checkOnionIsDead(Onion onion) {
-//        // 키우는 기간이 3일 미만인 양파의 경우
-////        if(onion.getCreatedAt())
-//
-//        // 키우는 기간이 3일 이상인 양파의 경우
-//    }
-//
-//    public boolean checkTime2Go(Onion onion) {
-//
-//    }
+    public List<Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+        // 키우는 기간이 3일 미만인 양파의 경우
+        // 양파 생성 due date에서 양파 생성일을 빼기
+        long growTime = onion.getCreatedAt().until(onion.getGrowDueDate(), ChronoUnit.SECONDS);
+        // 키우는 기간이 3일 이상인 경우
+        if(growTime >= 259200) {
+
+        } else {
+            // 키우는 기간이 3일 미만인 경우
+            // 만약
+        }
+    }
+
+    public boolean checkTime2Go(Onion onion) {
+
+    }
 
     public void throwOnion(Long onionId){
         Optional<Onion> opOnion = onionRepository.findById(onionId);
@@ -99,9 +107,11 @@ public class OnionService {
                 onion.setSendDate(Instant.now());
                 onionRepository.save(onion);
                 // 내가 만든 양파에서 해당 양파 전송여부 true
-                SendOnion sendOnion = sendOnionRepository.findByOnion(onion);
-                sendOnion.setIsSended(Boolean.TRUE);
-                sendOnionRepository.save(sendOnion);
+                Set<SendOnion> sendOnions = onion.getSendOnions();
+                for(SendOnion sendOnion : sendOnions) {
+                    sendOnion.setIsSended(Boolean.TRUE);
+                    sendOnionRepository.save(sendOnion);
+                }
                 // 내가 받은 양파에서 수신 여부 true
                 ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
                 receiveOnion.setIsReceived(Boolean.TRUE);
