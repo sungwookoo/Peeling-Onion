@@ -28,3 +28,4 @@ settings:
 
 authServer: https://test.auth.ssafy.shop
 userServer: https://test.user.ssafy.shop
+alarmServer: https://test.alarm.ssafy.shop

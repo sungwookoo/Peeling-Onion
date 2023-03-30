@@ -1,6 +1,9 @@
 package com.ssafy.peelingonion.onion.service;
 
+import static com.ssafy.peelingonion.common.ConstValues.*;
+
 import com.ssafy.peelingonion.field.domain.*;
+import com.ssafy.peelingonion.onion.controller.dto.AlarmRequest;
 import com.ssafy.peelingonion.onion.controller.dto.MessageCreateRequest;
 import com.ssafy.peelingonion.onion.controller.dto.OnionCreateRequest;
 import com.ssafy.peelingonion.onion.domain.*;
@@ -8,19 +11,21 @@ import com.ssafy.peelingonion.record.domain.MyRecord;
 import com.ssafy.peelingonion.record.domain.MyRecordRepository;
 import com.ssafy.peelingonion.record.domain.Record;
 import com.ssafy.peelingonion.record.domain.RecordRepository;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static com.ssafy.peelingonion.common.ConstValues.USER_SERVER_CLIENT;
-
+@Slf4j
 @Service
 public class OnionService {
-    private final OnionRepository onionRepository;
+private final OnionRepository onionRepository;
     private final SendOnionRepository sendOnionRepository;
     private final RecordRepository recordRepository;
     private final MyRecordRepository myRecordRepository;
@@ -59,6 +64,33 @@ public class OnionService {
             sendOnionRepository.save(SendOnion.from(senderId, onionCreateRequest, newOnion));
         }
         receiveOnionRepository.save(ReceiveOnion.from(onion, userId, onionCreateRequest));
+		// 모아보내기의 경우, 알림서버에 해당 메시지를 등록한다.
+		if (!onionCreateRequest.is_single.booleanValue()) {
+			senderIds.stream()
+				.forEach(e -> addAlarm(userId, e, ONION_ADD_SENDER));
+		}
+	}
+
+	public void addAlarm(Long srcUserId, Long desUserId, int type) {
+		AlarmRequest alarmRequest = AlarmRequest.builder()
+			.sender_id(srcUserId)
+			.receiver_id(desUserId)
+			.content("")
+			.created_at(Instant.now())
+			.type(type)
+			.build();
+		try {
+			ALARM_SERVER_CLIENT.post()
+				.uri("/alarm")
+				.bodyValue(alarmRequest)
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.bodyToMono(Void.class)
+				.block();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
     }
 
     public List<SendOnion> findSendOnions(Long userId) {
@@ -120,6 +152,9 @@ public class OnionService {
                 ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
                 receiveOnion.setIsReceived(Boolean.TRUE);
                 receiveOnionRepository.save(receiveOnion);
+		Long targetId = getUserIdFromMobileNumber(receiveOnion.getReceiverNumber());
+		if (targetId > 0) {
+			addAlarm(onion.getUserId(), targetId, ONION_RECEIVE);
             }
         }
     }
@@ -250,4 +285,18 @@ public class OnionService {
             return "";
         }
     }
+	public Long getUserIdFromMobileNumber(String mobileNumber) {
+		try {
+			return USER_SERVER_CLIENT.get()
+				.uri("/user/mobile/" + mobileNumber)
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.bodyToMono(Long.class)
+				.block();
+		} catch (Exception e) {
+			log.error("{}", e.getMessage());
+			return -2L;
+		}
+	}
 }
