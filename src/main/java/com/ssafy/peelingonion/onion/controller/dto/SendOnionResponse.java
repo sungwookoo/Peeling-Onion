@@ -22,7 +22,9 @@ public class SendOnionResponse {
     public Instant grow_due_date;
     public Boolean is_single;
     public String receiver_number;
-    public static SendOnionResponse from(SendOnion s){
+    public boolean is_gone;
+    public boolean is_time2go;
+    public static SendOnionResponse from(SendOnion s, boolean isDead, boolean isTime2Go){
         Onion o = s.getOnion();
         return SendOnionResponse.builder()
                 .id(o.getId())
@@ -32,6 +34,8 @@ public class SendOnionResponse {
                 .grow_due_date(o.getGrowDueDate())
                 .is_single(o.getIsSingle())
                 .receiver_number(s.getReceiverNumber())
+                .is_gone(isDead)
+                .is_time2go(isTime2Go)
                 .build();
     }
 }
