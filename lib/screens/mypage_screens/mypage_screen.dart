@@ -4,7 +4,7 @@ import 'package:front/user_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
-import 'package:kakao_flutter_sdk_share/kakao_flutter_sdk_share.dart';
+import 'package:front/widgets/kakao_share.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -54,33 +54,6 @@ class _MypageScreenState extends State<MypageScreen> {
       print('회원탈퇴 실패: ${response.body}');
     }
     Navigator.pushNamed(context, '/');
-  }
-
-  void shareMessage() async {
-    // 사용자 정의 템플릿 ID
-    int templateId = 91849;
-// 카카오톡 실행 가능 여부 확인
-    bool isKakaoTalkSharingAvailable =
-        await ShareClient.instance.isKakaoTalkSharingAvailable();
-
-    if (isKakaoTalkSharingAvailable) {
-      try {
-        Uri uri =
-            await ShareClient.instance.shareCustom(templateId: templateId);
-        await ShareClient.instance.launchKakaoTalk(uri);
-        print('카카오톡 공유 완료');
-      } catch (error) {
-        print('카카오톡 공유 실패 $error');
-      }
-    } else {
-      try {
-        Uri shareUrl = await WebSharerClient.instance
-            .makeCustomUrl(templateId: templateId);
-        await launchBrowserTab(shareUrl, popupOpen: true);
-      } catch (error) {
-        print('카카오톡 공유 실패 $error');
-      }
-    }
   }
 
   @override

@@ -38,6 +38,7 @@ class UserApiService {
     );
     print("${response.statusCode}, response입니다~~~~~~~~~~~~~~~~~~");
     if (response.statusCode == 200) {
+      print(response.body);
       CustomUser user = CustomUser.fromJson(jsonDecode(response.body));
       Provider.of<UserIdModel>(context, listen: false).setUserId(user.userId);
       return user.userId;
