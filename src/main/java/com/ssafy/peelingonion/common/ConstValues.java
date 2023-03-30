@@ -14,6 +14,11 @@ public class ConstValues {
 	public static final Long UNAUTHORIZED_USER = -2L;
 	public static final Long NON_MEMBER = -1L;
 
+	public static final int ONION_DEAD = 1; // 양파가 상하는 경우
+	public static final int ONION_RECEIVE = 2; // 양파를 받은 경우
+	public static final int ONION_GROW_DONE = 3; // 양파가 성장완료한 경우
+	public static final int ONION_ADD_SENDER = 4; // 양파 모아보내기에 보낸이에 추가된 경우
+
 	@Value(value = "${authServer}")
 	public void setAuthServer(String authServer) {
 		AUTH_SERVER = authServer;

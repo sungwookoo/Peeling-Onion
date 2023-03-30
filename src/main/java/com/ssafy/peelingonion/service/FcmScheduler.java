@@ -29,6 +29,8 @@ public class FcmScheduler {
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);
 			for (Alarm alarm : notSendedAlarmList) {
+
+
 				alarmService.sendMessageTo(alarm); // fcm server에 전송
 				alarm.setIsSended(true); // 보냄처리
 				alarmRepository.save(alarm); // DB에 반영

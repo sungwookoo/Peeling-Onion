@@ -42,7 +42,10 @@ public class Alarm {
 	@Column(name = "created_at")
 	private Instant createdAt;
 
-	@Column(name = "is_seneded")
+	@Column(name = "type")
+	private Integer type;
+
+	@Column(name = "is_sended")
 	private Boolean isSended;
 
 }
