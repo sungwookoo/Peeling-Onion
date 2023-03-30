@@ -143,7 +143,6 @@ public class OnionService {
     public void bookmarkOnion(Long onionId) {
         Optional<Onion> opOnion = onionRepository.findById(onionId);
         if(opOnion.isPresent()){
-            Onion onion = opOnion.get();
             ReceiveOnion receiveOnion = receiveOnionRepository.findByOnionId(onionId);
             if(receiveOnion.getIsBookmarked()) {
                 receiveOnion.setIsBookmarked(Boolean.FALSE);
@@ -152,18 +151,20 @@ public class OnionService {
             }
             receiveOnionRepository.save(receiveOnion);
         }
-
-
     }
 
-    public void deleteOnion(Long onionId) {
-        // ***** 만약 없다면 ***** //
+    public void deleteOnion(Long onionId, Long userId) {
         Optional<Onion> opOnion = onionRepository.findById(onionId);
         if(opOnion.isPresent()){
-            Onion onion = opOnion.get();
-            onion.setIsDisabled(Boolean.TRUE);
-            onionRepository.save(onion);
+            if(opOnion.get().getUserId().equals(userId)) {
+                Onion onion = opOnion.get();
+                onion.setIsDisabled(Boolean.TRUE);
+                onionRepository.save(onion);
+            } else {
+                throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.") ;
+            }
         }
+        throw new IllegalStateException("없는 양파입니다.");
     }
 
     public void transferOnion(Long fromFId, Long toFId, Long onionId) {
