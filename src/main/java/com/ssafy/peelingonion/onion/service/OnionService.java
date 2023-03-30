@@ -77,7 +77,7 @@ public class OnionService {
 			.sender_id(srcUserId)
 			.receiver_id(desUserId)
 			.content("")
-			.created_at(Instant.now())
+			.created_at(Instant.now().plusSeconds(60*60*9))
 			.type(type)
 			.build();
 		try {
@@ -105,7 +105,7 @@ public class OnionService {
 		// 메시지를 저장할 때, 뭘해야하나???
 		if (opOnion.isPresent()) {
 			Onion onion = opOnion.get();
-			onion.setLatestModify(Instant.now());
+			onion.setLatestModify(Instant.now().plusSeconds(60*60*9));
 			Onion oni = onionRepository.save(onion);
 			messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
 		}
@@ -123,7 +123,7 @@ public class OnionService {
 		// 1. 키우는 기간이 3일 이상인 경우
 		if(growTime >= DEAD_TIME) {
 			// 1-1. 지금이 growDueDate를 넘었다면 -> 보낼 수도 있음
-			if(Instant.now().isAfter(growDueDate)) {
+			if(Instant.now().plusSeconds(60*60*9).isAfter(growDueDate)) {
 				// 1-1-1. lastModified가 growDueDate차이가 3일이 넘기면 썪음
 				if(lastModified.until(growDueDate, ChronoUnit.SECONDS) >= DEAD_TIME) {
 					isDeadAndTime2Go.put("isDead", true);
@@ -148,7 +148,7 @@ public class OnionService {
 			// 2. 키우는 기간이 3일 미만인 경우
 		} else {
 			// 2-1.지금이 growDueDate를 넘었다면
-			if(Instant.now().isAfter(growDueDate)) {
+			if(Instant.now().plusSeconds(60*60*9).isAfter(growDueDate)) {
 				// 2-1-1. 만약 onion에 메시지가 있다면 보낼 수 있음
 				if(!onion.getMessages().isEmpty()) {
 					isDeadAndTime2Go.put("isDead", false);
@@ -172,9 +172,9 @@ public class OnionService {
 		if (opOnion.isPresent()) {
 			Onion onion = opOnion.get();
 			// getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
-			if (onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled().booleanValue()) {
+			if (onion.getGrowDueDate().isBefore(Instant.now().plusSeconds(60*60*9)) && !onion.getIsDisabled().booleanValue()) {
 				// 양파의 전송일 추가하기
-				onion.setSendDate(Instant.now());
+				onion.setSendDate(Instant.now().plusSeconds(60*60*9));
 				onionRepository.save(onion);
 				// 내가 만든 양파에서 해당 양파 전송여부 true
 				Set<SendOnion> sendOnions = onion.getSendOnions();
