@@ -399,6 +399,30 @@ class _RecordScreenState extends State<RecordScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      if (_sttMessage == '' ||
+                          _sttMessage == '어떤 말도 하지 않으셨어요!') {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('녹음하지 않으셨거나 녹음된 메시지가 올바르지 않아요!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => const AlertDialog(
+                            title: Text('정말 저장하시겠습니까?'),
+                          ),
+                        );
+                      }
                       saveRecordMessage();
                     },
                     child: const Text('저장'),
