@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/screens/mypage_screens/mypage_screen.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
@@ -42,7 +43,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
         final userId = await UserApiService.checkSignin(context);
         print(userId);
         if (userId != -1) {
-          Navigator.pushNamed(context, '/home');
+          // Navigator.pushNamed(context, '/home');
+          // test를 위한 루트 설정
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const MypageScreen()));
         } else {
           // 테스트용~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           Navigator.pushNamed(context, '/signin');
