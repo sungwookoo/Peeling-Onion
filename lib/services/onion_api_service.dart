@@ -86,13 +86,15 @@ class OnionApiService {
   }) async {
     final accessToken = await Token.then((value) => value?.accessToken);
 
+    var idList = userList.map((user) => user['id']).toList();
+
     Map<String, dynamic> datas = {
       'name': onionName,
       'img_src': onionImage,
       'receiver_number': receiverNumber,
       'grow_due_date': growDueDate,
       'is_single': isSingle,
-      'user_id_list': userList,
+      'user_id_list': idList,
     };
     print(datas);
 
