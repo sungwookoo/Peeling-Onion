@@ -8,6 +8,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJAR
 
 FROM adoptopenjdk/openjdk11
+RUN apt-get update && apt-get install -y redis-server
 COPY --from=builder build/libs/*.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["sh", "-c", "redis-server & java -jar /app.jar"]
