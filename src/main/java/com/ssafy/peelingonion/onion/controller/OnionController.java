@@ -72,8 +72,8 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)){
             try {
                 Onion onion = onionService.findOnionById(onionId);
-                if(onion.getIsDisabled() != Boolean.TRUE) {
-                    ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(userId, onionId);
+                if(onion.getIsDisabled() == Boolean.FALSE) {
+                    ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(onionId, userId);
                     List<Long> messageIdList = new ArrayList<>();
                     Set<Message> messages = onion.getMessages();
                     String userName = onionService.getNameByUserId(userId);
