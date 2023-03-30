@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
+import com.ssafy.peelingonion.common.ConstValues;
 import com.ssafy.peelingonion.domain.Alarm;
 import com.ssafy.peelingonion.domain.AlarmRepository;
 import com.ssafy.peelingonion.domain.FcmMessage;
@@ -51,8 +52,37 @@ public class AlarmService {
 	public void sendMessageTo(Alarm alarm) throws IOException {
 		// 해당 유저의 토큰값 가져오기.
 		String fcmToken = getFCMTokenByUserId(alarm.getReceiverId());
+
+		// contentType 설정
+		String msg = makeContentByType(alarm);
+
 		// overloading 함수 재사용
-		sendMessageTo(fcmToken, "", alarm.getContent());
+		sendMessageTo(fcmToken, alarm.getType().toString(), msg);
+	}
+
+	private String makeContentByType(Alarm alarm) {
+		final String sender = getNameByUserId(alarm.getSenderId());
+		final String receiver = getNameByUserId(alarm.getReceiverId());
+
+		String msg;
+		switch (alarm.getType().intValue()) {
+			case ConstValues.ONION_DEAD:
+				msg = "양파가 상하기 직전이에요.";
+				break;
+			case ConstValues.ONION_RECEIVE:
+				msg = sender + "에게 양파가 도착했어요";
+				break;
+			case ConstValues.ONION_GROW_DONE:
+				msg = "양파를 보낼 수 있어요.";
+				break;
+			case ConstValues.ONION_ADD_SENDER:
+				msg = sender + "가 " + receiver + "에게 보내는 메시지에 초대했어요";
+				break;
+			default:
+				msg = "Peeling Onion";
+				break;
+		}
+		return msg;
 	}
 
 	private Request newRequest(String message, String url) throws IOException {
@@ -109,6 +139,20 @@ public class AlarmService {
 		try {
 			return USER_SERVER_CLIENT.get()
 				.uri("/user/fcm/" + userId.toString())
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.bodyToMono(String.class)
+				.block();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	public String getNameByUserId(Long userId) {
+		try {
+			return USER_SERVER_CLIENT.get()
+				.uri("/user/" + userId.toString() + "/nickname")
 				.retrieve()
 				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
 				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))

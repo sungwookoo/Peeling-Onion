@@ -26,5 +26,6 @@ public class FcmMessage {
 		private String title;
 		private String body;
 		private String image;
+		private Integer type;
 	}
 }
