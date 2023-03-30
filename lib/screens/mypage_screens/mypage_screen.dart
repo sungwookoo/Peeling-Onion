@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:front/widgets/kakao_share.dart';
+import 'package:front/services/user_api_service.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -15,6 +16,17 @@ class MypageScreen extends StatefulWidget {
 
 class _MypageScreenState extends State<MypageScreen> {
   static String? baseUrl = dotenv.env['baseUrl'];
+  late Future<Map<String, dynamic>> userInfo; // userInfo 변수 선언
+
+  @override
+  void initState() {
+    super.initState();
+    getInfo();
+  }
+
+  void getInfo() async {
+    userInfo = UserApiService.getUserInfo(context);
+  }
 
   void logOut(context) async {
     try {
@@ -60,37 +72,63 @@ class _MypageScreenState extends State<MypageScreen> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 40,
-            ),
-            const Text('여긴 마이페이지 입니다.'),
-            Text('$userId'),
-            ElevatedButton(
-              onPressed: () async {
-                logOut(context);
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: FutureBuilder<Map<String, dynamic>>(
+              future: userInfo, // userInfo 변수 사용
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final nickname = snapshot.data!['nickname'];
+                  final phoneNumber = snapshot.data!['mobileNumber'];
+
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const Text(
+                        "마이페이지",
+                        style: TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xffA1D57A),
+                        ),
+                      ),
+                      Text('$userId'),
+                      Text('$nickname'),
+                      Text('$phoneNumber'),
+                      ElevatedButton(
+                        onPressed: () async {
+                          logOut(context);
+                        },
+                        child: const Text('로그아웃'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          signOut();
+                        },
+                        child: const Text('회원탈퇴'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          shareMessage();
+                        },
+                        child: const Text('공유하기'),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('에러 발생: ${snapshot.error}');
+                } else {
+                  return const CircularProgressIndicator();
+                }
               },
-              child: const Text('로그아웃'),
             ),
-            ElevatedButton(
-              onPressed: () async {
-                signOut();
-              },
-              child: const Text('회원탈퇴'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                shareMessage();
-              },
-              child: const Text('공유하기'),
-            ),
-          ],
+          ),
         ),
       ),
-    ));
+    );
   }
 }
