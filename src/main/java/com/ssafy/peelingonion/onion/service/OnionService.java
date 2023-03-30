@@ -14,9 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.ssafy.peelingonion.common.ConstValues.USER_SERVER_CLIENT;
 
@@ -80,19 +78,25 @@ public class OnionService {
         }
     }
 
-//    public List<Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+//    public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+//        Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
 //        // 키우는 기간이 3일 미만인 양파의 경우
 //        // 양파 생성 due date에서 양파 생성일을 빼기
-//        long growTime = onion.getCreatedAt().until(onion.getGrowDueDate(), ChronoUnit.SECONDS);
+//        Instant createdTime = onion.getCreatedAt();
+//        Instant growDueDate = onion.getCreatedAt();
+//        Instant lastModified = onion.getLatestModify();
+//        long growTime = createdTime.until(growDueDate, ChronoUnit.SECONDS);
 //        // 키우는 기간이 3일 이상인 경우
 //        if(growTime >= 259200) {
+//
+//
 //
 //        } else {
 //            // 키우는 기간이 3일 미만인 경우
 //            // 만약
 //        }
 //    }
-//
+
 //    public boolean checkTime2Go(Onion onion) {
 //
 //    }

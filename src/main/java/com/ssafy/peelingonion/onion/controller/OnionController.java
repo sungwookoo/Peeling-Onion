@@ -174,31 +174,31 @@ public class OnionController {
      * 전송 여부, 삭제 여부를 판단하여 전송하지 않았고, 삭제되지 않는 양파들의 리스트를 보내준다.
      * @return 키우고 있는 양파 리스트
      */
-    @GetMapping("/growing")
-    public ResponseEntity<List<SendOnionResponse>> readSendOnions(
-            @RequestHeader("Authorization") String token) {
-        final Long userId = authorizeService.getAuthorization(token);
-        if(authorizeService.isAuthorization(userId)){
-            try {
-                List<SendOnion> sendOnions = onionService.findSendOnions(userId);
-                List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
-                for(SendOnion sendOnion : sendOnions){
-                    Onion onion = sendOnion.getOnion();
-                    if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
-                        boolean isDead = onionService.checkOnionIsDead(onion);
-                        boolean isTime2Go = onionService.checkTime2Go(onion);
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
-                    }
-                }
-                return ResponseEntity.ok(sendOnionResponses);
-            } catch (SendOnionNotFoundException e) {
-                log.error(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-    }
+//    @GetMapping("/growing")
+//    public ResponseEntity<List<SendOnionResponse>> readSendOnions(
+//            @RequestHeader("Authorization") String token) {
+//        final Long userId = authorizeService.getAuthorization(token);
+//        if(authorizeService.isAuthorization(userId)){
+//            try {
+//                List<SendOnion> sendOnions = onionService.findSendOnions(userId);
+//                List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
+//                for(SendOnion sendOnion : sendOnions){
+//                    Onion onion = sendOnion.getOnion();
+//                    if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
+////                        boolean isDead = onionService.checkOnionIsDeadAndTime2Go(onion);
+////                        boolean isTime2Go = onionService.checkTime2Go(onion);
+//                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
+//                    }
+//                }
+//                return ResponseEntity.ok(sendOnionResponses);
+//            } catch (SendOnionNotFoundException e) {
+//                log.error(e.getMessage());
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//            }
+//        } else {
+//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+//        }
+//    }
 
     /**
      * Home화면에서 양파에 메시지를 추가한다.
