@@ -13,11 +13,10 @@ RUN npm install
 # 소스 코드를 컨테이너에 복사합니다.
 COPY . .
 
-# React 앱을 빌드합니다.
 RUN npm run build
+FROM nginx:stable-alpine as production-stage
 
-# 3000번 포트를 개방합니다.
-EXPOSE 3000
+COPY --from=build-stage /var/jenkins_home/workspace/react-main/peeling-onion/build /usr/share/nginx/html
 
-# React 앱을 실행합니다.
-CMD ["npm", "start"]
+EXPOSE 80
+CMD ["nginx", "-g","daemon off;"]
