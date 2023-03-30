@@ -35,7 +35,6 @@ class FieldApiService {
   // 밭 생성 create
   static Future<CustomField> createField(String fieldName) async {
     final accessToken = await Token.then((value) => value?.accessToken);
-    print('$fieldName: $accessToken');
     final response = await http.post(Uri.parse('$baseUrl/field'),
         headers: <String, String>{
           'Authorization': 'Bearer $accessToken',
@@ -68,6 +67,29 @@ class FieldApiService {
     // 요청 성공
     if (response.statusCode == 200) {
     } else {
+      throw Exception('Failed to load fields');
+    }
+  }
+
+  // 밭 이름 수정 update
+  static Future<CustomField> updateFieldName(
+      int fieldId, String fieldName) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+    final response = await http.put(Uri.parse('$baseUrl/field/$fieldId'),
+        headers: <String, String>{
+          'Authorization': 'Bearer $accessToken',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'name': fieldName,
+        }));
+    // 요청 성공
+    if (response.statusCode == 200) {
+      CustomField field =
+          CustomField.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      return field;
+    } else {
+      print(response.statusCode);
       throw Exception('Failed to load fields');
     }
   }
