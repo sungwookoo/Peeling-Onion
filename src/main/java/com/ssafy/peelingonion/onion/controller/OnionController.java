@@ -54,7 +54,7 @@ public class OnionController {
                 return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
             }
         } else {
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
         }
     }
 
@@ -157,7 +157,7 @@ public class OnionController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)){
             try {
-                onionService.deleteOnion(onionId);
+                onionService.deleteOnion(onionId, userId);
                 return ResponseEntity.ok().build();
             } catch (DeleteOnionFailException e) {
                 log.error(e.getMessage());
@@ -183,8 +183,11 @@ public class OnionController {
                 List<SendOnion> sendOnions = onionService.findSendOnions(userId);
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
                 for(SendOnion sendOnion : sendOnions){
+                    Onion onion = sendOnion.getOnion();
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion));
+                        boolean isDead = onionService.checkOnionIsDead(onion);
+                        boolean isTime2Go = onionService.checkTime2Go(onion);
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);
