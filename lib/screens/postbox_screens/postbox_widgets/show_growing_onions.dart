@@ -4,11 +4,11 @@ import '../postbox_widgets/postbox_one_onion.dart';
 
 // 택배함에서 기르는 양파들 보여주는 클래스
 class ShowGrowingOnions extends StatefulWidget {
-  final List<CustomOnionByOnionId> _onions;
+  final List<CustomOnionByOnionIdPostbox> _onions;
 
   const ShowGrowingOnions({
     super.key,
-    required List<CustomOnionByOnionId> onions,
+    required List<CustomOnionByOnionIdPostbox> onions,
   }) : _onions = onions;
 
   @override

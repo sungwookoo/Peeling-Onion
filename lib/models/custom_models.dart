@@ -74,6 +74,25 @@ class CustomOnionByOnionId {
             List<int>.from(json['message_id_list'] as List<dynamic>);
 }
 
+class CustomOnionByOnionIdPostbox {
+  final int id;
+  final String name;
+  final String imgSrc;
+  final String sender;
+  final String? receiveDate;
+  final String growDueDate;
+  final bool isSingle;
+
+  CustomOnionByOnionIdPostbox.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        sender = json['sender'],
+        imgSrc = json['img_src'],
+        receiveDate = json['receive_date'],
+        growDueDate = json['grow_due_date'],
+        isSingle = json['is_single'];
+}
+
 // 전체 밭 모델
 class CustomField {
   final int id;

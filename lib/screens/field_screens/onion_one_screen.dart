@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
-import 'package:front/widgets/onion_with_message.dart';
 
 // 양파 밭에서 클릭하면 나오는 양파 1개 화면
 class OnionOneScreen extends StatefulWidget {
