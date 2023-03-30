@@ -70,7 +70,7 @@ public class Message {
 				.userId(userId)
 				.onion(oni)
 				.record(record)
-				.createdAt(Instant.now())
+				.createdAt(Instant.now().plusSeconds(60*60*9))
 				.content(messageCreateRequest.getContent())
 				.posRate(messageCreateRequest.getPos_rate())
 				.negRate(messageCreateRequest.getNeg_rate())
