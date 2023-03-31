@@ -150,8 +150,7 @@ class OnionApiService {
           CustomMessage.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return message;
     } else {
-      print(response.statusCode);
-      throw Exception('Failed to get message');
+      throw Exception('존재하지 않는 메시지입니다.');
     }
   }
 }

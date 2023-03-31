@@ -71,7 +71,12 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                             ),
                           );
                         },
-                        child: Image.asset('assets/images/onion_image.png'),
+                        child: Column(
+                          children: [
+                            Text(onion.onionName),
+                            Image.asset(onion.imgSrc),
+                          ],
+                        ),
                       ),
                     ],
                   );
