@@ -6,9 +6,13 @@ function App() {
   const downloadApk = async () => {
     try {
       const response = await axios.get(
-        "/jenkins/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
+        "/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
         {
           responseType: "blob",
+          headers: {
+            "Content-Type": "application/octet-stream",
+            Accept: "application/octet-stream",
+          },
         }
       );
 

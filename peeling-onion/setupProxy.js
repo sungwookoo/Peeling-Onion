@@ -2,13 +2,14 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
   app.use(
-    "/jenkins",
+    "/job",
     createProxyMiddleware({
       target: "https://jenkins.ssafy.shop",
       changeOrigin: true,
-      pathRewrite: {
-        "^/jenkins": "",
-      },
+      // pathRewrite: {
+      //   "^/jenkins": "",
+      // },
+      logLevel: "debug",
     })
   );
 };
