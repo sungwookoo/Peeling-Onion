@@ -128,6 +128,7 @@ public class AlarmService {
 	}
 
 	public void saveNotification(Alarm alarm) {
+		alarm.setIsRead(false);
 		alarmRepository.save(alarm);
 	}
 
