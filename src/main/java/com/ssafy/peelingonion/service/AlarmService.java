@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.ssafy.peelingonion.common.ConstValues;
+import com.ssafy.peelingonion.controller.dto.AlarmDto;
 import com.ssafy.peelingonion.domain.Alarm;
 import com.ssafy.peelingonion.domain.AlarmRepository;
 import com.ssafy.peelingonion.domain.FcmMessage;
@@ -82,7 +83,10 @@ public class AlarmService {
 				msg = "Peeling Onion";
 				break;
 		}
-		return msg;
+
+		AlarmDto alarmDto = AlarmDto.from(alarm);
+		alarmDto.content = msg;
+		return alarmDto.toString();
 	}
 
 	private Request newRequest(String message, String url) throws IOException {
@@ -96,18 +100,18 @@ public class AlarmService {
 			.build();
 	}
 
-	private String makeMessage(String targetToken, String title, String body) throws JsonParseException,
-		JsonProcessingException {
+	private String makeMessage(String targetToken, String title, String body)
+		throws JsonParseException, JsonProcessingException {
 		FcmMessage fcmMessage = FcmMessage.builder()
 			.message(FcmMessage.Message.builder()
 				.token(targetToken)
-				.notification(FcmMessage.Notification
-					.builder()
-					.title(title)
-					.body(body)
-					.image(null)
-					.build()
-				)
+				.notification(
+					FcmMessage.Notification
+						.builder()
+						.title(title)
+						.body(body)
+						.image(null)
+						.build())
 				.build())
 			.validateOnly(false)
 			.build();

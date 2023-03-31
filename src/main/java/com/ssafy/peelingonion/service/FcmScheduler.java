@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -24,12 +25,15 @@ public class FcmScheduler {
 		this.alarmService = alarmService;
 	}
 
+	@Async
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 60) // execute every 1 hour
+	//@Scheduled(fixedRate = 5000) // execute every 1 hour
 	public void sendFcmMessage() {
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);
 			for (Alarm alarm : notSendedAlarmList) {
-
+				if(alarmService.getNameByUserId(alarm.getReceiverId()).equals(""))
+					continue;
 
 				alarmService.sendMessageTo(alarm); // fcm server에 전송
 				alarm.setIsSended(true); // 보냄처리
