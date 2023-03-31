@@ -286,6 +286,7 @@ public class OnionService {
 				Onion onion = opOnion.get();
 				onion.setIsDisabled(Boolean.TRUE);
 				onionRepository.save(onion);
+				return;
 			} else {
 				throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.");
 			}
