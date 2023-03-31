@@ -43,9 +43,9 @@ class CustomMessage {
   final String sender;
   final String createdAt;
   final String content;
-  final double posRate;
-  final double negRate;
-  final double neuRate;
+  final int posRate;
+  final int negRate;
+  final int neuRate;
   final String fileSrc;
 
   CustomMessage.fromJson(Map<String, dynamic> json)
@@ -74,8 +74,8 @@ class CustomOnionByOnionId {
   CustomOnionByOnionId.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        sender = json['sender'],
         imgSrc = json['img_src'],
+        sender = json['sender'],
         sendDate = json['send_date'],
         growDueDate = json['grow_due_date'],
         isSingle = json['is_single'],
@@ -135,9 +135,9 @@ class CustomOnionFromField {
 
   CustomOnionFromField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        onionName = json['name'],
+        onionName = json['onion_name'],
         imgSrc = json['img_src'],
-        recieveDate = json['recieve_date'],
+        recieveDate = json['receive_date'],
         sender = json['sender'],
         isSingle = json['is_single'];
 }
