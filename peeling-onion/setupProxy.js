@@ -5,7 +5,7 @@ module.exports = function (app) {
     "/jenkins",
     createProxyMiddleware({
       target: "https://jenkins.ssafy.shop",
-      changeOrigin: false,
+      changeOrigin: true,
       pathRewrite: {
         "^/jenkins": "",
       },
