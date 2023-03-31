@@ -9,7 +9,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -19,8 +18,9 @@ import com.ssafy.peelingonion.controller.dto.AlarmDto;
 import com.ssafy.peelingonion.domain.Alarm;
 import com.ssafy.peelingonion.domain.AlarmRepository;
 import com.ssafy.peelingonion.domain.FcmMessage;
+import com.ssafy.peelingonion.service.exceptions.Client4xxException;
+import com.ssafy.peelingonion.service.exceptions.Client5xxException;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -33,10 +33,9 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AlarmService {
 	private final AlarmRepository alarmRepository;
-
-	private final String API_URL = "https://fcm.googleapis.com/v1/projects/peeling-onion-80d46/messages:send";
 	private final ObjectMapper objectMapper;
 	private final OkHttpClient CLIENT = new OkHttpClient();
+	private final static String FIREBASE_CONFIG_PATH = "firebase/firebase_service_key.json";
 
 	public AlarmService(AlarmRepository alarmRepository, ObjectMapper objectMapper) {
 		this.alarmRepository = alarmRepository;
@@ -45,7 +44,7 @@ public class AlarmService {
 
 	public void sendMessageTo(String targetToken, String title, String body) throws IOException {
 		String message = makeMessage(targetToken, title, body);
-		Request request = newRequest(message, API_URL);
+		Request request = newRequest(message, FCM_API_URL);
 		Response response = CLIENT.newCall(request).execute();
 		log.info("{}", response.body().string());
 	}
@@ -101,7 +100,7 @@ public class AlarmService {
 	}
 
 	private String makeMessage(String targetToken, String title, String body)
-		throws JsonParseException, JsonProcessingException {
+		throws JsonProcessingException {
 		FcmMessage fcmMessage = FcmMessage.builder()
 			.message(FcmMessage.Message.builder()
 				.token(targetToken)
@@ -120,10 +119,8 @@ public class AlarmService {
 	}
 
 	private String getAccessToken() throws IOException {
-		String firebaseConfigPath = "firebase/firebase_service_key.json";
-
 		GoogleCredentials googleCredentials = GoogleCredentials
-			.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream())
+			.fromStream(new ClassPathResource(FIREBASE_CONFIG_PATH).getInputStream())
 			.createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
 
 		googleCredentials.refreshIfExpired();
@@ -144,8 +141,8 @@ public class AlarmService {
 			return USER_SERVER_CLIENT.get()
 				.uri("/user/fcm/" + userId.toString())
 				.retrieve()
-				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
-				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(Client4xxException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(Client5xxException::new))
 				.bodyToMono(String.class)
 				.block();
 		} catch (Exception e) {
@@ -153,13 +150,19 @@ public class AlarmService {
 		}
 	}
 
+	/**
+	 * userID를 통해서 닉네임을 찾는다.
+	 * 해당 유저가 없거나, 통신에 실패할 경우 빈문자열을 반환한다.
+	 * @param userId
+	 * @return
+	 */
 	public String getNameByUserId(Long userId) {
 		try {
 			return USER_SERVER_CLIENT.get()
 				.uri("/user/" + userId.toString() + "/nickname")
 				.retrieve()
-				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
-				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(Client4xxException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(Client5xxException::new))
 				.bodyToMono(String.class)
 				.block();
 		} catch (Exception e) {

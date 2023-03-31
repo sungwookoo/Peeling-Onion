@@ -27,7 +27,6 @@ public class FcmScheduler {
 
 	@Async
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 60) // execute every 1 hour
-	//@Scheduled(fixedRate = 5000) // execute every 1 hour
 	public void sendFcmMessage() {
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);

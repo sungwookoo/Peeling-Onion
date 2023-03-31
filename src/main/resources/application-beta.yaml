@@ -19,3 +19,4 @@ settings:
 authServer: https://test.auth.ssafy.shop
 bizServer: https://test.biz.ssafy.shop
 userServer: https://test.user.ssafy.shop
+FCMServer : https://fcm.googleapis.com/v1/projects/peeling-onion-80d46/messages:send
