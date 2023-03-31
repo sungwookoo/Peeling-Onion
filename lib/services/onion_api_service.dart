@@ -33,7 +33,7 @@ class OnionApiService {
   }
 
   // 택배함 get (유저가 받은 택배함 양파 정보 조회)
-  static Future<List<CustomOnionByOnionId>> getPostboxOnion() async {
+  static Future<List<CustomOnionByOnionIdPostbox>> getPostboxOnion() async {
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -47,7 +47,7 @@ class OnionApiService {
     if (response.statusCode == 200) {
       List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions
-          .map((onion) => CustomOnionByOnionId.fromJson(onion))
+          .map((onion) => CustomOnionByOnionIdPostbox.fromJson(onion))
           .toList();
     } else {
       print(response.statusCode);
@@ -71,6 +71,9 @@ class OnionApiService {
           jsonDecode(utf8.decode(response.bodyBytes)));
       return onion;
     } else {
+      print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+      print('$onionId');
+      print(response.statusCode);
       throw Exception('Failed to get onion');
     }
   }
