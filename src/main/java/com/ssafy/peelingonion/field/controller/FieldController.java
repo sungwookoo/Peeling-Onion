@@ -99,8 +99,10 @@ public class FieldController {
                 List<Storage> storages = fieldService.findStorages(fieldId);
                 for(Storage storage : storages){
                     Onion fieldOnion = storage.getOnion();
-                    String userName = fieldService.getNameByUserId(userId);
-                    onionInfos.add(OnionOutlineDto.from(fieldOnion, userName));
+                    if(fieldOnion.getIsDisabled() == Boolean.FALSE) {
+                        String userName = fieldService.getNameByUserId(userId);
+                        onionInfos.add(OnionOutlineDto.from(fieldOnion, userName));
+                    }
                 }
                 return ResponseEntity.ok(onionInfos);
             } catch(FieldNotFoundException e){
