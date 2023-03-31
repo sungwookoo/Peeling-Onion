@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="front"
+        android:label="Peeling Onion"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

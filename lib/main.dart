@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:front/screens/login_screens/loading_screen.dart';
 import 'package:front/screens/login_screens/sign_in_screen.dart';
+import 'package:front/services/notification_service.dart';
 import 'package:provider/provider.dart';
 import 'widgets/custom_navigation_bar.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -45,6 +46,7 @@ class _AppState extends State<App> {
     super.initState();
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    NotificationService().getFcmToken();
   }
 
   @override
@@ -95,8 +97,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 void showFlutterNotification(RemoteMessage message) {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
-  // print(message.notification?.android);
-  print(message.notification!.body);
 
   if (notification != null && android != null) {
     flutterLocalNotificationsPlugin.show(
