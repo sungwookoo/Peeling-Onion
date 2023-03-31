@@ -41,9 +41,96 @@ class _MakeFieldsState extends State<MakeFields> {
 
   // 밭 삭제하는 메서드
   void _deleteField(int fieldId) {
+    FieldApiService.deleteField(fieldId);
+
     setState(() {
       _fields.removeWhere((field) => field.id == fieldId);
     });
+  }
+
+  // 밭 삭제 모달
+  void _showDeleteConfirmationDialog(int fieldId) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('밭을 삭제하시겠습니까?'),
+          content: const Text('삭제한 밭은 되돌릴 수 없으며, 저장된 양파 역시 사라지게 됩니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // dismiss the dialog
+              },
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // dismiss the dialog
+                _deleteField(fieldId); // call the delete method
+              },
+              child: const Text('삭제'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 밭 이름 변경 메서드
+  String fieldName = 'basic';
+  void _renameField(int fieldId, String fieldName) async {
+    await FieldApiService.updateFieldName(fieldId, fieldName);
+    // Update local state
+    setState(() {
+      // Find the index of the updated field in the _fields list
+      int index = _fields.indexWhere((field) => field.id == fieldId);
+
+      // Replace the old field with the new one
+      _fields[index] = _fields[index].copyWith(name: fieldName);
+    });
+  }
+
+  // 밭 이름 변경 모달
+  void _showGetRenameDialog(int fieldId) async {
+    final TextEditingController fieldNameUpdate = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        String text = 'basic text';
+        return AlertDialog(
+          title: const Text('바꿀 이름을 입력하세요.'),
+          content: TextField(
+            controller: fieldNameUpdate,
+            decoration: InputDecoration(
+              hintText: '밭 이름',
+              errorText: fieldNameUpdate.text.isEmpty ? '값을 입력해 주세요' : null,
+            ),
+            // 입력값 있으면 빨간 줄 사라지게
+            onChanged: (value) {
+              setState(() {
+                fieldNameUpdate.text.isEmpty;
+              });
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // dismiss the dialog
+              },
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context); // dismiss the dialog
+                _renameField(
+                    fieldId, fieldNameUpdate.text); // call the delete method
+              },
+              child: const Text('변경'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -78,9 +165,14 @@ class _MakeFieldsState extends State<MakeFields> {
                   height: (MediaQuery.of(context).size.width - 60) / 2,
                   // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
                   child: GestureDetector(
-                    onLongPress: () {
-                      _showDeleteModal(
-                          context, field, () => _deleteField(field.id));
+                    onLongPressStart: (details) {
+                      _showFieldPopup(
+                        context,
+                        field,
+                        () => _showDeleteConfirmationDialog(field.id),
+                        () => _showGetRenameDialog(field.id),
+                        details,
+                      );
                     },
                     onTap: () {
                       // 밭 모달 띄우기
@@ -113,29 +205,52 @@ class _MakeFieldsState extends State<MakeFields> {
 }
 
 // 밭 삭제 popup 창
-Future<void> _showDeleteModal(
-    BuildContext context, CustomField field, VoidCallback onDelete) async {
+Future<void> _showFieldPopup(
+    BuildContext context,
+    CustomField field,
+    VoidCallback onDelete,
+    VoidCallback onRename,
+    LongPressStartDetails details) async {
   // final RenderObject? renderObject =
   //     context.findAncestorRenderObjectOfType<RenderObject>();
   // final Offset position =
   //     renderObject?.localToGlobal(Offset.zero) ?? Offset.zero;
-
+  final position = details.globalPosition;
+  final RenderBox overlay = Overlay.of(context).context.findRenderObject()
+      as RenderBox; // get the overlay render box
+  final RelativeRect positionOffset = RelativeRect.fromRect(
+    Rect.fromPoints(position, position),
+    Offset.zero & overlay.size,
+  ); // create a relative rect with the position offset
   return showMenu(
     context: context,
-    position: const RelativeRect.fromLTRB(0, 0, 0, 0),
+    position: positionOffset, // set the popup position to the relative rect
     items: [
       PopupMenuItem(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(field.name),
+            const Text('삭제'),
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                FieldApiService.deleteField(field.id);
-                onDelete();
-
                 Navigator.pop(context);
+                onDelete();
+              },
+            ),
+          ],
+        ),
+      ),
+      PopupMenuItem(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('이름 변경'),
+            IconButton(
+              icon: const Icon(Icons.update),
+              onPressed: () {
+                Navigator.pop(context);
+                onRename();
               },
             ),
           ],
