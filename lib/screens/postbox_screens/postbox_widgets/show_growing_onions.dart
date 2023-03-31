@@ -19,8 +19,6 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
-  // 각 양파 1개의 최대 높이를 지정함
-  double onionMaxHeight = 210;
   @override
   Widget build(BuildContext context) {
     // 선반이 비어있으면, 빈 선반 표시
@@ -34,8 +32,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
             3,
             (shelfIndex) {
               // Display each shelf
-              return SizedBox(
-                height: onionMaxHeight,
+              return Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -68,9 +65,9 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
-                return SizedBox(
-                  height: onionMaxHeight,
+                return Expanded(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GridView.builder(
                         shrinkWrap: true,

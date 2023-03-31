@@ -34,6 +34,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // app Bar
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),

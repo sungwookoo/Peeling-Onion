@@ -165,12 +165,14 @@ class _MakeFieldsState extends State<MakeFields> {
                   height: (MediaQuery.of(context).size.width - 60) / 2,
                   // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
                   child: GestureDetector(
-                    onLongPress: () {
+                    onLongPressStart: (details) {
                       _showFieldPopup(
-                          context,
-                          field,
-                          () => _showDeleteConfirmationDialog(field.id),
-                          () => _showGetRenameDialog(field.id));
+                        context,
+                        field,
+                        () => _showDeleteConfirmationDialog(field.id),
+                        () => _showGetRenameDialog(field.id),
+                        details,
+                      );
                     },
                     onTap: () {
                       // 밭 모달 띄우기
@@ -203,16 +205,26 @@ class _MakeFieldsState extends State<MakeFields> {
 }
 
 // 밭 삭제 popup 창
-Future<void> _showFieldPopup(BuildContext context, CustomField field,
-    VoidCallback onDelete, VoidCallback onRename) async {
+Future<void> _showFieldPopup(
+    BuildContext context,
+    CustomField field,
+    VoidCallback onDelete,
+    VoidCallback onRename,
+    LongPressStartDetails details) async {
   // final RenderObject? renderObject =
   //     context.findAncestorRenderObjectOfType<RenderObject>();
   // final Offset position =
   //     renderObject?.localToGlobal(Offset.zero) ?? Offset.zero;
-
+  final position = details.globalPosition;
+  final RenderBox overlay = Overlay.of(context).context.findRenderObject()
+      as RenderBox; // get the overlay render box
+  final RelativeRect positionOffset = RelativeRect.fromRect(
+    Rect.fromPoints(position, position),
+    Offset.zero & overlay.size,
+  ); // create a relative rect with the position offset
   return showMenu(
     context: context,
-    position: const RelativeRect.fromLTRB(0, 0, 0, 0),
+    position: positionOffset, // set the popup position to the relative rect
     items: [
       PopupMenuItem(
         child: Row(
@@ -222,8 +234,6 @@ Future<void> _showFieldPopup(BuildContext context, CustomField field,
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
-                // FieldApiService.deleteField(field.id);
-                // 여기선 pop 먼저 하기
                 Navigator.pop(context);
                 onDelete();
               },
