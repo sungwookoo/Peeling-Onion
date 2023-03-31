@@ -6,13 +6,9 @@ function App() {
   const downloadApk = async () => {
     try {
       const response = await axios.get(
-        "/api/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
+        "/jenkins/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
         {
           responseType: "blob",
-          headers: {
-            "Content-Type": "application/octet-stream",
-            Accept: "application/octet-stream",
-          },
         }
       );
 
@@ -35,8 +31,8 @@ function App() {
     <figure id="splash-device">
       <div className="device-image ios">
         <div className="device">
-          <img src="https://picsum.photos/1500/2500" />
-          {/* <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5400%2F2023%2F01%2F18%2F0000210703_001_20230118124202158.jpg&type=sc960_832" /> */}
+          {/* <img src="https://picsum.photos/1500/2500" /> */}
+          <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5400%2F2023%2F01%2F18%2F0000210703_001_20230118124202158.jpg&type=sc960_832" />
         </div>
       </div>
       <figcaption id="splash-message">
