@@ -267,13 +267,21 @@ public class OnionService {
 	public void deleteOnion(Long onionId, Long userId) {
 		Optional<Onion> opOnion = onionRepository.findById(onionId);
 		if (opOnion.isPresent()) {
-			if (opOnion.get().getUserId().equals(userId)) {
-				Onion onion = opOnion.get();
+			Onion onion = opOnion.get();
+			Iterator<ReceiveOnion> iterator = onion.getReceiveOnions().iterator();
+			ReceiveOnion receiveOnion = iterator.next();
+			String receiverNumber = receiveOnion.getReceiverNumber();
+			String requesterNumber = getMobileNumberByUserId(userId);
+			if (onion.getUserId().equals(userId)) {
+				onion.setIsDisabled(Boolean.TRUE);
+				onionRepository.save(onion);
+				return;
+			} else if (Objects.equals(requesterNumber, receiverNumber)){
 				onion.setIsDisabled(Boolean.TRUE);
 				onionRepository.save(onion);
 				return;
 			} else {
-				throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.");
+				throw new IllegalStateException("양파를 만든 대표자나 양파의 수신자만 삭제할 수 있습니다.");
 			}
 		}
 		throw new IllegalStateException("없는 양파입니다.");
@@ -338,4 +346,6 @@ public class OnionService {
 			return -2L;
 		}
 	}
+
+
 }
