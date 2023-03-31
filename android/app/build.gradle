@@ -1,3 +1,11 @@
+// 기존 코드 상단에 아래 내용을 추가
+import io.github.cdimascio.dotenv.Dotenv
+
+def getEnv(String name) {
+    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load()
+    return dotenv.get(name)
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -53,20 +61,31 @@ android {
         versionName flutterVersionName
     }
 
+    signingConfigs {
+
+        release {
+            def keyAlias = getEnv('keyAlias')
+            def keyPassword = getEnv('keyPassword')
+            def keystorePath = getEnv('storeFile')
+            def storePassword = getEnv('storePassword')
+
+            if (keyAlias != null && keyPassword != null && keystorePath != null && storePassword != null) {
+                keyAlias keyAlias
+                keyPassword keyPassword
+                storeFile file(keystorePath)
+                storePassword storePassword
+            }
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.getByName("release")
-        }
-    }
+            if (signingConfigs.has("release")) {
+                signingConfig signingConfigs.release
+            }
 
-    signingConfigs {
-        release {
-            keyAlias System.getenv('keyAlias')
-            keyPassword System.getenv('keyPassword')
-            storeFile System.getenv('storeFile')
-            storePassword System.getenv('storePassword')
         }
     }
 
@@ -78,4 +97,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    classpath 'io.github.cdimascio:java-dotenv:6.2.2' // 이 줄을 추가해주세요
 }
