@@ -7,12 +7,13 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SP_ONION_DEAD $$
 CREATE PROCEDURE SP_ONION_DEAD()
 BEGIN
-    INSERT INTO notificate.alarm(sender_id, receiver_id, content, created_at, is_sended, type)
+    INSERT INTO notificate.alarm(sender_id, receiver_id, content, created_at, is_sended, is_read, type)
     SELECT a.user_id as sender_id,
            a.user_id as "receiver_id",
            'content' as content,
            now()     as created_at,
            false     as is_sended,
+           false     as is_read,
            1         as type
     FROM onion.onion a,
          onion.send_onion b
@@ -28,12 +29,13 @@ DELIMITER $$
 DROP PROCEDURE IF EXISTS SP_ONION_GROW $$
 CREATE PROCEDURE SP_ONION_GROW()
 BEGIN
-    INSERT INTO notificate.alarm(sender_id, receiver_id, content, created_at, is_sended, type)
+    INSERT INTO notificate.alarm(sender_id, receiver_id, content, created_at, is_sended, is_read, type)
     SELECT a.user_id as sender_id,
            a.user_id as "receiver_id",
            'content' as content,
            now()     as created_at,
            false     as is_sended,
+           false     as is_read,
            3         as type
     FROM onion.onion a
     WHERE 1 = 1

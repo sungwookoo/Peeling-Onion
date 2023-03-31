@@ -4,6 +4,7 @@ import static com.ssafy.peelingonion.common.ConstValues.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -14,10 +15,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
 import com.ssafy.peelingonion.common.ConstValues;
-import com.ssafy.peelingonion.controller.dto.AlarmDto;
 import com.ssafy.peelingonion.domain.Alarm;
 import com.ssafy.peelingonion.domain.AlarmRepository;
 import com.ssafy.peelingonion.domain.FcmMessage;
+import com.ssafy.peelingonion.service.exceptions.AlarmNotFoundException;
 import com.ssafy.peelingonion.service.exceptions.Client4xxException;
 import com.ssafy.peelingonion.service.exceptions.Client5xxException;
 
@@ -169,5 +170,43 @@ public class AlarmService {
 		} catch (Exception e) {
 			return "";
 		}
+	}
+
+	/**
+	 * 해당 user의 모든 알림정보를 반환한다.
+	 * @param userId
+	 * @return
+	 */
+	public List<Alarm> getAlarmList(Long userId) {
+		return alarmRepository.findByReceiverIdOrderByIdDesc(userId);
+	}
+
+	/**
+	 * userId를 가진 유저의 프로필 이미지 링크를 불러온다.
+	 * @param userId
+	 * @return
+	 */
+	public String getUserImgSrc(Long userId) {
+		try {
+			return USER_SERVER_CLIENT.get()
+				.uri("/user/img/" + userId.toString())
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(Client4xxException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(Client5xxException::new))
+				.bodyToMono(String.class)
+				.block();
+		} catch (Exception e) {
+			return "";
+		}
+	}
+
+	public boolean readAlarm(Long userId, Long alarmId) {
+		Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(AlarmNotFoundException::new);
+		if (alarm.getReceiverId() == userId) {
+			alarm.setIsRead(true);
+			alarmRepository.save(alarm);
+			return true;
+		}
+		return false;
 	}
 }
