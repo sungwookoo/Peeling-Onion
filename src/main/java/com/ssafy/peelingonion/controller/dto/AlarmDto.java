@@ -1,37 +1,39 @@
 package com.ssafy.peelingonion.controller.dto;
 
 import com.ssafy.peelingonion.domain.Alarm;
+import com.ssafy.peelingonion.service.AlarmService;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.ToString;
 
 @Data
 @Builder
+@ToString
 public class AlarmDto {
 	public Long sender_id;
 	public Long receiver_id;
-	public String content;
 	public Integer type;
+	public String sender_img_src;
+	public String receiver_img_src;
+	public Long message_id;
+	public Boolean is_read;
 
 	public static AlarmDto from(Alarm alarm) {
 		return AlarmDto.builder()
 			.sender_id(alarm.getSenderId())
 			.receiver_id(alarm.getReceiverId())
-			.content(alarm.getContent())
 			.type(alarm.getType())
+			.is_read(alarm.getIsRead())
+			.message_id(alarm.getId())
 			.build();
 	}
 
-	@Override
-	public String toString() {
-		return "{" +
-			"\"sender_id\":\"" + sender_id + "\"," +
-			"\"receiver_id\":\"" + receiver_id + "\"," +
-			"\"content\":\"" + content + "\"," +
-			"\"type\":\"" + type + "\"" +
-			"}";
+	public static AlarmDto from(Alarm e, AlarmService alarmService) {
+		AlarmDto alarmDto = AlarmDto.from(e);
+		alarmDto.receiver_img_src = alarmService.getUserImgSrc(e.getReceiverId());
+		alarmDto.sender_img_src = alarmService.getUserImgSrc(e.getSenderId());
+		return alarmDto;
 	}
 }
 

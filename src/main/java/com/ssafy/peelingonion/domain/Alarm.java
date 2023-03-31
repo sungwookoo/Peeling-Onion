@@ -48,4 +48,6 @@ public class Alarm {
 	@Column(name = "is_sended")
 	private Boolean isSended;
 
+	@Column(name = "is_read")
+	private Boolean isRead;
 }
