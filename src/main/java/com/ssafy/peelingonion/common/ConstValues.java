@@ -11,6 +11,7 @@ public class ConstValues {
 	public static String USER_SERVER;
 	public static WebClient USER_SERVER_CLIENT;
 	public static final String AUTH_URI = "/auth/validity/kakao";
+	public static String FCM_API_URL;
 	public static final Long UNAUTHORIZED_USER = -2L;
 	public static final Long NON_MEMBER = -1L;
 
@@ -29,5 +30,10 @@ public class ConstValues {
 	public void setUserServer(String userServer) {
 		USER_SERVER = userServer;
 		USER_SERVER_CLIENT = WebClient.builder().baseUrl(USER_SERVER).build();
+	}
+
+	@Value(value = "${FCMServer}")
+	public void setFcmApiUrl(String fcmApiUrl){
+		FCM_API_URL = fcmApiUrl;
 	}
 }
