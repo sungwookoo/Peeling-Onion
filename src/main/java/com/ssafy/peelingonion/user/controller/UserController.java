@@ -76,7 +76,8 @@ public class UserController {
 		if (userId.equals(UNAUTHORIZED_USER)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		return ResponseEntity.ok(UserExitstInfoDto.from(userService.enrollUser(UserRequestDto.to(userRequestDto, userId), token)));
+		return ResponseEntity.ok(
+			UserExitstInfoDto.from(userService.enrollUser(UserRequestDto.to(userRequestDto, userId), token)));
 	}
 
 	@PatchMapping("")
@@ -178,6 +179,17 @@ public class UserController {
 			return ResponseEntity.ok("OK");
 		}
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+	}
+
+	@GetMapping("/img/{userId}")
+	public ResponseEntity<String> getUserImgSrc(@PathVariable Long userId) {
+		try {
+			User user = userService.getUserInfomation(userId);
+			return ResponseEntity.ok(user.getImgSrc());
+		} catch (UserNotFoundException e) {
+			log.error("{}", e.getMessage());
+		}
+		return ResponseEntity.ok("");
 	}
 
 	// Gateway Test

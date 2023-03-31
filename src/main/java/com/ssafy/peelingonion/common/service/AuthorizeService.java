@@ -5,6 +5,9 @@ import static com.ssafy.peelingonion.common.ConstValues.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.peelingonion.user.service.exceptions.Client4xxError;
+import com.ssafy.peelingonion.user.service.exceptions.Client5xxError;
+
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
@@ -28,8 +31,8 @@ public class AuthorizeService {
 				.uri(AUTH_URI)
 				.header("Authorization", token)
 				.retrieve()
-				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(RuntimeException::new))
-				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(RuntimeException::new))
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(Client4xxError::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(Client5xxError::new))
 				.bodyToMono(Long.class)
 				.block();
 		} catch (Exception e) {
