@@ -14,7 +14,7 @@ class CustomNavigationBar extends StatefulWidget {
 
 // 커스텀 stateful 위젯. 나의 페이지를 구분하기 위해 사용
 class _CustomNavigationBarState extends State<CustomNavigationBar> {
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
   // 페이지 종류
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
