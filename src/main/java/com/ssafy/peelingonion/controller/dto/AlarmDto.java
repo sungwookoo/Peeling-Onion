@@ -27,10 +27,10 @@ public class AlarmDto {
 	@Override
 	public String toString() {
 		return "{" +
-			"\"sender_id\":\"" + "\"" + sender_id + "\"," +
-			"\"receiver_id\":\"" + "\"" + receiver_id + "\"," +
-			"\"content\":\"" + "\"" + content + "\"," +
-			"\"type\":\"" + "\"" + type + "\"" +
+			"\"sender_id\":\"" + sender_id + "\"," +
+			"\"receiver_id\":\"" + receiver_id + "\"," +
+			"\"content\":\"" + content + "\"," +
+			"\"type\":\"" + type + "\"" +
 			"}";
 	}
 }

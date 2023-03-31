@@ -31,7 +31,11 @@ public class FcmScheduler {
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);
 			for (Alarm alarm : notSendedAlarmList) {
-				if(alarmService.getNameByUserId(alarm.getReceiverId()).equals(""))
+				String nameByUserId = alarmService.getNameByUserId(alarm.getReceiverId());
+				if (nameByUserId == null) {
+					continue;
+				}
+				if (nameByUserId.equals(""))
 					continue;
 
 				alarmService.sendMessageTo(alarm); // fcm server에 전송

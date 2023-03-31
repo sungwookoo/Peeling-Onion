@@ -57,7 +57,7 @@ public class AlarmService {
 		String msg = makeContentByType(alarm);
 
 		// overloading 함수 재사용
-		sendMessageTo(fcmToken, alarm.getType().toString(), msg);
+		sendMessageTo(fcmToken, "Peeling Onion", msg);
 	}
 
 	private String makeContentByType(Alarm alarm) {
@@ -76,16 +76,16 @@ public class AlarmService {
 				msg = "양파를 보낼 수 있어요.";
 				break;
 			case ConstValues.ONION_ADD_SENDER:
-				msg = sender + "가 " + receiver + "에게 보내는 메시지에 초대했어요";
+				msg = sender + "님이 " + receiver + "에게 보내는 메시지에 초대했어요";
 				break;
 			default:
 				msg = "Peeling Onion";
 				break;
 		}
-
-		AlarmDto alarmDto = AlarmDto.from(alarm);
-		alarmDto.content = msg;
-		return alarmDto.toString();
+		return msg;
+		// AlarmDto alarmDto = AlarmDto.from(alarm);
+		// alarmDto.content = msg;
+		// return alarmDto.toString();
 	}
 
 	private Request newRequest(String message, String url) throws IOException {
