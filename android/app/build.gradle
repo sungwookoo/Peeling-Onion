@@ -1,17 +1,15 @@
-// 기존 코드 상단에 아래 내용을 추가
-import io.github.cdimascio.dotenv.Dotenv
-
-def getEnv(String name) {
-    Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load()
-    return dotenv.get(name)
-}
-
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
         localProperties.load(reader)
     }
+}
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
@@ -62,33 +60,18 @@ android {
     }
 
     signingConfigs {
-
         release {
-            def keyAlias = getEnv('keyAlias')
-            def keyPassword = getEnv('keyPassword')
-            def keystorePath = getEnv('storeFile')
-            def storePassword = getEnv('storePassword')
-
-            if (keyAlias != null && keyPassword != null && keystorePath != null && storePassword != null) {
-                keyAlias keyAlias
-                keyPassword keyPassword
-                storeFile file(keystorePath)
-                storePassword storePassword
-            }
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
-
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            if (signingConfigs.has("release")) {
-                signingConfig signingConfigs.release
-            }
-
+            signingConfig signingConfigs.release
         }
     }
-
 }
 
 flutter {
@@ -97,5 +80,4 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    classpath 'io.github.cdimascio:java-dotenv:6.2.2' // 이 줄을 추가해주세요
 }
