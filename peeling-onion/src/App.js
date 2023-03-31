@@ -6,7 +6,7 @@ function App() {
   const downloadApk = async () => {
     try {
       const response = await axios.get(
-        "/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
+        "/jenkins/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
         {
           responseType: "blob",
           headers: {
