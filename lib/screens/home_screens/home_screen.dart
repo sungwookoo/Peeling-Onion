@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/widgets/loading_rotation.dart';
 import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
@@ -38,7 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Text('에러: ${snapshot.error}');
             }
             // 로딩 화면
-            return const CircularProgressIndicator();
+            // return const CircularProgressIndicator();
+            return const CustomLoadingWidget(
+                imagePath: 'assets/images/onion_image.png');
           },
         ),
       ),

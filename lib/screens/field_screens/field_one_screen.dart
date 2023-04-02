@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/services/field_api_service.dart';
 import 'package:front/services/onion_api_service.dart';
+import 'package:front/widgets/loading_rotation.dart';
 import './onion_one_screen.dart';
 import '../../models/custom_models.dart';
 
@@ -142,7 +143,9 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return const CircularProgressIndicator();
+                // return const CircularProgressIndicator();
+                return const CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png');
               }
             },
           ),
