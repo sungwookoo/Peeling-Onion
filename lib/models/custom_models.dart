@@ -35,8 +35,6 @@ class CustomHomeOnion {
         isTime2go = json['is_time2go'];
 }
 
-// 택배함 화면에서의 양파 모델 ()
-
 // 메시지 모델
 class CustomMessage {
   final int id;
@@ -84,6 +82,7 @@ class CustomOnionByOnionId {
             List<int>.from(json['message_id_list'] as List<dynamic>);
 }
 
+// 택배함 화면에서의 양파 모델 ()
 class CustomOnionByOnionIdPostbox {
   final int id;
   final String name;
@@ -127,7 +126,7 @@ class CustomField {
 // 밭 1개의 양파 정보 모델
 class CustomOnionFromField {
   final int id;
-  final String onionName;
+  final String name;
   final String imgSrc;
   final String recieveDate;
   final String sender;
@@ -135,7 +134,7 @@ class CustomOnionFromField {
 
   CustomOnionFromField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        onionName = json['onion_name'],
+        name = json['onion_name'],
         imgSrc = json['img_src'],
         recieveDate = json['receive_date'],
         sender = json['sender'],

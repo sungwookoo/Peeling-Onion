@@ -7,15 +7,12 @@ import '../../models/custom_models.dart';
 // 밭 1개를 모달로 출력하는 클래스
 class FieldOneScreen extends StatefulWidget {
   final CustomField field;
-  // late bool showDraggableRectangle;
-  final Function(bool) onValueChanged;
-
+  // 부모 (make_fields.dart) 에게 '양파의 밭 이동' 함수를 실행하라 전하기 위한 변수
   final Function parentShowMoveSelectDialog;
 
   const FieldOneScreen({
     super.key,
     required this.field,
-    required this.onValueChanged,
     required this.parentShowMoveSelectDialog,
   });
 
@@ -25,7 +22,6 @@ class FieldOneScreen extends StatefulWidget {
 
 class _FieldOneScreenState extends State<FieldOneScreen> {
   ValueNotifier<bool> showDraggableRectangle = ValueNotifier<bool>(false);
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late Future<List<CustomOnionFromField>> _onions;
 
@@ -58,13 +54,13 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // dismiss the dialog
+                Navigator.pop(context);
               },
               child: const Text('취소'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context); // dismiss the dialog
+                Navigator.pop(context);
                 _deleteOnion(onionId);
               },
               child: const Text('삭제'),
@@ -74,36 +70,6 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
       },
     );
   }
-
-  // 양파 이동 모달
-  // void _showMoveSelectDialog(
-  //     BuildContext innerContext, int onionId, int fromFId) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: const Text('이동할 밭을 선택하세요'),
-  //         content: const Text('삭제한 양파는 되돌릴 수 없으며, 저장된 메시지 역시 사라지게 됩니다.'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.pop(context); // dismiss the dialog
-  //             },
-  //             child: const Text('취소'),
-  //           ),
-  //           ElevatedButton(
-  //             onPressed: () {
-
-  //               Navigator.pop(context); // dismiss the dialog
-  //               _deleteOnion(onionId);
-  //             },
-  //             child: const Text('삭제'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +129,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                             },
                             child: Column(
                               children: [
-                                Text(onion.onionName),
+                                Text(onion.name),
                                 Image.asset(onion.imgSrc),
                               ],
                             ),
@@ -205,13 +171,11 @@ Future<void> showDeleteModal(
     position: RelativeRect.fromLTRB(
       itemPosition.dx,
       centerY + itemPosition.dy,
-      // boxSize.height,
-
-      // 10000,
       boxSize.width - itemPosition.dx,
       boxSize.height - itemPosition.dy,
     ),
     items: [
+      // 양파 삭제 버튼
       PopupMenuItem(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -227,11 +191,12 @@ Future<void> showDeleteModal(
           ],
         ),
       ),
+      // 양파 이동 버튼
       PopupMenuItem(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('수정'),
+            const Text('이동'),
             IconButton(
               icon: const Icon(Icons.update),
               onPressed: () {
