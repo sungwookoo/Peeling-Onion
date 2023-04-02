@@ -97,28 +97,73 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    // 양파 이미지
                     children: [
-                      Image.asset('assets/images/onion_image.png'),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        // 녹음 버튼들 출력
+                      Container(
+                        decoration: const BoxDecoration(
+                            image: DecorationImage(
+                          image: AssetImage('assets/images/note.png'),
+                          fit: BoxFit.fill,
+                        )),
+                        height: 320,
+                        width: 350,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 50.0, left: 20, right: 20),
+                          child: Column(
+                            children: [
+                              Text(message.createdAt),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Text('내용 : ${message.content}'),
+                              widget.onion.isSingle
+                                  ? const Text('')
+                                  : Text('from ${message.sender}'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      // 양파 이미지
+                      Image.asset(widget.onion.imgSrc,
+                          width: MediaQuery.of(context).size.width * 0.8),
+                      // 오디오 재생 버튼
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // 녹음 버튼들 출력
+                          children: [
+                            // 이전 재생 버튼
+                            IconButton(
+                              onPressed: prev,
+                              icon: const Icon(Icons.navigate_before_rounded),
+                            ),
+                            // 녹음 재생 위젯
+                            ListenAudioUrl(
+                              urlPath: message.fileSrc,
+                              isPlayed: isPlayed,
+                            ),
+                            // 다음 재생 버튼
+                            IconButton(
+                              onPressed: next,
+                              icon: const Icon(Icons.navigate_next_rounded),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
                         children: [
-                          // 이전 재생 버튼
-                          IconButton(
-                            onPressed: prev,
-                            icon: const Icon(Icons.navigate_before_rounded),
-                          ),
-                          // 녹음 재생 위젯
-                          ListenAudioUrl(
-                            urlPath: message.fileSrc,
-                            isPlayed: isPlayed,
-                          ),
-                          // 다음 재생 버튼
-                          IconButton(
-                            onPressed: next,
-                            icon: const Icon(Icons.navigate_next_rounded),
-                          ),
+                          Text('양파 이름 : ${widget.onion.name}'),
+                          Text('보낸 이 : ${widget.onion.sender}'),
+                          Text('보낸 날짜 : ${widget.onion.sendDate}'),
+                          // Text('내용 : ${}')
                         ],
                       ),
                     ],
@@ -138,43 +183,5 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
         }
       },
     );
-    // return Expanded(
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     children: [
-    //       Center(
-    //         child: Column(
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           crossAxisAlignment: CrossAxisAlignment.center,
-    //           // 양파 이미지
-    //           children: [
-    //             Image.asset('assets/images/onion_image.png'),
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               // 녹음 버튼들 출력
-    //               children: [
-    //                 // 이전 재생 버튼
-    //                 IconButton(
-    //                   onPressed: prev,
-    //                   icon: const Icon(Icons.navigate_before_rounded),
-    //                 ),
-    //                 // 녹음 재생 위젯
-    //                 ListenAudioUrl(
-    //                   urlPath: audioUrl,
-    //                   isPlayed: isPlayed,
-    //                 ),
-    //                 // 다음 재생 버튼
-    //                 IconButton(
-    //                   onPressed: next,
-    //                   icon: const Icon(Icons.navigate_next_rounded),
-    //                 ),
-    //               ],
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

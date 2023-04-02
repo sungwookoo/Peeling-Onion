@@ -78,7 +78,6 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   int onionsPerPage = 9;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
-  double onionMaxHeight = 210;
 
   @override
   Widget build(BuildContext context) {
@@ -93,8 +92,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
             3,
             (shelfIndex) {
               // Display each shelf
-              return SizedBox(
-                height: onionMaxHeight,
+              return Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -127,8 +125,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
-                return SizedBox(
-                  height: onionMaxHeight,
+                return Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -145,8 +142,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                           if (globalIndex < widget._onions.length) {
                             // 양파 1개 (텍스트 + 이미지) (HomeOneOnion 클래스 사용)
                             return HomeOneOnion(
-                              onions: widget._onions,
-                              globalIndex: globalIndex,
+                              onion: widget._onions.elementAt(globalIndex),
                               onDelete: () => _deleteOnion(globalIndex),
                             );
                           } else {

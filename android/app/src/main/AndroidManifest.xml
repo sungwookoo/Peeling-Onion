@@ -11,7 +11,7 @@
 
 
     <application
-        android:label="front"
+        android:label="Peeling Onion"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
@@ -72,5 +72,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <meta-data
+           android:name="firebase_messaging_auto_init_enabled"
+           android:value="false" />
+        <meta-data
+           android:name="firebase_analytics_collection_enabled"
+           android:value="false" />
     </application>
 </manifest>

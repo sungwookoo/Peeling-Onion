@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
-import 'package:front/screens/postbox_screens/postbox_widgets/show_growing_onions.dart';
+import 'package:front/screens/postbox_screens/postbox_widgets/show_posted_onions.dart';
 
 class PackageScreen extends StatefulWidget {
-  // 우선 user id 하는 식. 이후 토큰으로 api 변경될 예정
-  final int id = 1;
   const PackageScreen({super.key});
 
   @override
@@ -13,9 +11,8 @@ class PackageScreen extends StatefulWidget {
 }
 
 class _PackageScreenState extends State<PackageScreen> {
-  // 받아온 기르는 양파 정보들 (우선 홈 화면 api 연결.)
-  // 나중에 택배함 api 완성되면 연결
-  late Future<List<CustomOnionByOnionId>> onions;
+  // 택배함의 양파들 정보
+  late Future<List<CustomOnionByOnionIdPostbox>> onions;
 
   @override
   void initState() {
@@ -32,13 +29,13 @@ class _PackageScreenState extends State<PackageScreen> {
           future: onions,
           builder: (context, AsyncSnapshot<dynamic> snapshot) {
             if (snapshot.hasData) {
-              List<CustomOnionByOnionId> onionsData =
-                  snapshot.data as List<CustomOnionByOnionId>;
+              List<CustomOnionByOnionIdPostbox> onionsData =
+                  snapshot.data as List<CustomOnionByOnionIdPostbox>;
               // 양파들 출력
               return Stack(
                 children: [
-                  // ShowGrowingOnions 클래스 사용
-                  ShowGrowingOnions(onions: onionsData),
+                  // ShowPostedOnions 클래스 사용
+                  ShowPostedOnions(onions: onionsData),
                 ],
               );
             } else if (snapshot.hasError) {

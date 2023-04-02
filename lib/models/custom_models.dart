@@ -16,18 +16,24 @@ class CustomHomeOnion {
   final int id;
   final String name;
   final String imgSrc;
+  final String createdAt;
   final String growDueDate;
+  final bool isSingle;
   final String receiverNumber;
+  final bool isDead;
+  final bool isTime2go;
 
   CustomHomeOnion.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         imgSrc = json['img_src'],
+        createdAt = json['created_at'],
         growDueDate = json['grow_due_date'],
-        receiverNumber = json['receiver_number'];
+        isSingle = json['is_single'],
+        receiverNumber = json['receiver_number'],
+        isDead = json['is_dead'],
+        isTime2go = json['is_time2go'];
 }
-
-// 택배함 화면에서의 양파 모델 ()
 
 // 메시지 모델
 class CustomMessage {
@@ -35,8 +41,9 @@ class CustomMessage {
   final String sender;
   final String createdAt;
   final String content;
-  final double posRate;
-  final double negRate;
+  final int posRate;
+  final int negRate;
+  final int neuRate;
   final String fileSrc;
 
   CustomMessage.fromJson(Map<String, dynamic> json)
@@ -46,10 +53,11 @@ class CustomMessage {
         content = json['content'],
         posRate = json['pos_rate'],
         negRate = json['neg_rate'],
+        neuRate = json['neu_rate'],
         fileSrc = json['file_src'];
 }
 
-// 양파 1개 모델 (메시지들은 messageIdList 로 받음)
+// 양파 1개 모델 (메시지들은 messageIdList 로 받음. 양파 받 출력할 때 사용)
 class CustomOnionByOnionId {
   final int id;
   final String name;
@@ -64,8 +72,8 @@ class CustomOnionByOnionId {
   CustomOnionByOnionId.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        sender = json['sender'],
         imgSrc = json['img_src'],
+        sender = json['sender'],
         sendDate = json['send_date'],
         growDueDate = json['grow_due_date'],
         isSingle = json['is_single'],
@@ -74,22 +82,51 @@ class CustomOnionByOnionId {
             List<int>.from(json['message_id_list'] as List<dynamic>);
 }
 
+// 택배함 화면에서의 양파 모델 ()
+class CustomOnionByOnionIdPostbox {
+  final int id;
+  final String name;
+  final String imgSrc;
+  final String sender;
+  final String? receiveDate;
+  final String growDueDate;
+  final bool isSingle;
+
+  CustomOnionByOnionIdPostbox.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        name = json['name'],
+        sender = json['sender'],
+        imgSrc = json['img_src'],
+        receiveDate = json['receive_date'],
+        growDueDate = json['grow_due_date'],
+        isSingle = json['is_single'];
+}
+
 // 전체 밭 모델
 class CustomField {
   final int id;
   final String name;
   final String createdAt;
+  CustomField({required this.id, required this.name, required this.createdAt});
 
   CustomField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
         createdAt = json['created_at'];
+
+  CustomField copyWith({int? id, String? name, String? createdAt}) {
+    return CustomField(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }
 
 // 밭 1개의 양파 정보 모델
 class CustomOnionFromField {
   final int id;
-  final String onionName;
+  final String name;
   final String imgSrc;
   final String recieveDate;
   final String sender;
@@ -97,9 +134,9 @@ class CustomOnionFromField {
 
   CustomOnionFromField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        onionName = json['name'],
+        name = json['onion_name'],
         imgSrc = json['img_src'],
-        recieveDate = json['recieve_date'],
+        recieveDate = json['receive_date'],
         sender = json['sender'],
         isSingle = json['is_single'];
 }

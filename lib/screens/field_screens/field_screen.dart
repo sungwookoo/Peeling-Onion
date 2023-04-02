@@ -37,49 +37,48 @@ class _FieldScreenState extends State<FieldScreen> {
     });
   }
 
-  // 밭 삭제하는 메서드
-  void _deleteField(int index) {
-    setState(() {
-      _fields = _fields.then((fields) {
-        fields.removeAt(index);
-        return fields;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xff55D95D),
-      // 밭 표시 (그리드는 최대한 중앙에)
-      body: FutureBuilder(
-        future: _fields,
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            List<CustomField> fieldsData = snapshot.data as List<CustomField>;
-            // 밭들을 출력하는 class
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // 밭들을 grid 로 출력 (MakeField 클래스 사용)
-                MakeFields(
-                  fields: fieldsData,
-                ),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
-          // 로딩 화면
-          return const CircularProgressIndicator();
-        },
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/backfarm.png"),
+          fit: BoxFit.fill,
+        ),
       ),
-      // 밭 추가하는 버튼, 모달로 띄움(이후 디자인 따라 수정할 예정)
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          displayTextInputDialog(context, addField);
-        },
-        child: const Text('밭 추가'),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: false,
+        // 밭 표시 (그리드는 최대한 중앙에)
+        body: FutureBuilder(
+          future: _fields,
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              List<CustomField> fieldsData = snapshot.data as List<CustomField>;
+              // 밭들을 출력하는 class
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // 밭들을 grid 로 출력 (MakeField 클래스 사용)
+                  MakeFields(
+                    fields: fieldsData,
+                  ),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            // 로딩 화면
+            return const CircularProgressIndicator();
+          },
+        ),
+        // 밭 추가하는 버튼, 모달로 띄움(이후 디자인 따라 수정할 예정)
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            displayTextInputDialog(context, addField);
+          },
+          child: const Text('밭 추가'),
+        ),
       ),
     );
   }

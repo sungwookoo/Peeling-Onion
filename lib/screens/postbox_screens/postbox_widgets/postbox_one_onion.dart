@@ -6,11 +6,11 @@ import '../onion_one_screen.dart';
 class PostboxOneOnion extends StatelessWidget {
   const PostboxOneOnion({
     super.key,
-    required List<CustomOnionByOnionId> onions,
+    required List<CustomOnionByOnionIdPostbox> onions,
     required this.globalIndex,
   }) : _onions = onions;
 
-  final List<CustomOnionByOnionId> _onions;
+  final List<CustomOnionByOnionIdPostbox> _onions;
   final int globalIndex;
 
   @override
@@ -23,11 +23,12 @@ class PostboxOneOnion extends StatelessWidget {
           context,
           MaterialPageRoute(
             // OnionOneScreen 클래스 사용
-            builder: (context) => const OnionOneScreen(onionId: 10),
+            builder: (context) =>
+                OnionOneScreen(onionId: _onions.elementAt(globalIndex).id),
           ),
         );
       },
-      child: OneOnion(onions: _onions, globalIndex: globalIndex),
+      child: OneOnion(onion: _onions.elementAt(globalIndex)),
     );
   }
 }
@@ -36,20 +37,24 @@ class PostboxOneOnion extends StatelessWidget {
 class OneOnion extends StatelessWidget {
   const OneOnion({
     super.key,
-    required List<CustomOnionByOnionId> onions,
-    required this.globalIndex,
-  }) : _onions = onions;
+    required CustomOnionByOnionIdPostbox onion,
+  }) : _onion = onion;
 
-  final List<CustomOnionByOnionId> _onions;
-  final int globalIndex;
+  final CustomOnionByOnionIdPostbox _onion;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(_onions.elementAt(globalIndex).name),
-        Image.asset('assets/images/onion_image.png'),
+        Text(_onion.name),
+        Text(
+          _onion.sender,
+          style: const TextStyle(
+            fontSize: 10.0,
+          ),
+        ),
+        Image.asset(_onion.imgSrc)
       ],
     );
   }
