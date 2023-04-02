@@ -10,10 +10,13 @@ class FieldOneScreen extends StatefulWidget {
   // late bool showDraggableRectangle;
   final Function(bool) onValueChanged;
 
+  final Function parentShowMoveSelectDialog;
+
   const FieldOneScreen({
     super.key,
     required this.field,
     required this.onValueChanged,
+    required this.parentShowMoveSelectDialog,
   });
 
   @override
@@ -72,6 +75,36 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
     );
   }
 
+  // 양파 이동 모달
+  // void _showMoveSelectDialog(
+  //     BuildContext innerContext, int onionId, int fromFId) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('이동할 밭을 선택하세요'),
+  //         content: const Text('삭제한 양파는 되돌릴 수 없으며, 저장된 메시지 역시 사라지게 됩니다.'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.pop(context); // dismiss the dialog
+  //             },
+  //             child: const Text('취소'),
+  //           ),
+  //           ElevatedButton(
+  //             onPressed: () {
+
+  //               Navigator.pop(context); // dismiss the dialog
+  //               _deleteOnion(onionId);
+  //             },
+  //             child: const Text('삭제'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -114,6 +147,8 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                                 onion,
                                 () => _showDeleteConfirmationDialog(
                                     innerContext, onion.id),
+                                () => widget.parentShowMoveSelectDialog(
+                                    innerContext, onion.id, widget.field.id),
                                 position,
                               );
                             },
@@ -156,6 +191,7 @@ Future<void> showDeleteModal(
   BuildContext context,
   CustomOnionFromField onion,
   VoidCallback onDelete,
+  VoidCallback onMove,
   Offset position,
 ) async {
   final RenderBox box = context.findRenderObject() as RenderBox;
@@ -180,12 +216,28 @@ Future<void> showDeleteModal(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(onion.onionName),
+            const Text('삭제'),
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: () {
                 Navigator.pop(context);
                 onDelete();
+              },
+            ),
+          ],
+        ),
+      ),
+      PopupMenuItem(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text('수정'),
+            IconButton(
+              icon: const Icon(Icons.update),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+                onMove();
               },
             ),
           ],

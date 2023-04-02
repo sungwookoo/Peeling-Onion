@@ -153,4 +153,22 @@ class OnionApiService {
       throw Exception('존재하지 않는 메시지입니다.');
     }
   }
+
+  // 양파 밭 이동
+  static Future<void> updateOnionField(
+      int onionId, int fromFId, int toFId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/onion/$onionId/$fromFId/$toFId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('옮겨심는 도중 문제가 발생했어요!');
+    }
+  }
 }
