@@ -23,9 +23,7 @@ class MakeFields extends StatefulWidget {
 }
 
 class _MakeFieldsState extends State<MakeFields> {
-  // 양파를 drag 한 상태인지 판단하는 변수 (true 면 아래 밭 선택 창 표시)
-  ValueNotifier<bool> showDraggableRectangle = ValueNotifier<bool>(false);
-  // 양파를 이동중인 상태인지 판단하는 변수
+  // 양파 밭 이동할 때 사용할 변수들
   bool _isOnionMoving = false;
   late int _movingOnionId;
   late int _movingFromFId;
@@ -36,12 +34,6 @@ class _MakeFieldsState extends State<MakeFields> {
   void initState() {
     super.initState();
     _fields = widget._fields;
-  }
-
-  void _updateData(bool newData) {
-    setState(() {
-      showDraggableRectangle.value = newData;
-    });
   }
 
   // 밭 삭제하는 메서드
@@ -64,14 +56,14 @@ class _MakeFieldsState extends State<MakeFields> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // dismiss the dialog
+                Navigator.pop(context);
               },
               child: const Text('취소'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context); // dismiss the dialog
-                _deleteField(fieldId); // call the delete method
+                Navigator.pop(context);
+                _deleteField(fieldId);
               },
               child: const Text('삭제'),
             ),
@@ -89,30 +81,6 @@ class _MakeFieldsState extends State<MakeFields> {
       _movingOnionId = onionId;
       _movingFromFId = fromFId;
     });
-    // showDialog(
-    //   context: innerContext,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: const Text('이동할 밭을 선택하세요. 여긴 makeFeild'),
-    //       content: const Text('삭제한 양파는 되돌릴 수 없으며, 저장된 메시지 역시 사라지게 됩니다.'),
-    //       actions: [
-    //         TextButton(
-    //           onPressed: () {
-    //             Navigator.pop(context); // dismiss the dialog
-    //           },
-    //           child: const Text('취소'),
-    //         ),
-    //         ElevatedButton(
-    //           onPressed: () {
-    //             Navigator.pop(context); // dismiss the dialog
-    //           },
-    //           child: const Text('삭제'),
-    //         ),
-    //         Text('$onionId 그리고 $fromFId'),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 
   // 밭 이름 변경 메서드
@@ -277,7 +245,6 @@ class _MakeFieldsState extends State<MakeFields> {
                                       // 모달로 띄울 밭 1개 (FieldOneScreen 클래스 사용)
                                       child: FieldOneScreen(
                                         field: field,
-                                        onValueChanged: _updateData,
                                         parentShowMoveSelectDialog:
                                             showMoveSelectDialog,
                                       ),
@@ -310,20 +277,16 @@ Future<void> _showFieldPopup(
     VoidCallback onDelete,
     VoidCallback onRename,
     LongPressStartDetails details) async {
-  // final RenderObject? renderObject =
-  //     context.findAncestorRenderObjectOfType<RenderObject>();
-  // final Offset position =
-  //     renderObject?.localToGlobal(Offset.zero) ?? Offset.zero;
   final position = details.globalPosition;
-  final RenderBox overlay = Overlay.of(context).context.findRenderObject()
-      as RenderBox; // get the overlay render box
+  final RenderBox overlay =
+      Overlay.of(context).context.findRenderObject() as RenderBox;
   final RelativeRect positionOffset = RelativeRect.fromRect(
     Rect.fromPoints(position, position),
     Offset.zero & overlay.size,
-  ); // create a relative rect with the position offset
+  );
   return showMenu(
     context: context,
-    position: positionOffset, // set the popup position to the relative rect
+    position: positionOffset,
     items: [
       PopupMenuItem(
         child: Row(

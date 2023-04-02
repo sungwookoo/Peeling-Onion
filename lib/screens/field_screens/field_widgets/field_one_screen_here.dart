@@ -14,22 +14,6 @@ class FieldOneScreenHere extends StatefulWidget {
 class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   @override
   Widget build(BuildContext context) {
-    // 밭 drag and drop 기능
-    return OneField(widget: widget);
-  }
-}
-
-// 전체 화면으로 보이는 양파밭 1개의 코드
-class OneField extends StatelessWidget {
-  const OneField({
-    super.key,
-    required this.widget,
-  });
-
-  final FieldOneScreenHere widget;
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
       color: Colors.brown,
       child: Padding(
