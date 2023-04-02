@@ -42,23 +42,6 @@ class OneField extends StatelessWidget {
               widget.field.name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            // 밭 안의 양파들 출력
-            // Wrap(
-            //   spacing: 8,
-            //   runSpacing: 8,
-            //   children: widget.field.onionInfos.map((onion) {
-            //     return Column(
-            //       children: [
-            //         // Text(
-            //         //   onion.name,
-            //         //   maxLines: 1,
-            //         //   overflow: TextOverflow.ellipsis,
-            //         // ),
-            //         Image.asset('assets/images/onion_image.png'),
-            //       ],
-            //     );
-            //   }).toList(),
-            // ),
           ],
         ),
       ),
