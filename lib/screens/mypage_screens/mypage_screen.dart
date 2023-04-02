@@ -21,6 +21,7 @@ class _MypageScreenState extends State<MypageScreen> {
   String? _prevNicknameText;
   bool _nicknameChanged = true;
   bool _isNicknameValid = true;
+  bool _isNicknameEditing = false;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nicknameController = TextEditingController();
@@ -102,6 +103,7 @@ class _MypageScreenState extends State<MypageScreen> {
 
   void getInfo() async {
     userInfo = UserApiService.getUserInfo(context);
+    print(userInfo);
   }
 
   void logOut(context) async {
@@ -142,6 +144,51 @@ class _MypageScreenState extends State<MypageScreen> {
       print('회원탈퇴 실패: ${response.body}');
     }
     Navigator.pushNamed(context, '/');
+  }
+
+  void nicknameChange() async {
+    // // 회원가입 완료 처리 및 다음 화면으로 이동
+    // Map<String, dynamic> data = {
+    //   'nickname': _nicknameController.text,
+    //   'mobile_number': _phoneNumberController.text,
+    //   //   "img_src": "01050429167",
+    //   "kakaoId": tokenInfo.id,
+    // };
+
+    // print(data);
+
+    // Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
+    // final accessToken = await Token.then((value) => value?.accessToken);
+    // print(accessToken);
+
+    // http.Response response = await http.post(
+    //   Uri.parse('$baseUrl/user'),
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': 'Bearer $accessToken',
+    //   },
+    //   body: json.encode(data),
+    // );
+
+    // print(response.statusCode);
+    // if (response.statusCode == 200) {
+    //   // 성공적으로 회원가입이 완료된 경우
+    //   print(response.body);
+    //   CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
+    //   Provider.of<UserIdModel>(context, listen: false)
+    //       .setUserId(customUser.userId);
+    //   print('회원가입 완료');
+    //   Navigator.pushNamed(context, '/home');
+    // } else {
+    //   // 회원가입이 실패한 경우
+    //   print('회원가입 실패: ${response.body}');
+    // }
+  }
+
+  void showNicknameForm() {
+    _isNicknameEditing = !_isNicknameEditing;
+    print(_isNicknameEditing);
   }
 
   @override
@@ -206,28 +253,32 @@ class _MypageScreenState extends State<MypageScreen> {
                                       fontWeight: FontWeight.bold,
                                       fontSize: 17),
                                 ),
-                                const Text(
+                                Text(
                                   // '$nickname',
-                                  '가가가가가가가가',
-                                  style: TextStyle(fontSize: 15),
+                                  '$nickname',
+                                  style: const TextStyle(fontSize: 15),
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    logOut(context);
+                                    setState(() {
+                                      _isNicknameEditing = !_isNicknameEditing;
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: _isNicknameEditing
+                                        ? Colors.grey
+                                        : Colors.green,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     minimumSize: const Size(40, 30),
                                   ),
-                                  child: const Text('수정'),
+                                  child: Text(_isNicknameEditing ? '취소' : '수정'),
                                 )
                               ],
                             ),
                             // const NicknameForm(),
-                            if (true)
+                            if (_isNicknameEditing)
                               Form(
                                 key: _formKey,
                                 child: Column(
@@ -261,6 +312,35 @@ class _MypageScreenState extends State<MypageScreen> {
                               ),
                             const SizedBox(
                               height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  '전화번호 :',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                                Text(
+                                  // '$nickname',
+                                  '$phoneNumber',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    logOut(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.green,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    minimumSize: const Size(40, 30),
+                                  ),
+                                  child: const Text('수정'),
+                                )
+                              ],
                             ),
                             Text('$userId'),
                             Text('$phoneNumber'),
