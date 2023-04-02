@@ -92,7 +92,7 @@ public class Onion {
 				.userId(userId)
 				.createdAt(Instant.now().plusSeconds(60*60*9))
 				.latestModify(Instant.now().plusSeconds(60*60*9))
-				.growDueDate(inst)
+				.growDueDate(inst.plusSeconds(60*60*9))
 				.isDisabled(Boolean.FALSE)
 				.isSingle(onionCreateRequest.getIs_single())
 				.build();
