@@ -22,6 +22,7 @@ class _MypageScreenState extends State<MypageScreen> {
   bool _nicknameChanged = true;
   bool _isNicknameValid = true;
   bool _isNicknameEditing = false;
+  bool _isPhoneNumberEditing = false;
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nicknameController = TextEditingController();
@@ -329,19 +330,26 @@ class _MypageScreenState extends State<MypageScreen> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () async {
-                                    logOut(context);
+                                    setState(() {
+                                      _isPhoneNumberEditing =
+                                          !_isPhoneNumberEditing;
+                                    });
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: _isPhoneNumberEditing
+                                        ? Colors.grey
+                                        : Colors.green,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     minimumSize: const Size(40, 30),
                                   ),
-                                  child: const Text('수정'),
+                                  child:
+                                      Text(_isPhoneNumberEditing ? '취소' : '수정'),
                                 )
                               ],
                             ),
+                            if (_isPhoneNumberEditing) const Text('전화번호 수정수정'),
                             Text('$userId'),
                             Text('$phoneNumber'),
                           ],
