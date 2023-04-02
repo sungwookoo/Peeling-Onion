@@ -22,6 +22,7 @@ class CustomHomeOnion {
   final String receiverNumber;
   final bool isDead;
   final bool isTime2go;
+  final bool isWatered;
 
   CustomHomeOnion.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -32,7 +33,8 @@ class CustomHomeOnion {
         isSingle = json['is_single'],
         receiverNumber = json['receiver_number'],
         isDead = json['is_dead'],
-        isTime2go = json['is_time2go'];
+        isTime2go = json['is_time2go'],
+        isWatered = json['is_watered'];
 }
 
 // 메시지 모델

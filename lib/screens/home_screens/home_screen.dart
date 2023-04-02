@@ -75,7 +75,9 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
     });
   }
 
-  int onionsPerPage = 9;
+  int onionsPerPage = 4;
+  int shelvesPerPage = 2;
+  int onionsPerShelf = 2;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
 
@@ -89,7 +91,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           // Display 3 shelves
           children: List.generate(
-            3,
+            shelvesPerPage,
             (shelfIndex) {
               // Display each shelf
               return Expanded(
@@ -116,12 +118,11 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.end,
             // 선반 3개출력
             children: List.generate(
-              3,
+              shelvesPerPage,
               (shelfIndex) {
-                int onionsPerShelf = 3;
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
@@ -133,9 +134,8 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: onionsPerShelf,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: onionsPerShelf,
                         ),
                         itemBuilder: (BuildContext context, int itemIndex) {
                           int globalIndex = firstOnionIndex + itemIndex;
