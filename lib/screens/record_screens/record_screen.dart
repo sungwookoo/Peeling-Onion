@@ -399,6 +399,9 @@ class _RecordScreenState extends State<RecordScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      if (_isListening == true || _isThinking == true) {
+                        return;
+                      }
                       if (_sttMessage == '' ||
                           _sttMessage == '어떤 말도 하지 않으셨어요!') {
                         showDialog(
