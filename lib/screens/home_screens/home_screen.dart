@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/alarm_provider.dart';
 import 'package:front/widgets/loading_rotation.dart';
 import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
@@ -21,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     onions = OnionApiService.getGrowingOnionByUserId();
-    AlarmProvider().getAlarmList();
   }
 
   @override
