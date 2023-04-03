@@ -56,6 +56,20 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
+	@GetMapping("/activate/{uid}}")
+	public ResponseEntity<Boolean> isActivate(@PathVariable Long uid) {
+		try {
+			User userInfomation = userService.getUserInfomation(uid);
+			if (userInfomation.getActivate())
+				return ResponseEntity.ok(true);
+			else
+				return ResponseEntity.ok(false);
+		} catch (UserNotFoundException e) {
+			log.error("{}", e.getMessage());
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserResponseDto> searchUserInfomation(@RequestHeader("Authorization") String token,
 		@PathVariable Long userId) {
