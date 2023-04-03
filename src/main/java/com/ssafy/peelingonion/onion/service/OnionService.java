@@ -122,7 +122,18 @@ public class OnionService {
 			// 오늘 == 수정일 -> isWatered: true/ 아니면 false
 			Date dateNow = Date.from(Instant.now().plusSeconds(60*60*9));
 			Date dateModified = Date.from(lastModified);
-			return dateNow.equals(dateModified);
+			Calendar calendar1 = Calendar.getInstance();
+			calendar1.setTime(dateNow);
+			Calendar calendar2 = Calendar.getInstance();
+			calendar2.setTime(dateModified);
+			int year1 = calendar1.get(Calendar.YEAR);
+			int month1 = calendar1.get(Calendar.MONTH) + 1;
+			int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
+			int year2 = calendar2.get(Calendar.YEAR);
+			int month2 = calendar2.get(Calendar.MONTH) + 1;
+			int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
+
+			return year1 == year2 && month1 == month2 && day1 == day2;
 		}
 	}
 
