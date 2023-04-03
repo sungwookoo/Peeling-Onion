@@ -140,7 +140,6 @@ public class OnionService {
 	public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
 		// 이미 썪어있다면 썪은 여부는 판단이 불가능하다.
 		Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
-		// 키우는 기간이 3일 미만인 양파의 경우
 		// 양파 생성 due date에서 양파 생성일을 빼기
 		Instant createdTime = onion.getCreatedAt();
 		Instant growDueDate = onion.getGrowDueDate();
