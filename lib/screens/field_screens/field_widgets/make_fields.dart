@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:front/screens/field_screens/field_one_screen.dart';
+import 'package:front/screens/field_screens/field_widgets/show_bookmarked_onions.dart';
 import 'package:front/services/onion_api_service.dart';
 import '../../../models/custom_models.dart';
 import 'package:front/services/field_api_service.dart';
@@ -27,13 +28,16 @@ class _MakeFieldsState extends State<MakeFields> {
   bool _isOnionMoving = false;
   late int _movingOnionId;
   late int _movingFromFId;
-
+  // 밭들 정보
   late final List<CustomField> _fields;
+  // 즐겨찾기 양파들 정보
+  late Future<List<CustomOnionFromField>> _bookmarkedOnions;
 
   @override
   void initState() {
     super.initState();
     _fields = widget._fields;
+    _bookmarkedOnions = OnionApiService.getBookmarkedOnion();
   }
 
   // 밭 삭제하는 메서드
@@ -73,7 +77,7 @@ class _MakeFieldsState extends State<MakeFields> {
     );
   }
 
-// 양파 이동 모달
+  // 양파 이동 모달
   void showMoveSelectDialog(
       BuildContext innerContext, int onionId, int fromFId) {
     setState(() {
@@ -137,19 +141,52 @@ class _MakeFieldsState extends State<MakeFields> {
     );
   }
 
+  // 즐겨찾기 한 양파들 모달
+  void _showBookmarkedDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('즐겨찾기 양파들'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: FutureBuilder(
+                future: _bookmarkedOnions,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<CustomOnionFromField>> snapshot) {
+                  if (snapshot.hasData) {
+                    return SizedBox(
+                      height: 300,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: ShowBookmarkedOnions(
+                                onions: snapshot.data ?? []),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Text('에러');
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // 페이지 수
     int numOfPages = (widget._fields.length / 2).ceil();
     // 페이지 표현
-    return SizedBox(
-      height: (MediaQuery.of(context).size.width - 60) / 2 * 3 + 20,
-      // decoration: const BoxDecoration(
-      //   image: DecorationImage(
-      //     image: AssetImage('assets/images/field.png'),
-      //     fit: BoxFit.fill,
-      //   ),
-      // ),
+    return Expanded(
       child: Stack(
         children: [
           // 양파 이동시키려는 상태면 아래 글을 표시
@@ -171,11 +208,11 @@ class _MakeFieldsState extends State<MakeFields> {
           Column(
             children: [
               // 위의 빈 공간
-              SizedBox(
-                height:
-                    ((MediaQuery.of(context).size.width - 60) / 2 * 3 + 20) *
-                        0.75,
-              ),
+              // SizedBox(
+              //   height:
+              //       ((MediaQuery.of(context).size.width - 60) / 2 * 3 + 20) *
+              //           0.75,
+              // ),
               // 아래의 밭 페이지 구현
               Expanded(
                 child: PageView.builder(
@@ -191,78 +228,101 @@ class _MakeFieldsState extends State<MakeFields> {
 
                     // 현재 페이지의 밭들을 UI 에 표시
                     return Container(
-                      alignment: Alignment.topCenter,
-                      child: Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
-                        // 각 밭들을 한 번씩 return 해서 children 에 담음
-                        children: pageFields.map((field) {
-                          return SizedBox(
-                            width: (MediaQuery.of(context).size.width - 60) / 2,
-                            height:
-                                (MediaQuery.of(context).size.width - 60) / 2.5,
-                            // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
-                            child: GestureDetector(
-                              onLongPressStart: (details) {
-                                _showFieldPopup(
-                                  context,
-                                  field,
-                                  () => _showDeleteConfirmationDialog(field.id),
-                                  () => _showGetRenameDialog(field.id),
-                                  details,
-                                );
-                              },
-                              onTap: () {
-                                // 양파 밭 이동하는 상태인 경우
-                                if (_isOnionMoving) {
-                                  if (_movingFromFId == field.id) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('이미 그 밭에 있습니다.'),
-                                        duration: Duration(seconds: 1),
-                                      ),
-                                    );
-                                  } else {
-                                    OnionApiService.updateOnionField(
-                                        _movingOnionId,
-                                        _movingFromFId,
-                                        field.id);
-                                    setState(() {
-                                      _isOnionMoving = false;
-                                    });
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('옮겨심기 성공!'),
-                                        duration: Duration(seconds: 1),
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  // 밭 모달 띄우기
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        Container(
-                                      width: MediaQuery.of(context)
-                                          .size
-                                          .width, // 화면의 가로 길이만큼
-                                      height: MediaQuery.of(context).size.width,
-                                      alignment: Alignment.center,
-                                      // 모달로 띄울 밭 1개 (FieldOneScreen 클래스 사용)
-                                      child: FieldOneScreen(
-                                        field: field,
-                                        parentShowMoveSelectDialog:
-                                            showMoveSelectDialog,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              // 전체 밭 화면에서 나타나게 할 밭 1개
-                              child: FieldOneScreenHere(field: field),
+                      alignment: Alignment.bottomCenter,
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height * 0.05),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // 즐겨찾기 목록
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.only(left: 50),
+                              alignment: Alignment.centerLeft,
+                              child: GestureDetector(
+                                onTap: () => _showBookmarkedDialog(),
+                                child: const Icon(Icons.star),
+                              ),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                          Wrap(
+                            // 각 밭들을 한 번씩 return 해서 children 에 담음
+                            children: pageFields.map((field) {
+                              return SizedBox(
+                                width:
+                                    (MediaQuery.of(context).size.width - 60) /
+                                        2,
+                                height:
+                                    (MediaQuery.of(context).size.width - 60) /
+                                        2.5,
+                                // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
+                                child: GestureDetector(
+                                  onLongPressStart: (details) {
+                                    _showFieldPopup(
+                                      context,
+                                      field,
+                                      () => _showDeleteConfirmationDialog(
+                                          field.id),
+                                      () => _showGetRenameDialog(field.id),
+                                      details,
+                                    );
+                                  },
+                                  onTap: () {
+                                    // 양파 밭 이동하는 상태인 경우
+                                    if (_isOnionMoving) {
+                                      if (_movingFromFId == field.id) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text('이미 그 밭에 있습니다.'),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        );
+                                      } else {
+                                        OnionApiService.updateOnionField(
+                                            _movingOnionId,
+                                            _movingFromFId,
+                                            field.id);
+                                        setState(() {
+                                          _isOnionMoving = false;
+                                        });
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text('옮겨심기 성공!'),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      // 밭 모달 띄우기
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            Container(
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width, // 화면의 가로 길이만큼
+                                          height:
+                                              MediaQuery.of(context).size.width,
+                                          alignment: Alignment.center,
+                                          // 모달로 띄울 밭 1개 (FieldOneScreen 클래스 사용)
+                                          child: FieldOneScreen(
+                                            field: field,
+                                            parentShowMoveSelectDialog:
+                                                showMoveSelectDialog,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  // 전체 밭 화면에서 나타나게 할 밭 1개
+                                  child: FieldOneScreenHere(field: field),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ],
                       ),
                     );
                   },
@@ -275,6 +335,8 @@ class _MakeFieldsState extends State<MakeFields> {
     );
   }
 }
+
+// 즐겨찾기 한 양파들
 
 // 밭 삭제 popup 창
 Future<void> _showFieldPopup(

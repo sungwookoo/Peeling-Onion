@@ -77,6 +77,28 @@ class OnionApiService {
     }
   }
 
+  // 양파 즐겨찾기 get
+  static Future<List<CustomOnionFromField>> getBookmarkedOnion() async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    // get 요청 보내기
+    final response = await http.get(
+      Uri.parse('$baseUrl/onion/bookmarked'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    // 요청에 따라 저장
+    if (response.statusCode == 200) {
+      List onions = jsonDecode(utf8.decode(response.bodyBytes));
+      return onions
+          .map((onion) => CustomOnionFromField.fromJson(onion))
+          .toList();
+    } else {
+      throw Exception('Failed to get home_onions');
+    }
+  }
+
   // 양파 즐겨찾기 post
   static Future<void> postMarkedOnionById(int onionId) async {
     final accessToken = await Token.then((value) => value?.accessToken);
@@ -97,8 +119,6 @@ class OnionApiService {
       throw Exception('Failed to get onion');
     }
   }
-
-  // }
 
   // 양파 post (양파 생성)
   static Future<void> createOnion({
