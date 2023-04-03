@@ -265,7 +265,7 @@ public class OnionController {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(onionService.getMobileNumberByUserId(userId));
                 for(ReceiveOnion receiveOnion : receiveOnions){
-                    String senderName = onionService.getNameByUserId(receiveOnion.getUserId());
+                    String senderName = onionService.getNameByUserId(receiveOnion.getFromUserId());
                     receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, senderName));
                 }
                 return ResponseEntity.ok(receiveOnionResponses);
