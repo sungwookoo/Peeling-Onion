@@ -140,10 +140,16 @@ class _MakeFieldsState extends State<MakeFields> {
   @override
   Widget build(BuildContext context) {
     // 페이지 수
-    int numOfPages = (widget._fields.length / 4).ceil();
+    int numOfPages = (widget._fields.length / 2).ceil();
     // 페이지 표현
     return SizedBox(
       height: (MediaQuery.of(context).size.width - 60) / 2 * 3 + 20,
+      // decoration: const BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage('assets/images/field.png'),
+      //     fit: BoxFit.fill,
+      //   ),
+      // ),
       child: Stack(
         children: [
           // 양파 이동시키려는 상태면 아래 글을 표시
@@ -168,7 +174,7 @@ class _MakeFieldsState extends State<MakeFields> {
               SizedBox(
                 height:
                     ((MediaQuery.of(context).size.width - 60) / 2 * 3 + 20) *
-                        0.4,
+                        0.75,
               ),
               // 아래의 밭 페이지 구현
               Expanded(
@@ -176,8 +182,8 @@ class _MakeFieldsState extends State<MakeFields> {
                   itemCount: numOfPages,
                   itemBuilder: (BuildContext context, int pageIndex) {
                     // 밭 번호 할당
-                    int startIndex = pageIndex * 4;
-                    int endIndex = min(startIndex + 4, widget._fields.length);
+                    int startIndex = pageIndex * 2;
+                    int endIndex = min(startIndex + 2, widget._fields.length);
 
                     // 현재 페이지에 속한 밭들의 리스트 제작
                     List<CustomField> pageFields =
@@ -194,7 +200,7 @@ class _MakeFieldsState extends State<MakeFields> {
                           return SizedBox(
                             width: (MediaQuery.of(context).size.width - 60) / 2,
                             height:
-                                (MediaQuery.of(context).size.width - 60) / 3,
+                                (MediaQuery.of(context).size.width - 60) / 2.5,
                             // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
                             child: GestureDetector(
                               onLongPressStart: (details) {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:front/alarm_provider.dart';
 import 'package:front/screens/alarm_screens/alarm_screen.dart';
 import '../screens/postbox_screens/postbox_screen.dart';
 import '../screens/home_screens/home_screen.dart';
 import '../screens/field_screens/field_screen.dart';
 import '../screens/mypage_screens/mypage_screen.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   const CustomNavigationBar({super.key});
@@ -33,65 +35,76 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   // 실제 UI 화면
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // app Bar
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
-        actions: [
-          IconButton(
-            icon: Image.asset('assets/icons/noalarm.png'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AlarmScreen(),
-                ),
-              );
-            },
-          ),
-          // IconButton(
-          //     onPressed: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => const RecordScreen(),
-          //         ),
-          //       );
-          //     },
-          //     icon: const Icon(Icons.voice_chat_outlined)),
-        ],
-      ),
-      // 화면 내용
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      // 네비게이션 바. 커스텀은 여기서
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.black,
-        showUnselectedLabels: true,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/icons/onion_icon.png')),
-            label: '내 양파들',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/icons/box_icon.png')),
-            label: '받은 택배함',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/icons/sprout_icon.png')),
-            label: '내 양파밭',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('assets/icons/mypage_icon.png')),
-            label: '마이페이지',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+    return ChangeNotifierProvider(
+      create: (context) => AlarmProvider(),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        // app Bar
+        appBar: AppBar(
+          title: const Text('BottomNavigationBar Sample'),
+          actions: [
+            context.watch<AlarmProvider>().unreadAlarm
+                ? IconButton(
+                    icon: Image.asset('assets/icons/alarm_color.png'),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AlarmScreen(),
+                        ),
+                      );
+                    },
+                  )
+                : TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      context.watch<AlarmProvider>().unreadAlarm.toString(),
+                      style: const TextStyle(color: Colors.black),
+                    ))
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => const AlarmScreen(),
+            //         ),
+            //       );
+            //     },
+            //     icon: Image.asset('assets/icons/noalarm_color.png'),
+            //   ),
+          ],
+        ),
+        // 화면 내용
+        body: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
+        // 네비게이션 바. 커스텀은 여기서
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          unselectedItemColor: Colors.black,
+          showUnselectedLabels: true,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/onion_icon.png')),
+              label: '내 양파들',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/box_icon.png')),
+              label: '받은 택배함',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/sprout_icon.png')),
+              label: '내 양파밭',
+            ),
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('assets/icons/mypage_icon.png')),
+              label: '마이페이지',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.amber[800],
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }

@@ -45,16 +45,35 @@ class OneOnion extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(_onion.name),
-        Text(
-          _onion.sender,
-          style: const TextStyle(
-            fontSize: 10.0,
-          ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width * 0.3,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 2,
+                  )),
+              child: Column(
+                children: [
+                  Text(_onion.name),
+                  Text(
+                    'from : ${_onion.sender}',
+                    style: const TextStyle(
+                      fontSize: 10.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        Image.asset(_onion.imgSrc)
+        Flexible(
+          child: Image.asset('assets/images/gift_box.png'),
+        ),
       ],
     );
   }

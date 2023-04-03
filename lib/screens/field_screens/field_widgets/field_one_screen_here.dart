@@ -14,21 +14,32 @@ class FieldOneScreenHere extends StatefulWidget {
 class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.brown,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 밭 이름 표시
-            Text(
-              widget.field.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Stack(
+      children: [
+        Container(
+          width: (MediaQuery.of(context).size.width - 60) / 2,
+          // color: Colors.brown,
+          decoration: const BoxDecoration(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 밭 이름 표시
+                Text(
+                  widget.field.name,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+
+        Image.asset('assets/images/pannel_nosand.png'),
+
+        // Image.asset('assets/images/pannel.png')
+      ],
     );
   }
 }

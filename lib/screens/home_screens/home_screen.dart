@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/alarm_provider.dart';
 import 'package:front/widgets/loading_rotation.dart';
 import 'package:front/widgets/onion_create_modal.dart';
 import 'package:front/models/custom_models.dart';
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     onions = OnionApiService.getGrowingOnionByUserId();
+    AlarmProvider().getAlarmList();
   }
 
   @override
@@ -88,27 +90,33 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   Widget build(BuildContext context) {
     // 선반이 비어있으면, 빈 선반 표시
     if (widget._onions.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // Display 3 shelves
-          children: List.generate(
-            shelvesPerPage,
-            (shelfIndex) {
-              // Display each shelf
-              return Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Display shelf image
-                    Image.asset(
-                      'assets/images/shelf.png',
-                    ),
-                  ],
-                ),
-              );
-            },
+      return Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/wall_paper.jpg')),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // Display 3 shelves
+            children: List.generate(
+              shelvesPerPage,
+              (shelfIndex) {
+                // Display each shelf
+                return Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Display shelf image
+                      Image.asset(
+                        'assets/images/shelf.png',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       );
@@ -117,19 +125,16 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
     return PageView.builder(
       itemCount: numOfPages,
       itemBuilder: (context, pageIndex) {
-        // 선반 세로로 출력
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            // 선반 3개출력
             children: List.generate(
               shelvesPerPage,
               (shelfIndex) {
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
-                // 각 선반 1개
-                return Expanded(
+                return Flexible(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -139,11 +144,11 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                         itemCount: onionsPerShelf,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: onionsPerShelf,
+                          childAspectRatio: 0.9,
                         ),
                         itemBuilder: (BuildContext context, int itemIndex) {
                           int globalIndex = firstOnionIndex + itemIndex;
                           if (globalIndex < widget._onions.length) {
-                            // 양파 1개 (텍스트 + 이미지) (HomeOneOnion 클래스 사용)
                             return HomeOneOnion(
                               onion: widget._onions.elementAt(globalIndex),
                               onDelete: () => _deleteOnion(globalIndex),
@@ -153,7 +158,6 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                           }
                         },
                       ),
-                      // 선반 1개 이미지
                       Image.asset(
                         'assets/images/shelf.png',
                       ),
