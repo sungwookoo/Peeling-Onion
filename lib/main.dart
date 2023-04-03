@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:front/alarm_provider.dart';
 import 'package:front/screens/login_screens/loading_screen.dart';
 import 'package:front/screens/login_screens/sign_in_screen.dart';
 import 'package:front/services/notification_service.dart';
@@ -26,10 +27,15 @@ void main() async {
 
   await setupFlutterNotifications();
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => UserIdModel(),
-    child: const App(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserIdModel()),
+        ChangeNotifierProvider(create: (context) => AlarmProvider()),
+      ],
+      child: const App(),
+    ),
+  );
 }
 
 // 위젯 상속
@@ -44,6 +50,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationService().getFcmToken();
@@ -82,6 +89,11 @@ Future<void> setupFlutterNotifications() async {
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission();
 
   isFlutterLocalNotificationsInitialized = true;
 }
