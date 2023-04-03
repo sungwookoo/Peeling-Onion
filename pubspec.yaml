@@ -104,7 +104,8 @@ flutter:
     - assets/images/field.png
     - assets/images/gift_box.png
     - assets/images/pannel_nosand.png
-    - assets/images/pannel.png    
+    - assets/images/pannel.png
+    - assets/images/kakao_login.png
 
     - assets/images/createAlone.png
     - assets/images/createTogether.png

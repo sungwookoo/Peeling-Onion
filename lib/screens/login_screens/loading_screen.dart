@@ -21,6 +21,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Future<void> goNext(context) async {
     // 가입 되어 있으면 userId를 반환받아서 상태 저장.
     // 가입 안 되어 있으면 sign_in으로 푸쉬 아니면 홈으로 푸쉬.
+    print('why 안 됨?');
+    print(
+        '---------------------------------------------------------------------------------');
     final userId = await UserApiService.checkSignin(context);
     if (userId != -1) {
       Navigator.pushNamed(context, '/home');
@@ -126,12 +129,41 @@ class _LoadingScreenState extends State<LoadingScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("지금 로딩중입니다"),
+                const Text(
+                  "양파로 전하는",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+                const Text(
+                  "고마움, 감사함",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Peeling Onion",
+                  style: TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
                     await kakaoLogin(context);
                   },
                   child: const Text('Kakao Login'),
+                ),
+                Image.asset(
+                  'assets/images/kakao_login.png',
+                  width: 180,
                 ),
                 // FutureBuilder<String>(
                 //   future: accessTokenFuture,
