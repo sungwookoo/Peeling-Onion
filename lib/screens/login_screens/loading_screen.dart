@@ -114,38 +114,47 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("지금 로딩중입니다"),
-            ElevatedButton(
-              onPressed: () async {
-                await kakaoLogin(context);
-              },
-              child: const Text('Kakao Login'),
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/images/start_image.png',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("지금 로딩중입니다"),
+                ElevatedButton(
+                  onPressed: () async {
+                    await kakaoLogin(context);
+                  },
+                  child: const Text('Kakao Login'),
+                ),
+                // FutureBuilder<String>(
+                //   future: accessTokenFuture,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.waiting) {
+                //       return const CircularProgressIndicator();
+                //     }
+                //     if (snapshot.hasData) {
+                //       return Padding(
+                //           padding: const EdgeInsets.symmetric(horizontal: 20),
+                //           child: SelectableText(
+                //             'Access Token: \n ${snapshot.data}',
+                //             style: const TextStyle(fontSize: 32),
+                //           ));
+                //     } else {
+                //       return const Text('No access token found');
+                //     }
+                //   },
+                // ),
+              ],
             ),
-            FutureBuilder<String>(
-              future: accessTokenFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-                if (snapshot.hasData) {
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SelectableText(
-                        'Access Token: \n ${snapshot.data}',
-                        style: const TextStyle(fontSize: 32),
-                      ));
-                } else {
-                  return const Text('No access token found');
-                }
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

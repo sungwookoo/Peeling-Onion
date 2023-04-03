@@ -48,6 +48,7 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationService().getFcmToken();

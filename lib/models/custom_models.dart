@@ -143,6 +143,7 @@ class CustomOnionFromField {
         isSingle = json['is_single'];
 }
 
+// 알림 모델
 class CustomAlarmField {
   final int senderId;
   final String senderNickname;

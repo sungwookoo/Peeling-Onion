@@ -5,6 +5,14 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'dart:convert';
 import 'dart:core'; // RegExp를 사용하기 위해 추가
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:front/user_provider.dart';
+
+class CustomUser {
+  final int? userId;
+
+  CustomUser.fromJson(Map<String, dynamic> json) : userId = json['user_id'];
+}
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -129,18 +137,6 @@ class _SigninScreenState extends State<SigninScreen> {
       return;
     }
 
-    String authCode = '123456'; // 인증번호 생성 로직 구현 필요
-    String message = '회원가입 인증번호: $authCode';
-    List<String> recipients = [_phoneNumberController.text];
-
-    // String result =
-    //     await FlutterSms.sendSMS(message: message, recipients: recipients)
-    //         .catchError((onError) {
-    //   print(onError);
-    // });
-
-    // print(result);
-
     FirebaseAuth auth = FirebaseAuth.instance;
 
     String phoneNumber = _phoneNumberController.text;
@@ -215,20 +211,16 @@ class _SigninScreenState extends State<SigninScreen> {
     Map<String, dynamic> data = {
       'nickname': _nicknameController.text,
       'mobile_number': _phoneNumberController.text,
+      //   "img_src": "01050429167",
       "kakaoId": tokenInfo.id,
     };
-    // Map<String, String> data = {
-    //   "nickname": "khryu1",
-    //   "mobile_number": "01050429166",
-    //   "img_src": "01050429167",
-    //   "kakaoId": "2718790468",
-    // };
 
     print(data);
 
     Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 
     final accessToken = await Token.then((value) => value?.accessToken);
+    print(accessToken);
 
     http.Response response = await http.post(
       Uri.parse('$baseUrl/user'),
@@ -243,6 +235,9 @@ class _SigninScreenState extends State<SigninScreen> {
     if (response.statusCode == 200) {
       // 성공적으로 회원가입이 완료된 경우
       print(response.body);
+      CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
+      Provider.of<UserIdModel>(context, listen: false)
+          .setUserId(customUser.userId);
       print('회원가입 완료');
       Navigator.pushNamed(context, '/home');
     } else {
@@ -395,11 +390,11 @@ class _SigninScreenState extends State<SigninScreen> {
                               : null,
                           child: const Text('회원가입 완료'),
                         ),
-                        IconButton(
-                          onPressed: () =>
-                              {Navigator.pushNamed(context, '/home')},
-                          icon: const Icon(Icons.home),
-                        )
+                        // IconButton(
+                        //   onPressed: () =>
+                        //       {Navigator.pushNamed(context, '/home')},
+                        //   icon: const Icon(Icons.home),
+                        // )
                       ],
                     ),
                   ],
