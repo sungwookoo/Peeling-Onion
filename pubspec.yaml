@@ -102,6 +102,10 @@ flutter:
     - assets/images/customonion2.png
     - assets/images/need_water.png
     - assets/images/ready_to_go.png
+    - assets/images/field.png
+    - assets/images/gift_box.png
+    - assets/images/pannel_nosand.png
+    - assets/images/pannel.png    
 
   #   - images/a_dot_ham.jpeg
 
