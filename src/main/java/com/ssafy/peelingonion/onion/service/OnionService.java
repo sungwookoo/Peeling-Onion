@@ -185,8 +185,14 @@ public class OnionService {
 				}
 				// 2-2. 아직 growDueDate를 못넘겼다면 -> 안썪음, 보낼 수 없음
 			} else {
-				isDeadAndTime2Go.put("isDead", false);
-				isDeadAndTime2Go.put("time2Go", false);
+				// 2-2-1. growDueDate가 created_at날짜보다 하루 뒤이고 메세지가 있다면
+				if(createdTime.plusSeconds(60*60*24).isAfter(growDueDate) && !onion.getMessages().isEmpty()) {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", false);
+				}
 			}
 		}
 		return isDeadAndTime2Go;
@@ -196,6 +202,27 @@ public class OnionService {
 		Optional<Onion> opOnion = onionRepository.findById(onionId);
 		if (opOnion.isPresent()) {
 			Onion onion = opOnion.get();
+			// growDueDate가 created_at날짜보다 하루 뒤이고, 메세지가 있다면
+			if (onion.getCreatedAt().plusSeconds(60*60*24).isAfter(onion.getGrowDueDate()) && !onion.getMessages().isEmpty()){
+				// 양파의 전송일 추가하기
+				onion.setSendDate(Instant.now().plusSeconds(60*60*9));
+				onionRepository.save(onion);
+				// 내가 만든 양파에서 해당 양파 전송여부 true
+				Set<SendOnion> sendOnions = onion.getSendOnions();
+				for (SendOnion sendOnion : sendOnions) {
+					sendOnion.setIsSended(Boolean.TRUE);
+					sendOnionRepository.save(sendOnion);
+				}
+				// 내가 받은 양파에서 수신 여부 true
+				ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
+				receiveOnion.setIsReceived(Boolean.TRUE);
+				receiveOnionRepository.save(receiveOnion);
+				Long targetId = getUserIdFromMobileNumber(receiveOnion.getReceiverNumber());
+				if (targetId > 0) {
+					addAlarm(onion.getUserId(), targetId, ONION_RECEIVE);
+				}
+			}
+
 			// getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
 			if (onion.getGrowDueDate().isBefore(Instant.now().plusSeconds(60*60*9)) && !onion.getIsDisabled().booleanValue()) {
 				// 양파의 전송일 추가하기
