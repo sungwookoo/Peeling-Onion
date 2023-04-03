@@ -138,6 +138,23 @@ class OnionApiService {
     }
   }
 
+  // 양파 send (다 키운 양파 전송)
+  static Future<void> sendOnionById(int onionId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/onion/growing/send/$onionId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('전송 완료');
+    } else {
+      throw Exception('Failed to delete onion');
+    }
+  }
+
   // 양파의 메시지 get
   static Future<CustomMessage> getMessage(int messageId) async {
     final accessToken = await Token.then((value) => value?.accessToken);
