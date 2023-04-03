@@ -142,3 +142,21 @@ class CustomOnionFromField {
         sender = json['sender'],
         isSingle = json['is_single'];
 }
+
+// 알림 모델
+class CustomAlarmField {
+  final int senderId;
+  final String senderNickname;
+  final int receiverId;
+  final int alarmType;
+  final int alarmId;
+  final bool isRead;
+
+  CustomAlarmField.fromJson(Map<String, dynamic> json)
+      : senderId = json['sender_id'],
+        senderNickname = json['sender_nickname'],
+        receiverId = json['receiver_id'],
+        alarmType = json['type'],
+        alarmId = json['message_id'],
+        isRead = json['is_read'];
+}
