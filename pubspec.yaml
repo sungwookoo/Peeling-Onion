@@ -98,8 +98,13 @@ flutter:
     - assets/images/note.png
     - assets/images/customonion1.png
     - assets/images/customonion2.png
+
+    - assets/images/need_water.png
+    - assets/images/ready_to_go.png
+
     - assets/images/createAlone.png
     - assets/images/createTogether.png
+
 
   #   - images/a_dot_ham.jpeg
 
