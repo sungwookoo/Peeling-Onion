@@ -56,7 +56,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@GetMapping("/activate/{uid}}")
+	@GetMapping("/activate/{uid}")
 	public ResponseEntity<Boolean> isActivate(@PathVariable Long uid) {
 		try {
 			User userInfomation = userService.getUserInfomation(uid);
