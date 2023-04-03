@@ -390,11 +390,11 @@ class _SigninScreenState extends State<SigninScreen> {
                               : null,
                           child: const Text('회원가입 완료'),
                         ),
-                        IconButton(
-                          onPressed: () =>
-                              {Navigator.pushNamed(context, '/home')},
-                          icon: const Icon(Icons.home),
-                        )
+                        // IconButton(
+                        //   onPressed: () =>
+                        //       {Navigator.pushNamed(context, '/home')},
+                        //   icon: const Icon(Icons.home),
+                        // )
                       ],
                     ),
                   ],

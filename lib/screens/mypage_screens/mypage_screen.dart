@@ -7,6 +7,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:front/widgets/kakao_share.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -157,49 +158,77 @@ class _MypageScreenState extends State<MypageScreen> {
     Navigator.pushNamed(context, '/');
   }
 
-  void nicknameChange() async {
-    // // 회원가입 완료 처리 및 다음 화면으로 이동
-    // Map<String, dynamic> data = {
-    //   'nickname': _nicknameController.text,
-    //   'mobile_number': _phoneNumberController.text,
-    //   //   "img_src": "01050429167",
-    //   "kakaoId": tokenInfo.id,
-    // };
+  // void nicknameChange() async {
+  // // 회원가입 완료 처리 및 다음 화면으로 이동
+  // Map<String, dynamic> data = {
+  //   'nickname': _nicknameController.text,
+  //   'mobile_number': _phoneNumberController.text,
+  //   //   "img_src": "01050429167",
+  //   "kakaoId": tokenInfo.id,
+  // };
 
-    // print(data);
+  // print(data);
 
-    // Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+  // Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 
-    // final accessToken = await Token.then((value) => value?.accessToken);
-    // print(accessToken);
+  // final accessToken = await Token.then((value) => value?.accessToken);
+  // print(accessToken);
 
-    // http.Response response = await http.post(
-    //   Uri.parse('$baseUrl/user'),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': 'Bearer $accessToken',
-    //   },
-    //   body: json.encode(data),
-    // );
+  // http.Response response = await http.post(
+  //   Uri.parse('$baseUrl/user'),
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': 'Bearer $accessToken',
+  //   },
+  //   body: json.encode(data),
+  // );
 
-    // print(response.statusCode);
-    // if (response.statusCode == 200) {
-    //   // 성공적으로 회원가입이 완료된 경우
-    //   print(response.body);
-    //   CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
-    //   Provider.of<UserIdModel>(context, listen: false)
-    //       .setUserId(customUser.userId);
-    //   print('회원가입 완료');
-    //   Navigator.pushNamed(context, '/home');
-    // } else {
-    //   // 회원가입이 실패한 경우
-    //   print('회원가입 실패: ${response.body}');
-    // }
-  }
+  // print(response.statusCode);
+  // if (response.statusCode == 200) {
+  //   // 성공적으로 회원가입이 완료된 경우
+  //   print(response.body);
+  //   CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
+  //   Provider.of<UserIdModel>(context, listen: false)
+  //       .setUserId(customUser.userId);
+  //   print('회원가입 완료');
+  //   Navigator.pushNamed(context, '/home');
+  // } else {
+  //   // 회원가입이 실패한 경우
+  //   print('회원가입 실패: ${response.body}');
+  // }
+  // }
 
-  void showNicknameForm() {
-    _isNicknameEditing = !_isNicknameEditing;
-    print(_isNicknameEditing);
+  void nicknameChange(context) async {
+    if (_formKey.currentState!.validate() && _isNicknameValid) {
+      Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+      final accessToken = await Token.then((value) => value?.accessToken);
+
+      try {
+        final response = await http.patch(
+          Uri.parse('$baseUrl/user'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(<String, String>{
+            'nickname': _nicknameController.text,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            _isNicknameEditing = false;
+            _nicknameChanged = false;
+          });
+          getInfo();
+          print('닉네임 수정 완료');
+        } else {
+          print('닉네임 수정 실패: ${response.body}');
+        }
+      } catch (error) {
+        print('닉네임 수정 에러: $error');
+      }
+    }
   }
 
   Future<void> _sendAuthCode() async {
@@ -393,8 +422,18 @@ class _MypageScreenState extends State<MypageScreen> {
                                             icon: _nicknameChanged
                                                 ? const Icon(Icons.check,
                                                     color: Colors.red)
-                                                : const Icon(Icons.check,
-                                                    color: Colors.green),
+                                                : ElevatedButton(
+                                                    onPressed: () =>
+                                                        nicknameChange(context),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      minimumSize: const Size(
+                                                          40, 30), // 이 부분 수정
+                                                    ),
+                                                    child: const Text('완료'),
+                                                  ),
                                             onPressed: _checkNickname,
                                           ),
                                         ),

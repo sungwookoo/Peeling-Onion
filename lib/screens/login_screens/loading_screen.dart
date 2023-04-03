@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:front/screens/mypage_screens/mypage_screen.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
@@ -43,10 +42,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
         final userId = await UserApiService.checkSignin(context);
         print(userId);
         if (userId != -1) {
-          // Navigator.pushNamed(context, '/home');
-          // test를 위한 루트 설정
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const MypageScreen()));
+          Navigator.pushNamed(context, '/home');
         } else {
           // 테스트용~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           Navigator.pushNamed(context, '/signin');
@@ -118,38 +114,47 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("지금 로딩중입니다"),
-            ElevatedButton(
-              onPressed: () async {
-                await kakaoLogin(context);
-              },
-              child: const Text('Kakao Login'),
+      body: Stack(
+        children: [
+          Image.asset(
+            'assets/images/start_image.png',
+            fit: BoxFit.cover,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("지금 로딩중입니다"),
+                ElevatedButton(
+                  onPressed: () async {
+                    await kakaoLogin(context);
+                  },
+                  child: const Text('Kakao Login'),
+                ),
+                // FutureBuilder<String>(
+                //   future: accessTokenFuture,
+                //   builder: (context, snapshot) {
+                //     if (snapshot.connectionState == ConnectionState.waiting) {
+                //       return const CircularProgressIndicator();
+                //     }
+                //     if (snapshot.hasData) {
+                //       return Padding(
+                //           padding: const EdgeInsets.symmetric(horizontal: 20),
+                //           child: SelectableText(
+                //             'Access Token: \n ${snapshot.data}',
+                //             style: const TextStyle(fontSize: 32),
+                //           ));
+                //     } else {
+                //       return const Text('No access token found');
+                //     }
+                //   },
+                // ),
+              ],
             ),
-            FutureBuilder<String>(
-              future: accessTokenFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-                if (snapshot.hasData) {
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: SelectableText(
-                        'Access Token: \n ${snapshot.data}',
-                        style: const TextStyle(fontSize: 32),
-                      ));
-                } else {
-                  return const Text('No access token found');
-                }
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
