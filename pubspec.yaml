@@ -108,7 +108,7 @@ flutter:
 
     - assets/images/createAlone.png
     - assets/images/createTogether.png
-
+    - assets/images/start_image.png
     - assets/icons/alarm_color.png
     - assets/icons/noalarm_color.png
 
