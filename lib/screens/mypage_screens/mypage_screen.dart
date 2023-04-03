@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:front/widgets/kakao_share.dart';
 import 'package:front/services/user_api_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -23,6 +24,15 @@ class _MypageScreenState extends State<MypageScreen> {
   bool _isNicknameValid = true;
   bool _isNicknameEditing = false;
   bool _isPhoneNumberEditing = false;
+  bool _isPhoneValid = true;
+  bool _isAuthCodeSent = false;
+  bool _isAuthCodeValid = false;
+  String? _verificationId;
+  String? _phoneValidationMessage;
+  String? _authCodeValidationMessage;
+
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _authCodeController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nicknameController = TextEditingController();
@@ -192,6 +202,89 @@ class _MypageScreenState extends State<MypageScreen> {
     print(_isNicknameEditing);
   }
 
+  Future<void> _sendAuthCode() async {
+    if (_phoneNumberController.text == '') {
+      setState(() {
+        _isPhoneValid = false;
+        _phoneValidationMessage = '전화번호를 입력해주세요.';
+      });
+      return;
+    }
+    RegExp regExp = RegExp(r'^\d{11}$');
+    if (!regExp.hasMatch(_phoneNumberController.text)) {
+      setState(() {
+        _phoneValidationMessage = '전화번호는 11자리 숫자만 입력 가능합니다.';
+      });
+      return;
+    }
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    String phoneNumber = _phoneNumberController.text;
+    String formattedPhoneNumber = phoneNumber.replaceAll(RegExp(r'^0'), '+82');
+
+    await auth.verifyPhoneNumber(
+      phoneNumber: formattedPhoneNumber, // 입력받은 전화번호
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        // 자동 인증이 완료된 경우
+        await auth.signInWithCredential(credential);
+      },
+      verificationFailed: (FirebaseAuthException e) {
+        // 인증 실패
+        print(e.message);
+      },
+      codeSent: (String verificationId, int? resendToken) {
+        // 인증 코드가 전송된 경우
+        setState(() {
+          _verificationId = verificationId;
+          _isAuthCodeSent = true;
+
+          _checkNickname();
+        });
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        // 타임아웃 처리
+        setState(() {
+          _verificationId = verificationId;
+        });
+      },
+    );
+  }
+
+  Future<void> _checkAuthCode() async {
+    if (_authCodeController.text == '') {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
+      });
+      return;
+    }
+
+    FirebaseAuth auth = FirebaseAuth.instance;
+    // _verificationId 변수가 null일 경우를 체크하는 코드 추가
+    if (_verificationId == null) {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '인증번호를 먼저 전송해주세요.';
+      });
+      return;
+    }
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: _verificationId!, smsCode: _authCodeController.text);
+
+    try {
+      await auth.signInWithCredential(credential);
+      setState(() {
+        _isAuthCodeValid = true;
+      });
+    } catch (e) {
+      setState(() {
+        _isAuthCodeValid = false;
+        _authCodeValidationMessage = '잘못 입력하셨습니다.';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
@@ -349,7 +442,61 @@ class _MypageScreenState extends State<MypageScreen> {
                                 )
                               ],
                             ),
-                            if (_isPhoneNumberEditing) const Text('전화번호 수정수정'),
+                            if (_isPhoneNumberEditing)
+                              TextFormField(
+                                controller: _phoneNumberController,
+                                keyboardType: TextInputType.phone,
+                                decoration: InputDecoration(
+                                  labelText: '전화번호',
+                                  hintText: '숫자 11자리',
+                                  suffixIcon: ElevatedButton(
+                                    onPressed: _sendAuthCode,
+                                    child: Text(
+                                        _isAuthCodeSent ? '재인증하기' : '인증하기'),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return '전화번호를 입력해주세요.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            if (_phoneValidationMessage != null)
+                              Text(_phoneValidationMessage!),
+                            const SizedBox(height: 16),
+                            if (_isAuthCodeSent)
+                              Column(
+                                children: [
+                                  TextFormField(
+                                    controller: _authCodeController,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                      labelText: '인증번호',
+                                      hintText: '6자리 숫자',
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          Icons.check,
+                                          color: _isAuthCodeValid
+                                              ? Colors.green
+                                              : Colors.red,
+                                        ),
+                                        onPressed: _checkAuthCode,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return '인증번호를 입력해주세요.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  if (_authCodeValidationMessage != null)
+                                    Text(_authCodeValidationMessage!),
+                                ],
+                              ),
+
+                            const Text('전화번호 수정수정'),
                             Text('$userId'),
                             Text('$phoneNumber'),
                           ],
