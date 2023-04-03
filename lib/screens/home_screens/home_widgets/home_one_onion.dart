@@ -69,16 +69,13 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                   : !widget._onion.isWatered
                       // 물 주기
                       ? GestureDetector(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             RecordScreen(onion: widget._onion)),
-                          //   );
-                          // },
                           onTap: () {
-                            _showSendConfirmDialog(context, widget._onion.id);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecordScreen(onion: widget._onion)),
+                            );
                           },
                           child: Image.asset('assets/images/need_water.png'),
                         )
