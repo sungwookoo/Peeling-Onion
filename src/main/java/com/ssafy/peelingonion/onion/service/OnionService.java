@@ -161,7 +161,7 @@ public class OnionService {
 				// 1-2. 아직 growDueDate를 넘기지 않았다면 -> 못보냄, 썪음 여부만 판단
 			} else {
 				// 1-2-1. lastModified가 3일이 지났다면 -> 썪음
-				if(lastModified.until(growDueDate, ChronoUnit.SECONDS) >= DEAD_TIME) {
+				if(lastModified.until(Instant.now(), ChronoUnit.SECONDS) >= DEAD_TIME) {
 					isDeadAndTime2Go.put("isDead", true);
 				// 1-2-2. lastModified가 3일이 지나지 않았다면 -> 썪지 않음
 				} else {
