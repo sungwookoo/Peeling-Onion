@@ -155,15 +155,14 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
+                GestureDetector(
+                  onTap: () async {
                     await kakaoLogin(context);
                   },
-                  child: const Text('Kakao Login'),
-                ),
-                Image.asset(
-                  'assets/images/kakao_login.png',
-                  width: 180,
+                  child: Image.asset(
+                    'assets/images/kakao_login.png',
+                    width: 180,
+                  ),
                 ),
                 // FutureBuilder<String>(
                 //   future: accessTokenFuture,
