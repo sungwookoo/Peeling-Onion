@@ -42,7 +42,7 @@ class _FieldScreenState extends State<FieldScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/backfarm.png"),
+          image: AssetImage("assets/images/createbackground.jpg"),
           fit: BoxFit.fill,
         ),
       ),

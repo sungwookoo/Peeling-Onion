@@ -16,34 +16,42 @@ class ShowPostedOnions extends StatefulWidget {
 }
 
 class _ShowPostedOnionsState extends State<ShowPostedOnions> {
-  int onionsPerPage = 9;
+  int onionsPerPage = 4;
+  int shelvesPerPage = 2;
+  int onionsPerShelf = 2;
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
   @override
   Widget build(BuildContext context) {
     // 선반이 비어있으면, 빈 선반 표시
     if (widget._onions.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          // Display 3 shelves
-          children: List.generate(
-            3,
-            (shelfIndex) {
-              // Display each shelf
-              return Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // Display shelf image
-                    Image.asset(
-                      'assets/images/shelf.png',
-                    ),
-                  ],
-                ),
-              );
-            },
+      return Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/wall_paper.jpg')),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // Display 3 shelves
+            children: List.generate(
+              shelvesPerPage,
+              (shelfIndex) {
+                // Display each shelf
+                return Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // Display shelf image
+                      Image.asset(
+                        'assets/images/shelf.png',
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       );
@@ -59,13 +67,12 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             // 선반 3개출력
             children: List.generate(
-              3,
+              shelvesPerPage,
               (shelfIndex) {
-                int onionsPerShelf = 3;
                 int firstOnionIndex =
                     pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
                 // 각 선반 1개
-                return Expanded(
+                return Flexible(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -73,11 +80,9 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: onionsPerShelf,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: onionsPerShelf,
+                          childAspectRatio: 0.9,
                         ),
                         itemBuilder: (BuildContext context, int itemIndex) {
                           int globalIndex = firstOnionIndex + itemIndex;

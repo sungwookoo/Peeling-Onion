@@ -51,54 +51,62 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        SizedBox(
-          height: 70,
-          child: widget._onion.isDead
-              ? const Text('으악 죽었따')
-              // 전송하기
-              : widget._onion.isTime2go
-                  ? GestureDetector(
-                      onTap: () {
-                        _showSendConfirmDialog(context, widget._onion.id);
-                      },
-                      child: Image.asset('assets/images/ready_to_go.png'),
-                    )
-                  : !widget._onion.isWatered
-                      // 물 주기
+    return LayoutBuilder(builder: (context, constraints) {
+      return SizedBox(
+        height: constraints.maxHeight,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: 70,
+              child: widget._onion.isDead
+                  ? const Text('으악 죽었따')
+                  // 전송하기
+                  : widget._onion.isTime2go
                       ? GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      RecordScreen(onion: widget._onion)),
-                            );
+                            _showSendConfirmDialog(context, widget._onion.id);
                           },
-                          child: Image.asset('assets/images/need_water.png'),
+                          child: Image.asset('assets/images/ready_to_go.png'),
                         )
-                      : Container(),
+                      : !widget._onion.isWatered
+                          // 물 주기
+                          ? GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          RecordScreen(onion: widget._onion)),
+                                );
+                              },
+                              child:
+                                  Image.asset('assets/images/need_water.png'),
+                            )
+                          : Container(),
+            ),
+            Text('이름 : ${widget._onion.name}'),
+            Flexible(
+              child: GestureDetector(
+                onLongPress: () {
+                  // 양파 1개 delete 함수
+                  showDeleteModal(context, widget._onion, widget.onDelete);
+                },
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RecordScreen(onion: widget._onion)),
+                  );
+                },
+                // child: Image.asset(widget._onion.imgSrc),
+                child: Image.asset('assets/images/onioninbottle.png'),
+              ),
+            ),
+          ],
         ),
-        Text('이름 : ${widget._onion.name}'),
-        Expanded(
-          child: GestureDetector(
-            onLongPress: () {
-              // 양파 1개 delete 함수
-              showDeleteModal(context, widget._onion, widget.onDelete);
-            },
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RecordScreen(onion: widget._onion)),
-              );
-            },
-            child: Image.asset(widget._onion.imgSrc),
-          ),
-        ),
-      ],
-    );
+      );
+    });
   }
 }
