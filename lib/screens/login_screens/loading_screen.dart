@@ -133,28 +133,32 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   "양파로 전하는",
                   style: TextStyle(
                     fontSize: 30,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white,
+                    fontFamily: 'NanumMyeongjo',
                   ),
                 ),
+                const SizedBox(height: 7),
                 const Text(
                   "고마움, 감사함",
                   style: TextStyle(
                     fontSize: 30,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     color: Colors.white,
+                    fontFamily: 'NanumMyeongjo',
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 const Text(
                   "Peeling Onion",
                   style: TextStyle(
                     fontSize: 40,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w700,
                     color: Colors.white,
+                    fontFamily: 'NanumMyeongjo',
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 16),
                 GestureDetector(
                   onTap: () async {
                     await kakaoLogin(context);

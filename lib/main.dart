@@ -65,6 +65,7 @@ class _AppState extends State<App> {
           '/signin': (context) => const SigninScreen(),
           '/home': (context) => const CustomNavigationBar(),
         },
+        theme: ThemeData(fontFamily: 'NanumGothic'),
       ),
     );
   }
