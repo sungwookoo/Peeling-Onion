@@ -23,11 +23,14 @@ class OnionApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
+    print(accessToken);
     // 요청에 따라 저장
     if (response.statusCode == 200) {
       List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
+      print(response.statusCode);
+      print(response.body);
       throw Exception('Failed to get home_onions');
     }
   }
@@ -135,6 +138,23 @@ class OnionApiService {
     }
   }
 
+  // 양파 send (다 키운 양파 전송)
+  static Future<void> sendOnionById(int onionId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.post(
+      Uri.parse('$baseUrl/onion/growing/send/$onionId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      print('전송 완료');
+    } else {
+      throw Exception('Failed to delete onion');
+    }
+  }
+
   // 양파의 메시지 get
   static Future<CustomMessage> getMessage(int messageId) async {
     final accessToken = await Token.then((value) => value?.accessToken);
@@ -150,8 +170,25 @@ class OnionApiService {
           CustomMessage.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       return message;
     } else {
-      print(response.statusCode);
-      throw Exception('Failed to get message');
+      throw Exception('존재하지 않는 메시지입니다.');
+    }
+  }
+
+  // 양파 밭 이동
+  static Future<void> updateOnionField(
+      int onionId, int fromFId, int toFId) async {
+    final accessToken = await Token.then((value) => value?.accessToken);
+
+    final response = await http.put(
+      Uri.parse('$baseUrl/onion/$onionId/$fromFId/$toFId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      throw Exception('옮겨심는 도중 문제가 발생했어요!');
     }
   }
 }

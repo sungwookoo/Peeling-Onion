@@ -46,12 +46,9 @@ Future<void> displayTextInputDialog(
                   // text input 값
                   String text = textFieldController.text;
                   // 예외 처리
-
                   if (text.isEmpty) {
                     return;
                   }
-                  print('전송이 됩니다.');
-                  // FieldApiService.createField(text);
                   Navigator.pop(context);
                   addField(text);
                 },

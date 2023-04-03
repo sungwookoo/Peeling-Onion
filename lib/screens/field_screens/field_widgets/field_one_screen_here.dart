@@ -14,54 +14,32 @@ class FieldOneScreenHere extends StatefulWidget {
 class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   @override
   Widget build(BuildContext context) {
-    // 밭 drag and drop 기능
-    return OneField(widget: widget);
-  }
-}
-
-// 전체 화면으로 보이는 양파밭 1개의 코드
-class OneField extends StatelessWidget {
-  const OneField({
-    super.key,
-    required this.widget,
-  });
-
-  final FieldOneScreenHere widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.brown,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 밭 이름 표시
-            Text(
-              widget.field.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Stack(
+      children: [
+        Container(
+          width: (MediaQuery.of(context).size.width - 60) / 2,
+          // color: Colors.brown,
+          decoration: const BoxDecoration(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 밭 이름 표시
+                Text(
+                  widget.field.name,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            // 밭 안의 양파들 출력
-            // Wrap(
-            //   spacing: 8,
-            //   runSpacing: 8,
-            //   children: widget.field.onionInfos.map((onion) {
-            //     return Column(
-            //       children: [
-            //         // Text(
-            //         //   onion.name,
-            //         //   maxLines: 1,
-            //         //   overflow: TextOverflow.ellipsis,
-            //         // ),
-            //         Image.asset('assets/images/onion_image.png'),
-            //       ],
-            //     );
-            //   }).toList(),
-            // ),
-          ],
+          ),
         ),
-      ),
+
+        Image.asset('assets/images/pannel_nosand.png'),
+
+        // Image.asset('assets/images/pannel.png')
+      ],
     );
   }
 }

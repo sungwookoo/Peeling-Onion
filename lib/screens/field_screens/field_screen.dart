@@ -37,22 +37,12 @@ class _FieldScreenState extends State<FieldScreen> {
     });
   }
 
-  // 밭 삭제하는 메서드
-  void _deleteField(int index) {
-    setState(() {
-      _fields = _fields.then((fields) {
-        fields.removeAt(index);
-        return fields;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/backfarm.png"),
+          image: AssetImage("assets/images/createbackground.jpg"),
           fit: BoxFit.fill,
         ),
       ),

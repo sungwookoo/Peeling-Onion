@@ -399,6 +399,9 @@ class _RecordScreenState extends State<RecordScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
+                      if (_isListening == true || _isThinking == true) {
+                        return;
+                      }
                       if (_sttMessage == '' ||
                           _sttMessage == '어떤 말도 하지 않으셨어요!') {
                         showDialog(
@@ -418,12 +421,27 @@ class _RecordScreenState extends State<RecordScreen> {
                       } else {
                         showDialog(
                           context: context,
-                          builder: (context) => const AlertDialog(
-                            title: Text('정말 저장하시겠습니까?'),
+                          builder: (context) => AlertDialog(
+                            title: const Text('정말 저장하시겠습니까?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('취소'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  saveRecordMessage();
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('저장'),
+                              )
+                            ],
                           ),
                         );
                       }
-                      saveRecordMessage();
                     },
                     child: const Text('저장'),
                   ),

@@ -22,6 +22,7 @@ class CustomHomeOnion {
   final String receiverNumber;
   final bool isDead;
   final bool isTime2go;
+  final bool isWatered;
 
   CustomHomeOnion.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -32,10 +33,9 @@ class CustomHomeOnion {
         isSingle = json['is_single'],
         receiverNumber = json['receiver_number'],
         isDead = json['is_dead'],
-        isTime2go = json['is_time2go'];
+        isTime2go = json['is_time2go'],
+        isWatered = json['is_watered'];
 }
-
-// 택배함 화면에서의 양파 모델 ()
 
 // 메시지 모델
 class CustomMessage {
@@ -43,9 +43,9 @@ class CustomMessage {
   final String sender;
   final String createdAt;
   final String content;
-  final double posRate;
-  final double negRate;
-  final double neuRate;
+  final int posRate;
+  final int negRate;
+  final int neuRate;
   final String fileSrc;
 
   CustomMessage.fromJson(Map<String, dynamic> json)
@@ -74,8 +74,8 @@ class CustomOnionByOnionId {
   CustomOnionByOnionId.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        sender = json['sender'],
         imgSrc = json['img_src'],
+        sender = json['sender'],
         sendDate = json['send_date'],
         growDueDate = json['grow_due_date'],
         isSingle = json['is_single'],
@@ -84,6 +84,7 @@ class CustomOnionByOnionId {
             List<int>.from(json['message_id_list'] as List<dynamic>);
 }
 
+// 택배함 화면에서의 양파 모델 ()
 class CustomOnionByOnionIdPostbox {
   final int id;
   final String name;
@@ -127,7 +128,7 @@ class CustomField {
 // 밭 1개의 양파 정보 모델
 class CustomOnionFromField {
   final int id;
-  final String onionName;
+  final String name;
   final String imgSrc;
   final String recieveDate;
   final String sender;
@@ -135,9 +136,27 @@ class CustomOnionFromField {
 
   CustomOnionFromField.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        onionName = json['name'],
+        name = json['onion_name'],
         imgSrc = json['img_src'],
-        recieveDate = json['recieve_date'],
+        recieveDate = json['receive_date'],
         sender = json['sender'],
         isSingle = json['is_single'];
+}
+
+// 알림 모델
+class CustomAlarmField {
+  final int senderId;
+  final String senderNickname;
+  final int receiverId;
+  final int alarmType;
+  final int alarmId;
+  final bool isRead;
+
+  CustomAlarmField.fromJson(Map<String, dynamic> json)
+      : senderId = json['sender_id'],
+        senderNickname = json['sender_nickname'],
+        receiverId = json['receiver_id'],
+        alarmType = json['type'],
+        alarmId = json['message_id'],
+        isRead = json['is_read'];
 }

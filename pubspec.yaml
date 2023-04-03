@@ -55,6 +55,11 @@ dependencies:
   firebase_auth: ^4.3.0
   path_provider: ^2.0.14
 
+  firebase_messaging: ^14.2.0
+  flutter_local_notifications: ^13.0.0
+  firebase_analytics: ^10.2.0
+  flutter_launcher_icons: ^0.12.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -88,14 +93,26 @@ flutter:
     - assets/images/createbackground.jpg
     - assets/images/onion_image.png
     - assets/images/customonion0.png
-    - assets/images/letter.png
-    - assets/images/letters.png
     - assets/images/shelf.png
     - assets/images/wall_paper.jpg
     - assets/images/onioninbottle.png
     - assets/images/note.png
     - assets/images/customonion1.png
     - assets/images/customonion2.png
+
+    - assets/images/need_water.png
+    - assets/images/ready_to_go.png
+    - assets/images/field.png
+    - assets/images/gift_box.png
+    - assets/images/pannel_nosand.png
+    - assets/images/pannel.png
+
+    - assets/images/createAlone.png
+    - assets/images/createTogether.png
+
+    - assets/images/start_image.png
+    - assets/icons/alarm_color.png
+    - assets/icons/noalarm_color.png
 
   #   - images/a_dot_ham.jpeg
 

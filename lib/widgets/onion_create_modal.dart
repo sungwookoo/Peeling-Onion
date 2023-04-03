@@ -7,23 +7,18 @@ class OnionCreateDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: const Color.fromARGB(255, 154, 229, 187),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      insetPadding: EdgeInsets.zero,
       content: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             InkWell(
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('혼자 보내기'),
-                  Image(
-                    image: AssetImage('assets/images/letter.png'),
-                    width: 100,
-                    height: 100,
-                  ),
-                ],
+              child: const Image(
+                image: AssetImage('assets/images/createAlone.png'),
+                width: 120,
+                height: 120,
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -34,17 +29,14 @@ class OnionCreateDialog extends StatelessWidget {
                             const OnionCreate(isTogether: false)));
               },
             ),
+            const SizedBox(
+              width: 20,
+            ),
             InkWell(
-              child: const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('모아 보내기'),
-                  Image(
-                    image: AssetImage('assets/images/letters.png'),
-                    width: 100,
-                    height: 100,
-                  ),
-                ],
+              child: const Image(
+                image: AssetImage('assets/images/createTogether.png'),
+                width: 120,
+                height: 120,
               ),
               onTap: () {
                 Navigator.pop(context);
