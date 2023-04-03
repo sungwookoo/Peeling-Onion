@@ -12,6 +12,7 @@ import lombok.ToString;
 @ToString
 public class AlarmDto {
 	public Long sender_id;
+	public String sender_nickname;
 	public Long receiver_id;
 	public Integer type;
 	public String sender_img_src;
@@ -31,6 +32,7 @@ public class AlarmDto {
 
 	public static AlarmDto from(Alarm e, AlarmService alarmService) {
 		AlarmDto alarmDto = AlarmDto.from(e);
+		alarmDto.sender_nickname = alarmService.getNameByUserId(e.getSenderId());
 		alarmDto.receiver_img_src = alarmService.getUserImgSrc(e.getReceiverId());
 		alarmDto.sender_img_src = alarmService.getUserImgSrc(e.getSenderId());
 		return alarmDto;
