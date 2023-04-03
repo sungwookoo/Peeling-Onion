@@ -191,10 +191,4 @@ public class UserController {
 		}
 		return ResponseEntity.ok("");
 	}
-
-	// Gateway Test
-	@GetMapping("/gateway")
-	public ResponseEntity<String> test() {
-		return ResponseEntity.ok("main Branch");
-	}
 }
