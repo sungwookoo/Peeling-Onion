@@ -31,6 +31,8 @@ public class FcmScheduler {
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);
 			for (Alarm alarm : notSendedAlarmList) {
+				if(!alarmService.getActivate(alarm.getReceiverId()))
+					continue;
 				String nameByUserId = alarmService.getNameByUserId(alarm.getReceiverId());
 				if (nameByUserId == null) {
 					continue;

@@ -3,8 +3,9 @@ package com.ssafy.peelingonion.service;
 import static com.ssafy.peelingonion.common.ConstValues.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
@@ -37,14 +38,25 @@ public class AlarmService {
 	private final ObjectMapper objectMapper;
 	private final OkHttpClient CLIENT = new OkHttpClient();
 	private final static String FIREBASE_CONFIG_PATH = "firebase/firebase_service_key.json";
+	private Map<Integer, String> typeImgMap;
 
 	public AlarmService(AlarmRepository alarmRepository, ObjectMapper objectMapper) {
 		this.alarmRepository = alarmRepository;
 		this.objectMapper = objectMapper;
+		this.typeImgMap = new HashMap<>();
+		this.typeImgMap.put(0, null);
+		this.typeImgMap.put(1,
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+		this.typeImgMap.put(2,
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+		this.typeImgMap.put(3,
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+		this.typeImgMap.put(4,
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
 	}
 
-	public void sendMessageTo(String targetToken, String title, String body) throws IOException {
-		String message = makeMessage(targetToken, title, body);
+	public void sendMessageTo(String targetToken, String title, String body, int type) throws IOException {
+		String message = makeMessage(targetToken, title, body, type);
 		Request request = newRequest(message, FCM_API_URL);
 		Response response = CLIENT.newCall(request).execute();
 		log.info("{}", response.body().string());
@@ -58,7 +70,7 @@ public class AlarmService {
 		String msg = makeContentByType(alarm);
 
 		// overloading 함수 재사용
-		sendMessageTo(fcmToken, "Peeling Onion", msg);
+		sendMessageTo(fcmToken, "Peeling Onion", msg, alarm.getType());
 	}
 
 	private String makeContentByType(Alarm alarm) {
@@ -100,7 +112,7 @@ public class AlarmService {
 			.build();
 	}
 
-	private String makeMessage(String targetToken, String title, String body)
+	private String makeMessage(String targetToken, String title, String body, int type)
 		throws JsonProcessingException {
 		FcmMessage fcmMessage = FcmMessage.builder()
 			.message(FcmMessage.Message.builder()
@@ -110,7 +122,7 @@ public class AlarmService {
 						.builder()
 						.title(title)
 						.body(body)
-						.image(null)
+						.image(typeImgMap.get(type))
 						.build())
 				.build())
 			.validateOnly(false)
@@ -197,6 +209,20 @@ public class AlarmService {
 				.block();
 		} catch (Exception e) {
 			return "";
+		}
+	}
+
+	public Boolean getActivate(Long userId) {
+		try {
+			return USER_SERVER_CLIENT.get()
+				.uri("/user/activate/" + userId.toString())
+				.retrieve()
+				.onStatus(HttpStatus::is4xxClientError, clientResponse -> Mono.error(Client4xxException::new))
+				.onStatus(HttpStatus::is5xxServerError, clientResponse -> Mono.error(Client5xxException::new))
+				.bodyToMono(Boolean.class)
+				.block();
+		} catch (Exception e) {
+			return false;
 		}
 	}
 

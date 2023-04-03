@@ -54,7 +54,7 @@ public class AlarmController {
 		alarmService.sendMessageTo(
 			requestDTO.getToken(),
 			requestDTO.getTitle(),
-			requestDTO.getBody());
+			requestDTO.getBody(),0);
 		return ResponseEntity.ok().build();
 	}
 
