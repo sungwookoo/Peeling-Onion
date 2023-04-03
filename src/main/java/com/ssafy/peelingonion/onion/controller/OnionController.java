@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -81,6 +82,7 @@ public class OnionController {
                     for(Message message : messages) {
                         messageIdList.add(message.getId());
                     }
+                    Collections.sort(messageIdList);
                     return ResponseEntity.ok(OnionDetailResponse.from(onion, receiveOnion, userName, messageIdList));
                 }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
