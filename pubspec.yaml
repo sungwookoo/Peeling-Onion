@@ -105,6 +105,7 @@ flutter:
     - assets/images/gift_box.png
     - assets/images/pannel_nosand.png
     - assets/images/pannel.png    
+    - assets/images/rainbow.jpg
 
     - assets/images/createAlone.png
     - assets/images/createTogether.png
