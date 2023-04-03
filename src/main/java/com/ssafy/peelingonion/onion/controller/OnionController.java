@@ -4,10 +4,7 @@ import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.field.controller.dto.OnionOutlineDto;
 import com.ssafy.peelingonion.field.service.exceptions.FieldNotFoundException;
 import com.ssafy.peelingonion.onion.controller.dto.*;
-import com.ssafy.peelingonion.onion.domain.Message;
-import com.ssafy.peelingonion.onion.domain.Onion;
-import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
-import com.ssafy.peelingonion.onion.domain.SendOnion;
+import com.ssafy.peelingonion.onion.domain.*;
 import com.ssafy.peelingonion.onion.service.OnionService;
 import com.ssafy.peelingonion.onion.service.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +22,17 @@ import java.util.Set;
 @RestController
 @RequestMapping("/onion")
 public class OnionController {
+    private final ReceiveOnionRepository receiveOnionRepository;
 
     private final OnionService onionService;
     private final AuthorizeService authorizeService;
 
     @Autowired
-    public OnionController(OnionService onionService, AuthorizeService authorizeService) {
+    public OnionController(OnionService onionService, AuthorizeService authorizeService,
+                           ReceiveOnionRepository receiveOnionRepository) {
         this.onionService = onionService;
         this.authorizeService = authorizeService;
+        this.receiveOnionRepository = receiveOnionRepository;
     }
 
     /**
@@ -106,8 +106,9 @@ public class OnionController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)){
             try {
+                String receiverNumber = onionService.getMobileNumberByUserId(userId);
                 List<OnionOutlineDto> onionOutlineDtos = new ArrayList<>();
-                List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(userId);
+                List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(receiverNumber);
                 String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions) {
                     onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
