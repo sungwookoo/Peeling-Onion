@@ -339,7 +339,7 @@ class _MypageScreenState extends State<MypageScreen> {
                           "마이페이지",
                           style: TextStyle(
                             fontSize: 40,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w800,
                             color: Color(0xffA1D57A),
                           ),
                         ),
@@ -356,7 +356,7 @@ class _MypageScreenState extends State<MypageScreen> {
                               "회원정보 수정",
                               style: TextStyle(
                                 fontSize: 25,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -375,7 +375,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                   const Text(
                                     '닉네임 :',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 17),
                                   ),
                                   Text(
@@ -458,7 +458,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                   const Text(
                                     '전화번호 :',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 17),
                                   ),
                                   Text(
@@ -551,7 +551,6 @@ class _MypageScreenState extends State<MypageScreen> {
                               //   },
                               //   child: const Text('공유하기'),
                               // ),
-
                               const Divider(
                                 thickness: 2,
                                 color: Colors.black,
@@ -567,7 +566,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                         "로그아웃",
                                         style: TextStyle(
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w700,
                                         ),
                                       ),
                                       Icon(
@@ -595,7 +594,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                         "회원탈퇴",
                                         style: TextStyle(
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w700,
                                           color: Color.fromRGBO(255, 85, 73, 1),
                                         ),
                                       ),
