@@ -299,8 +299,8 @@ public class OnionService {
 		throw new IllegalStateException("해당 양파가 없음");
 	}
 
-	public List<ReceiveOnion> findBookmarkedOnions(Long userId) {
-		return receiveOnionRepository.findByUserIdAndIsBookmarked(userId, Boolean.TRUE);
+	public List<ReceiveOnion> findBookmarkedOnions(String receiverNumber) {
+		return receiveOnionRepository.findByReceiverNumberAndIsBookmarked(receiverNumber, Boolean.TRUE);
 	}
 
 	public void bookmarkOnion(Long onionId) {
