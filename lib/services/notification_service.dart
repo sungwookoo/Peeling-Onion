@@ -26,6 +26,7 @@ class NotificationService {
       },
     );
 
+    print(token);
     print(response.statusCode);
     print('fcm 토큰이 정상적으로 갔나요????');
   }
