@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:front/screens/alarm_screens/alarm_screen.dart';
+import 'package:front/alarm_provider.dart';
 import '../screens/postbox_screens/postbox_screen.dart';
 import '../screens/home_screens/home_screen.dart';
 import '../screens/field_screens/field_screen.dart';
 import '../screens/mypage_screens/mypage_screen.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   const CustomNavigationBar({super.key});
@@ -39,27 +40,19 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       appBar: AppBar(
         title: const Text('BottomNavigationBar Sample'),
         actions: [
-          IconButton(
-            icon: Image.asset('assets/icons/noalarm.png'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AlarmScreen(),
-                ),
+          Consumer<AlarmProvider>(
+            builder: (context, alarmProvider, _) {
+              final hasUnreadAlarm = alarmProvider.unreadAlarm;
+              return IconButton(
+                onPressed: () {
+                  alarmProvider.getUnreadAlarm();
+                },
+                icon: Image.asset(hasUnreadAlarm
+                    ? 'assets/icons/alarm_color.png'
+                    : 'assets/icons/noalarm_color.png'),
               );
             },
-          ),
-          // IconButton(
-          //     onPressed: () {
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //           builder: (context) => const RecordScreen(),
-          //         ),
-          //       );
-          //     },
-          //     icon: const Icon(Icons.voice_chat_outlined)),
+          )
         ],
       ),
       // 화면 내용

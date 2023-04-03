@@ -13,7 +13,7 @@
     <application
         android:label="Peeling Onion"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <!-- 카카오 로그인 커스텀 URL 스킴 설정 -->
         <activity 
@@ -72,7 +72,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-
+        
         <meta-data
            android:name="firebase_messaging_auto_init_enabled"
            android:value="false" />

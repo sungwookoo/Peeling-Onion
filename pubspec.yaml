@@ -58,6 +58,7 @@ dependencies:
   firebase_messaging: ^14.2.0
   flutter_local_notifications: ^13.0.0
   firebase_analytics: ^10.2.0
+  flutter_launcher_icons: ^0.12.0
 
 dev_dependencies:
   flutter_test:
@@ -105,6 +106,8 @@ flutter:
     - assets/images/createAlone.png
     - assets/images/createTogether.png
 
+    - assets/icons/alarm_color.png
+    - assets/icons/noalarm_color.png
 
   #   - images/a_dot_ham.jpeg
 

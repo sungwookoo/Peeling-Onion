@@ -12,6 +12,7 @@ class AlarmScreen extends StatefulWidget {
 class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
+    var alarmList = Provider.of<AlarmProvider>(context).alarmList;
     return ChangeNotifierProvider(
       create: (_) => AlarmProvider(),
       child: Scaffold(

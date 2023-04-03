@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:front/alarm_provider.dart';
 import 'package:front/screens/login_screens/loading_screen.dart';
 import 'package:front/screens/login_screens/sign_in_screen.dart';
 import 'package:front/services/notification_service.dart';
@@ -26,8 +27,11 @@ void main() async {
 
   await setupFlutterNotifications();
 
-  runApp(ChangeNotifierProvider(
-    create: (context) => UserIdModel(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserIdModel()),
+      ChangeNotifierProvider(create: (context) => AlarmProvider()),
+    ],
     child: const App(),
   ));
 }
@@ -47,16 +51,20 @@ class _AppState extends State<App> {
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationService().getFcmToken();
+    // AlarmProvider().getUnreadAlarm();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/': (context) => const LoadingScreen(),
-        '/signin': (context) => const SigninScreen(),
-        '/home': (context) => const CustomNavigationBar(),
-      },
+    return ChangeNotifierProvider<AlarmProvider>(
+      create: (context) => AlarmProvider(),
+      child: MaterialApp(
+        routes: {
+          '/': (context) => const LoadingScreen(),
+          '/signin': (context) => const SigninScreen(),
+          '/home': (context) => const CustomNavigationBar(),
+        },
+      ),
     );
   }
 }
@@ -77,11 +85,19 @@ Future<void> setupFlutterNotifications() async {
     importance: Importance.high,
   );
 
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   isFlutterLocalNotificationsInitialized = true;
 }
