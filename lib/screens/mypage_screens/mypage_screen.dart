@@ -289,248 +289,315 @@ class _MypageScreenState extends State<MypageScreen> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
-          child: Center(
-            child: FutureBuilder<Map<String, dynamic>>(
-              future: userInfo, // userInfo 변수 사용
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final nickname = snapshot.data!['nickname'];
-                  final phoneNumber = snapshot.data!['mobileNumber'];
+      body: Container(
+        color: const Color.fromRGBO(253, 253, 245, 1),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Center(
+              child: FutureBuilder<Map<String, dynamic>>(
+                future: userInfo, // userInfo 변수 사용
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    final nickname = snapshot.data!['nickname'];
+                    final phoneNumber = snapshot.data!['mobileNumber'];
 
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 40,
-                      ),
-                      const Text(
-                        "마이페이지",
-                        style: TextStyle(
-                          fontSize: 40,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xffA1D57A),
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 40,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // SizedBox(
-                          //   width: 60,
-                          // ),
-                          Text(
-                            "회원정보수정",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500,
-                            ),
+                        const Text(
+                          "마이페이지",
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xffA1D57A),
                           ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: 270,
-                        child: Column(
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  '닉네임 :',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                ),
-                                Text(
-                                  // '$nickname',
-                                  '$nickname',
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      _isNicknameEditing = !_isNicknameEditing;
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _isNicknameEditing
-                                        ? Colors.grey
-                                        : Colors.green,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    minimumSize: const Size(40, 30),
-                                  ),
-                                  child: Text(_isNicknameEditing ? '취소' : '수정'),
-                                )
-                              ],
+                            // SizedBox(
+                            //   width: 60,
+                            // ),
+                            Text(
+                              "회원정보 수정",
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                            // const NicknameForm(),
-                            if (_isNicknameEditing)
-                              Form(
-                                key: _formKey,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SizedBox(
+                          width: 270,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    '닉네임 :',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  ),
+                                  Text(
+                                    // '$nickname',
+                                    '$nickname',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        _isNicknameEditing =
+                                            !_isNicknameEditing;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: _isNicknameEditing
+                                          ? Colors.grey
+                                          : Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      minimumSize: const Size(40, 30),
+                                    ),
+                                    child:
+                                        Text(_isNicknameEditing ? '취소' : '수정'),
+                                  )
+                                ],
+                              ),
+                              // const NicknameForm(),
+                              if (_isNicknameEditing)
+                                Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextFormField(
+                                        controller: _nicknameController,
+                                        decoration: InputDecoration(
+                                          labelText: '닉네임',
+                                          hintText: '8자 이내의 한글 혹은 영문',
+                                          suffixIcon: IconButton(
+                                            icon: _nicknameChanged
+                                                ? const Icon(Icons.check,
+                                                    color: Colors.red)
+                                                : const Icon(Icons.check,
+                                                    color: Colors.green),
+                                            onPressed: _checkNickname,
+                                          ),
+                                        ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return '닉네임을 입력해주세요.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      if (_nicknameValidationMessage != null)
+                                        Text(_nicknameValidationMessage!),
+                                    ],
+                                  ),
+                                ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    '전화번호 :',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17),
+                                  ),
+                                  Text(
+                                    // '$nickname',
+                                    '$phoneNumber',
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        _isPhoneNumberEditing =
+                                            !_isPhoneNumberEditing;
+                                      });
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: _isPhoneNumberEditing
+                                          ? Colors.grey
+                                          : Colors.green,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      minimumSize: const Size(40, 30),
+                                    ),
+                                    child: Text(
+                                        _isPhoneNumberEditing ? '취소' : '수정'),
+                                  )
+                                ],
+                              ),
+                              if (_isPhoneNumberEditing)
+                                TextFormField(
+                                  controller: _phoneNumberController,
+                                  keyboardType: TextInputType.phone,
+                                  decoration: InputDecoration(
+                                    labelText: '전화번호',
+                                    hintText: '숫자 11자리',
+                                    suffixIcon: ElevatedButton(
+                                      onPressed: _sendAuthCode,
+                                      child: Text(
+                                          _isAuthCodeSent ? '재인증하기' : '인증하기'),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return '전화번호를 입력해주세요.';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              if (_phoneValidationMessage != null)
+                                Text(_phoneValidationMessage!),
+                              const SizedBox(height: 16),
+                              if (_isAuthCodeSent)
+                                Column(
                                   children: [
                                     TextFormField(
-                                      controller: _nicknameController,
+                                      controller: _authCodeController,
+                                      keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
-                                        labelText: '닉네임',
-                                        hintText: '8자 이내의 한글 혹은 영문',
+                                        labelText: '인증번호',
+                                        hintText: '6자리 숫자',
                                         suffixIcon: IconButton(
-                                          icon: _nicknameChanged
-                                              ? const Icon(Icons.check,
-                                                  color: Colors.red)
-                                              : const Icon(Icons.check,
-                                                  color: Colors.green),
-                                          onPressed: _checkNickname,
+                                          icon: Icon(
+                                            Icons.check,
+                                            color: _isAuthCodeValid
+                                                ? Colors.green
+                                                : Colors.red,
+                                          ),
+                                          onPressed: _checkAuthCode,
                                         ),
                                       ),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
-                                          return '닉네임을 입력해주세요.';
+                                          return '인증번호를 입력해주세요.';
                                         }
                                         return null;
                                       },
                                     ),
-                                    if (_nicknameValidationMessage != null)
-                                      Text(_nicknameValidationMessage!),
+                                    if (_authCodeValidationMessage != null)
+                                      Text(_authCodeValidationMessage!),
                                   ],
                                 ),
+
+                              Text('$userId'),
+                              Text('$phoneNumber'),
+                              const SizedBox(
+                                height: 100,
                               ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  '전화번호 :',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  shareMessage();
+                                },
+                                child: const Text('공유하기'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  logOut(context);
+                                },
+                                child: const Text('로그아웃'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  signOut();
+                                },
+                                child: const Text(
+                                  '회원탈퇴',
                                 ),
-                                Text(
-                                  // '$nickname',
-                                  '$phoneNumber',
-                                  style: const TextStyle(fontSize: 15),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    setState(() {
-                                      _isPhoneNumberEditing =
-                                          !_isPhoneNumberEditing;
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _isPhoneNumberEditing
-                                        ? Colors.grey
-                                        : Colors.green,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    minimumSize: const Size(40, 30),
-                                  ),
-                                  child:
-                                      Text(_isPhoneNumberEditing ? '취소' : '수정'),
-                                )
-                              ],
-                            ),
-                            if (_isPhoneNumberEditing)
-                              TextFormField(
-                                controller: _phoneNumberController,
-                                keyboardType: TextInputType.phone,
-                                decoration: InputDecoration(
-                                  labelText: '전화번호',
-                                  hintText: '숫자 11자리',
-                                  suffixIcon: ElevatedButton(
-                                    onPressed: _sendAuthCode,
-                                    child: Text(
-                                        _isAuthCodeSent ? '재인증하기' : '인증하기'),
+                              ),
+                              const Divider(
+                                thickness: 2,
+                                color: Colors.black,
+                              ),
+                              InkWell(
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "로그아웃",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Colors.grey,
+                                      )
+                                    ],
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '전화번호를 입력해주세요.';
-                                  }
-                                  return null;
+                                onTap: () {
+                                  print('yes');
                                 },
                               ),
-                            if (_phoneValidationMessage != null)
-                              Text(_phoneValidationMessage!),
-                            const SizedBox(height: 16),
-                            if (_isAuthCodeSent)
-                              Column(
-                                children: [
-                                  TextFormField(
-                                    controller: _authCodeController,
-                                    keyboardType: TextInputType.number,
-                                    decoration: InputDecoration(
-                                      labelText: '인증번호',
-                                      hintText: '6자리 숫자',
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          Icons.check,
-                                          color: _isAuthCodeValid
-                                              ? Colors.green
-                                              : Colors.red,
-                                        ),
-                                        onPressed: _checkAuthCode,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return '인증번호를 입력해주세요.';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                  if (_authCodeValidationMessage != null)
-                                    Text(_authCodeValidationMessage!),
-                                ],
+                              const Divider(
+                                thickness: 1,
                               ),
-
-                            const Text('전화번호 수정수정'),
-                            Text('$userId'),
-                            Text('$phoneNumber'),
-                          ],
+                              InkWell(
+                                child: const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "회원탈퇴",
+                                        style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color.fromRGBO(255, 85, 73, 1),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Colors.grey,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  print('yes');
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          logOut(context);
-                        },
-                        child: const Text('로그아웃'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          signOut();
-                        },
-                        child: const Text('회원탈퇴'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          shareMessage();
-                        },
-                        child: const Text('공유하기'),
-                      ),
-                    ],
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('에러 발생: ${snapshot.error}');
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('에러 발생: ${snapshot.error}');
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              ),
             ),
           ),
         ),
