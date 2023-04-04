@@ -29,8 +29,6 @@ class OnionApiService {
       List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
-      print(response.statusCode);
-      print(response.body);
       throw Exception('Failed to get home_onions');
     }
   }

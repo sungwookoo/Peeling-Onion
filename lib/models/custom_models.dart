@@ -15,6 +15,8 @@ class CustomOnion {
 class CustomHomeOnion {
   final int id;
   final String name;
+  final String onionMaker;
+  final bool isOnionMaker;
   final String imgSrc;
   final String createdAt;
   final String growDueDate;
@@ -27,6 +29,8 @@ class CustomHomeOnion {
   CustomHomeOnion.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
+        onionMaker = json['onion_maker'],
+        isOnionMaker = json['is_onion_maker'],
         imgSrc = json['img_src'],
         createdAt = json['created_at'],
         growDueDate = json['grow_due_date'],
