@@ -25,25 +25,32 @@ class _PackageScreenState extends State<PackageScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: FutureBuilder(
-          future: onions,
-          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData) {
-              List<CustomOnionByOnionIdPostbox> onionsData =
-                  snapshot.data as List<CustomOnionByOnionIdPostbox>;
-              // 양파들 출력
-              return Stack(
-                children: [
-                  // ShowPostedOnions 클래스 사용
-                  ShowPostedOnions(onions: onionsData),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text('에러: ${snapshot.error}');
-            }
-            // 로딩 화면
-            return const CircularProgressIndicator();
-          },
+        child: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/wall_paper.jpg'),
+                fit: BoxFit.fill),
+          ),
+          child: FutureBuilder(
+            future: onions,
+            builder: (context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                List<CustomOnionByOnionIdPostbox> onionsData =
+                    snapshot.data as List<CustomOnionByOnionIdPostbox>;
+                // 양파들 출력
+                return Stack(
+                  children: [
+                    // ShowPostedOnions 클래스 사용
+                    ShowPostedOnions(onions: onionsData),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('에러: ${snapshot.error}');
+              }
+              // 로딩 화면
+              return const CircularProgressIndicator();
+            },
+          ),
         ),
       ),
     );

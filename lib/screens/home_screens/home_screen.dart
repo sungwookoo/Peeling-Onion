@@ -90,7 +90,8 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
       return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/images/wall_paper.jpg')),
+              image: AssetImage('assets/images/wall_paper.jpg'),
+              fit: BoxFit.fill),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -119,53 +120,61 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
       );
     }
     // 양파 수가 많으면, 페이지 넘겨서 확인
-    return PageView.builder(
-      itemCount: numOfPages,
-      itemBuilder: (context, pageIndex) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: List.generate(
-              shelvesPerPage,
-              (shelfIndex) {
-                int firstOnionIndex =
-                    pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
-                return Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: onionsPerShelf,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: onionsPerShelf,
-                          childAspectRatio: 0.9,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/images/wall_paper.jpg'),
+            fit: BoxFit.fill),
+      ),
+      child: PageView.builder(
+        itemCount: numOfPages,
+        itemBuilder: (context, pageIndex) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: List.generate(
+                shelvesPerPage,
+                (shelfIndex) {
+                  int firstOnionIndex =
+                      pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
+                  return Flexible(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: onionsPerShelf,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: onionsPerShelf,
+                            childAspectRatio: 0.9,
+                          ),
+                          itemBuilder: (BuildContext context, int itemIndex) {
+                            int globalIndex = firstOnionIndex + itemIndex;
+                            if (globalIndex < widget._onions.length) {
+                              return HomeOneOnion(
+                                onion: widget._onions.elementAt(globalIndex),
+                                onDelete: () => _deleteOnion(globalIndex),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
                         ),
-                        itemBuilder: (BuildContext context, int itemIndex) {
-                          int globalIndex = firstOnionIndex + itemIndex;
-                          if (globalIndex < widget._onions.length) {
-                            return HomeOneOnion(
-                              onion: widget._onions.elementAt(globalIndex),
-                              onDelete: () => _deleteOnion(globalIndex),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                      ),
-                      Image.asset(
-                        'assets/images/shelf.png',
-                      ),
-                    ],
-                  ),
-                );
-              },
+                        Image.asset(
+                          'assets/images/shelf.png',
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
