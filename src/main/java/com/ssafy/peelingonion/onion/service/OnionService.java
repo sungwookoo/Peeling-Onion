@@ -112,29 +112,37 @@ public class OnionService {
 		}
 	}
 
-	public boolean checkOnionIsWatered(Onion onion) {
+	public boolean checkOnionIsWatered(Onion onion, Long userId) {
 		Instant lastModified = onion.getLatestModify();
 		// 1. 메세지가 없다면 그냥 추가하면 된다.
 		if(onion.getMessages().isEmpty()) {
 			return false;
 		// 2. 메세지가 있다면
 		} else {
-			// 2-1. lastModified의 날짜를 가져와서 오늘 날짜와 비교
-			// 오늘 == 수정일 -> isWatered: true/ 아니면 false
-			Date dateNow = Date.from(Instant.now().plusSeconds(60*60*9));
-			Date dateModified = Date.from(lastModified);
-			Calendar calendar1 = Calendar.getInstance();
-			calendar1.setTime(dateNow);
-			Calendar calendar2 = Calendar.getInstance();
-			calendar2.setTime(dateModified);
-			int year1 = calendar1.get(Calendar.YEAR);
-			int month1 = calendar1.get(Calendar.MONTH) + 1;
-			int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
-			int year2 = calendar2.get(Calendar.YEAR);
-			int month2 = calendar2.get(Calendar.MONTH) + 1;
-			int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
+			// 2-1. 해당 메시지가 혼자보내기인 경우
+			if(onion.getIsSingle()) {
+				// lastModified의 날짜를 가져와서 오늘 날짜와 비교
+				// 오늘 == 수정일 -> isWatered: true/ 아니면 false
+				Date dateNow = Date.from(Instant.now().plusSeconds(60*60*9));
+				Date dateModified = Date.from(lastModified);
+				Calendar calendar1 = Calendar.getInstance();
+				calendar1.setTime(dateNow);
+				Calendar calendar2 = Calendar.getInstance();
+				calendar2.setTime(dateModified);
+				int year1 = calendar1.get(Calendar.YEAR);
+				int month1 = calendar1.get(Calendar.MONTH) + 1;
+				int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
+				int year2 = calendar2.get(Calendar.YEAR);
+				int month2 = calendar2.get(Calendar.MONTH) + 1;
+				int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
 
-			return year1 == year2 && month1 == month2 && day1 == day2;
+				return year1 == year2 && month1 == month2 && day1 == day2;
+			// 2-2. 해당 메시지가 모아보내기인 경우
+			} else {
+				// 메시지 중 본인이 보낸 메시지가 있는 경우 is_wartered = true, 아니라면 is_watered_false.
+				Optional<Message> message = messageRepository.findByOnionAndUserId(onion, userId);
+				return message.isPresent();
+			}
 		}
 	}
 
@@ -399,6 +407,4 @@ public class OnionService {
 			return -2L;
 		}
 	}
-
-
 }

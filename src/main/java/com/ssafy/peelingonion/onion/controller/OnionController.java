@@ -193,7 +193,7 @@ public class OnionController {
                         boolean isDead, isTime2Go, isWatered;
                         isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
                         isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
-                        isWatered = onionService.checkOnionIsWatered(onion);
+                        isWatered = onionService.checkOnionIsWatered(onion, userId);
                         sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDaePyoJa, DaePyoJa, isDead, isTime2Go, isWatered));
                     }
                 }
