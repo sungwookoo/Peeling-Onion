@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -165,7 +162,7 @@ public class OnionController {
                 return ResponseEntity.ok().build();
             } catch (DeleteOnionFailException e) {
                 log.error(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
         } else {
             return ResponseEntity.status(HttpStatus.NON_AUTHORITATIVE_INFORMATION).build();
@@ -186,16 +183,18 @@ public class OnionController {
             try {
                 List<SendOnion> sendOnions = onionService.findSendOnions(userId);
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
+                String LogInUserName = onionService.getNameByUserId(userId);
                 for(SendOnion sendOnion : sendOnions){
                     Onion onion = sendOnion.getOnion();
                     Long DaePyoJaId = onion.getUserId();
                     String DaePyoJa = onionService.getNameByUserId(DaePyoJaId);
+                    boolean isDaePyoJa = Objects.equals(LogInUserName, DaePyoJa);
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
                         boolean isDead, isTime2Go, isWatered;
                         isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
                         isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
                         isWatered = onionService.checkOnionIsWatered(onion);
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, DaePyoJa, isDead, isTime2Go, isWatered));
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDaePyoJa, DaePyoJa, isDead, isTime2Go, isWatered));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);
