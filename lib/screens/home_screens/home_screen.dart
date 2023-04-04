@@ -133,7 +133,6 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
 
   void _deleteOnion(int index) {
     setState(() {
-      // Remove the onion from the list
       _onions.removeAt(index);
     });
   }
