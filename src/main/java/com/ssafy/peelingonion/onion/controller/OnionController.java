@@ -75,12 +75,13 @@ public class OnionController {
                     ReceiveOnion receiveOnion = onionService.findReceiveOnionByOnionId(onionId, userId);
                     List<Long> messageIdList = new ArrayList<>();
                     Set<Message> messages = onion.getMessages();
-                    String userName = onionService.getNameByUserId(userId);
+                    Long DaePyoJaId = onion.getUserId();
+                    String DaePyoJa = onionService.getNameByUserId(DaePyoJaId);
                     for(Message message : messages) {
                         messageIdList.add(message.getId());
                     }
                     Collections.sort(messageIdList);
-                    return ResponseEntity.ok(OnionDetailResponse.from(onion, receiveOnion, userName, messageIdList));
+                    return ResponseEntity.ok(OnionDetailResponse.from(onion, receiveOnion, DaePyoJa, messageIdList));
                 }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             } catch (Exception e){
