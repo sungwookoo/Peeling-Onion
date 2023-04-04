@@ -138,6 +138,7 @@ class _MypageScreenState extends State<MypageScreen> {
       },
     );
 
+    print('회원탈퇴 시도!!!!');
     print(response.statusCode);
     if (response.statusCode == 200) {
       // 성공적으로 회원가입이 완료된 경우
@@ -154,7 +155,6 @@ class _MypageScreenState extends State<MypageScreen> {
       // 회원가입이 실패한 경우
       print('회원탈퇴 실패: ${response.body}');
     }
-    Navigator.pushNamed(context, '/');
   }
 
   // void nicknameChange() async {
