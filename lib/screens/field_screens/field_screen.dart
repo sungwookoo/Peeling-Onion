@@ -42,7 +42,8 @@ class _FieldScreenState extends State<FieldScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/createbackground.jpg"),
+          // image: AssetImage("assets/images/createbackground.jpg"),
+          image: AssetImage("assets/images/background.png"),
           fit: BoxFit.fill,
         ),
       ),
@@ -57,7 +58,7 @@ class _FieldScreenState extends State<FieldScreen> {
               List<CustomField> fieldsData = snapshot.data as List<CustomField>;
               // 밭들을 출력하는 class
               return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   // 밭들을 grid 로 출력 (MakeField 클래스 사용)
                   MakeFields(

@@ -290,28 +290,17 @@ class _OnionCreateState extends State<OnionCreate> {
                                             Text('함께 보낼 사람을 적어도 1명 선택해주세요!')),
                                   );
                                 } else {
-                                  // ScaffoldMessenger.of(context).showSnackBar(
-                                  //   SnackBar(
-                                  //     content: Text(
-                                  //         '$_onionName/$_mobileNumber/$_date'),
-                                  //     behavior: SnackBarBehavior.floating,
-                                  //     // margin: const EdgeInsets.symmetric(
-                                  //     //   vertical: 50,
-                                  //     //   horizontal: 20,
-                                  //     // ),
-                                  //   ),
-                                  // );
                                   bool isSingle = !isTogether;
 
                                   OnionApiService.createOnion(
-                                      onionName: _onionName,
-                                      onionImage:
-                                          'assets/images/customonion$_imageidx.png',
-                                      receiverNumber: _mobileNumber,
-                                      growDueDate: _date,
-                                      isSingle: isSingle,
-                                      userList: _withUser);
-                                  Navigator.pop(context);
+                                          onionName: _onionName,
+                                          onionImage:
+                                              'assets/images/customonion$_imageidx.png',
+                                          receiverNumber: _mobileNumber,
+                                          growDueDate: _date,
+                                          isSingle: isSingle,
+                                          userList: _withUser)
+                                      .then((value) => Navigator.pop(context));
                                 }
                               }
                             },

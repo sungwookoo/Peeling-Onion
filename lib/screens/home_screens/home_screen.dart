@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/widgets/loading_rotation.dart';
-import 'package:front/widgets/onion_create_modal.dart';
+// import 'package:front/widgets/onion_create_modal.dart';
+import '../onion_create/home_onion_create_screen.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import './home_widgets/home_one_onion.dart';
@@ -20,6 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     onions = OnionApiService.getGrowingOnionByUserId();
+  }
+
+  void updateOnions() {
+    setState(() {
+      onions = OnionApiService.getGrowingOnionByUserId();
+      print('됨?');
+    });
   }
 
   @override
@@ -47,7 +55,59 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _displayOnionCreateModal(context);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                  insetPadding: EdgeInsets.zero,
+                  content: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          child: const Image(
+                            image: AssetImage('assets/images/createAlone.png'),
+                            width: 120,
+                            height: 120,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const OnionCreate(
+                                            isTogether: false)))
+                                .then((value) => updateOnions());
+                          },
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        InkWell(
+                          child: const Image(
+                            image:
+                                AssetImage('assets/images/createTogether.png'),
+                            width: 120,
+                            height: 120,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const OnionCreate(
+                                            isTogether: true)))
+                                .then((value) => updateOnions());
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
         },
       ),
       // bottomNavigationBar: const NavigateBar(),
@@ -171,12 +231,12 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
   }
 }
 
-Future<void> _displayOnionCreateModal(
-  BuildContext context,
-) async {
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return const OnionCreateDialog();
-      });
-}
+// Future<void> _displayOnionCreateModal(
+//   BuildContext context,
+// ) async {
+//   return showDialog(
+//       context: context,
+//       builder: (context) {
+//         return const OnionCreateDialog();
+//       });
+// }
