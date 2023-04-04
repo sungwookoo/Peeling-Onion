@@ -37,7 +37,7 @@ public class AlarmService {
 	private final AlarmRepository alarmRepository;
 	private final ObjectMapper objectMapper;
 	private final OkHttpClient CLIENT = new OkHttpClient();
-	private final static String FIREBASE_CONFIG_PATH = "firebase/firebase_service_key.json";
+	private static final String FIREBASE_CONFIG_PATH = "firebase/firebase_service_key.json";
 	private Map<Integer, String> typeImgMap;
 
 	public AlarmService(AlarmRepository alarmRepository, ObjectMapper objectMapper) {
@@ -75,7 +75,6 @@ public class AlarmService {
 
 	private String makeContentByType(Alarm alarm) {
 		final String sender = getNameByUserId(alarm.getSenderId());
-		// final String receiver = getNameByUserId(alarm.getReceiverId());
 
 		String msg;
 		switch (alarm.getType().intValue()) {
@@ -96,9 +95,6 @@ public class AlarmService {
 				break;
 		}
 		return msg;
-		// AlarmDto alarmDto = AlarmDto.from(alarm);
-		// alarmDto.content = msg;
-		// return alarmDto.toString();
 	}
 
 	private Request newRequest(String message, String url) throws IOException {

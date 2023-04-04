@@ -28,7 +28,7 @@ public class FcmScheduler {
 	}
 
 	@Async
-	@Scheduled(fixedRate = 1000 * 60 * 60 * 60) // execute every 1 hour
+	@Scheduled(fixedRate = 1000 * 60 * 60) // execute every 1 hour
 	public void sendFcmMessage() {
 		log.info("{}", ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		try {
