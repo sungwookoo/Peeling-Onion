@@ -58,6 +58,7 @@ dependencies:
   firebase_messaging: ^14.2.0
   flutter_local_notifications: ^13.0.0
   firebase_analytics: ^10.2.0
+  flutter_launcher_icons: ^0.12.0
 
 dev_dependencies:
   flutter_test:
@@ -107,14 +108,36 @@ flutter:
     - assets/images/pannel_nosand.png
     - assets/images/pannel.png    
     - assets/images/rainbow.jpg
+    - assets/images/kakao_login.png
 
     - assets/images/createAlone.png
     - assets/images/createTogether.png
 
+    - assets/images/start_image.png
     - assets/icons/alarm_color.png
     - assets/icons/noalarm_color.png
 
   #   - images/a_dot_ham.jpeg
+
+  fonts:
+    - family: NanumGothic
+      fonts:
+        - asset: assets/fonts/NanumGothicLight.otf
+          weight: 300
+        - asset: assets/fonts/NanumGothic.otf
+          weight: 400
+        - asset: assets/fonts/NanumGothicBold.otf
+          weight: 700
+        - asset: assets/fonts/NanumGothicExtraBold.otf
+          weight: 800
+    - family: NanumMyeongjo
+      fonts:
+        - asset: assets/fonts/NanumMyeongjo.otf
+          weight: 400
+        - asset: assets/fonts/NanumMyeongjoBold.otf
+          weight: 700
+        - asset: assets/fonts/NanumMyeongjoExtraBold.otf
+          weight: 800
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

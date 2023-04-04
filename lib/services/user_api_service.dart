@@ -38,6 +38,7 @@ class UserApiService {
     );
     print("${response.statusCode}, response입니다~~~~~~~~~~~~~~~~~~");
     if (response.statusCode == 200) {
+      print(response.body);
       CustomUser user = CustomUser.fromJson(jsonDecode(response.body));
       Provider.of<UserIdModel>(context, listen: false).setUserId(user.userId);
       return user.userId;
@@ -48,6 +49,43 @@ class UserApiService {
       throw Exception('User Not Found');
     } else {
       return 0;
+      throw Exception('Failed to request');
+    }
+  }
+
+  // 유저 정보 받아오기
+  static Future<Map<String, dynamic>> getUserInfo(context) async {
+    // 유저 ID 가져오기
+    final userId = Provider.of<UserIdModel>(context, listen: false).userId;
+
+    // 유저 토큰 가져오기
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+    final accessToken = await Token.then((value) => value?.accessToken);
+    print("$accessToken : accessToken");
+    print('yessssssssssssssssssssssssss');
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/user/$userId'),
+      headers: <String, String>{
+        'Authorization': 'Bearer $accessToken',
+      },
+    );
+
+    print("${response.statusCode}, response입니다~~~~~~~~~~~~~~~~~~");
+    if (response.statusCode == 200) {
+      final json = jsonDecode(utf8.decode(response.bodyBytes));
+      print(json);
+
+      final mobileNumber = json['mobile_number'];
+      final nickname = json['nickname'];
+
+      final result = {'mobileNumber': mobileNumber, 'nickname': nickname};
+      return result;
+    } else if (response.statusCode == 204) {
+      print('204204');
+      // 회원가입한 녀석이 아니면
+      throw Exception('User Not Found');
+    } else {
       throw Exception('Failed to request');
     }
   }

@@ -27,15 +27,13 @@ void main() async {
 
   await setupFlutterNotifications();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => UserIdModel()),
-        ChangeNotifierProvider(create: (context) => AlarmProvider()),
-      ],
-      child: const App(),
-    ),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserIdModel()),
+      ChangeNotifierProvider(create: (context) => AlarmProvider()),
+    ],
+    child: const App(),
+  ));
 }
 
 // 위젯 상속
@@ -54,16 +52,21 @@ class _AppState extends State<App> {
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationService().getFcmToken();
+    // AlarmProvider().getUnreadAlarm();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        '/': (context) => const LoadingScreen(),
-        '/signin': (context) => const SigninScreen(),
-        '/home': (context) => const CustomNavigationBar(),
-      },
+    return ChangeNotifierProvider<AlarmProvider>(
+      create: (context) => AlarmProvider(),
+      child: MaterialApp(
+        routes: {
+          '/': (context) => const LoadingScreen(),
+          '/signin': (context) => const SigninScreen(),
+          '/home': (context) => const CustomNavigationBar(),
+        },
+        theme: ThemeData(fontFamily: 'NanumGothic'),
+      ),
     );
   }
 }
@@ -84,16 +87,19 @@ Future<void> setupFlutterNotifications() async {
     importance: Importance.high,
   );
 
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestPermission();
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
   isFlutterLocalNotificationsInitialized = true;
 }
