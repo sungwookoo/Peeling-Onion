@@ -188,12 +188,14 @@ public class OnionController {
                 List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
                 for(SendOnion sendOnion : sendOnions){
                     Onion onion = sendOnion.getOnion();
+                    Long DaePyoJaId = onion.getUserId();
+                    String DaePyoJa = onionService.getNameByUserId(DaePyoJaId);
                     if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
                         boolean isDead, isTime2Go, isWatered;
                         isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
                         isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
                         isWatered = onionService.checkOnionIsWatered(onion);
-                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go, isWatered));
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, DaePyoJa, isDead, isTime2Go, isWatered));
                     }
                 }
                 return ResponseEntity.ok(sendOnionResponses);
@@ -295,8 +297,8 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)) {
             try {
                 Message message = onionService.findMessageById(messageId);
-                String userName = onionService.getNameByUserId(userId);
-                return ResponseEntity.ok(MessageDetailResponse.from(messageId, userName, message));
+                String messageSender = onionService.getNameByUserId(message.getUserId());
+                return ResponseEntity.ok(MessageDetailResponse.from(messageId, messageSender, message));
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
