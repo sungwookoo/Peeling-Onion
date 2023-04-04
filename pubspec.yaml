@@ -117,6 +117,11 @@ flutter:
     - assets/icons/alarm_color.png
     - assets/icons/noalarm_color.png
 
+    - assets/images/invite.jpg
+    - assets/images/oniondead.png
+    - assets/images/getMessage.png
+    - assets/images/timetosend.png
+
   #   - images/a_dot_ham.jpeg
 
   fonts:

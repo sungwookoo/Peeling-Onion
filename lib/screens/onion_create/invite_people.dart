@@ -144,10 +144,6 @@ class _InvitePeopleState extends State<InvitePeople> {
                               _searchedUser =
                                   FindPeopleApiService.findUsersByWord(
                                       _searchWord);
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(_searchWord)),
-                              );
                             }
                           },
                           icon: const Icon(Icons.search),
