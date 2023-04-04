@@ -201,7 +201,8 @@ public class OnionController {
                 return ResponseEntity.ok(sendOnionResponses);
             } catch (SendOnionNotFoundException e) {
                 log.error(e.getMessage());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                return ResponseEntity.
+                        status(HttpStatus.NOT_ACCEPTABLE).build();
             }
         } else {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
