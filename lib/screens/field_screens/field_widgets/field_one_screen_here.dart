@@ -16,29 +16,25 @@ class _FieldOneScreenHereState extends State<FieldOneScreenHere> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Image.asset('assets/images/pannel_nosand.png', height: 200),
         Container(
+          padding: const EdgeInsets.fromLTRB(20, 40, 40, 0),
           width: (MediaQuery.of(context).size.width - 60) / 2,
-          // color: Colors.brown,
           decoration: const BoxDecoration(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 밭 이름 표시
-                Text(
-                  widget.field.name,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ],
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 10),
+              child: Text(
+                widget.field.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
-
-        Image.asset('assets/images/pannel_nosand.png'),
-
-        // Image.asset('assets/images/pannel.png')
       ],
     );
   }

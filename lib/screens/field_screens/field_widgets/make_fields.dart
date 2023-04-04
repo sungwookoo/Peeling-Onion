@@ -191,28 +191,35 @@ class _MakeFieldsState extends State<MakeFields> {
         children: [
           // 양파 이동시키려는 상태면 아래 글을 표시
           if (_isOnionMoving)
-            Row(
-              children: [
-                const Text('양파를 옮길 밭을 골라주세요!'),
-                OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isOnionMoving = false;
-                    });
-                  },
-                  child: const Text('취소'),
-                )
-              ],
+            Center(
+              child: Row(
+                children: [
+                  const Text('양파를 옮길 밭을 골라주세요!'),
+                  OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isOnionMoving = false;
+                      });
+                    },
+                    child: const Text('취소'),
+                  )
+                ],
+              ),
             ),
           // 양파 밭을 페이지처럼 넘기도록 구현
           Column(
             children: [
-              // 위의 빈 공간
-              // SizedBox(
-              //   height:
-              //       ((MediaQuery.of(context).size.width - 60) / 2 * 3 + 20) *
-              //           0.75,
-              // ),
+              // 즐겨찾기 목록
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 50),
+                  alignment: Alignment.bottomLeft,
+                  child: GestureDetector(
+                    onTap: () => _showBookmarkedDialog(),
+                    child: const Icon(Icons.star),
+                  ),
+                ),
+              ),
               // 아래의 밭 페이지 구현
               Expanded(
                 child: PageView.builder(
@@ -234,17 +241,6 @@ class _MakeFieldsState extends State<MakeFields> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          // 즐겨찾기 목록
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 50),
-                              alignment: Alignment.centerLeft,
-                              child: GestureDetector(
-                                onTap: () => _showBookmarkedDialog(),
-                                child: const Icon(Icons.star),
-                              ),
-                            ),
-                          ),
                           Wrap(
                             // 각 밭들을 한 번씩 return 해서 children 에 담음
                             children: pageFields.map((field) {
