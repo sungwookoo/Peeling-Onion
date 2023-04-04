@@ -4,10 +4,7 @@ import com.ssafy.peelingonion.common.service.AuthorizeService;
 import com.ssafy.peelingonion.field.controller.dto.OnionOutlineDto;
 import com.ssafy.peelingonion.field.service.exceptions.FieldNotFoundException;
 import com.ssafy.peelingonion.onion.controller.dto.*;
-import com.ssafy.peelingonion.onion.domain.Message;
-import com.ssafy.peelingonion.onion.domain.Onion;
-import com.ssafy.peelingonion.onion.domain.ReceiveOnion;
-import com.ssafy.peelingonion.onion.domain.SendOnion;
+import com.ssafy.peelingonion.onion.domain.*;
 import com.ssafy.peelingonion.onion.service.OnionService;
 import com.ssafy.peelingonion.onion.service.exceptions.*;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -24,14 +22,17 @@ import java.util.Set;
 @RestController
 @RequestMapping("/onion")
 public class OnionController {
+    private final ReceiveOnionRepository receiveOnionRepository;
 
     private final OnionService onionService;
     private final AuthorizeService authorizeService;
 
     @Autowired
-    public OnionController(OnionService onionService, AuthorizeService authorizeService) {
+    public OnionController(OnionService onionService, AuthorizeService authorizeService,
+                           ReceiveOnionRepository receiveOnionRepository) {
         this.onionService = onionService;
         this.authorizeService = authorizeService;
+        this.receiveOnionRepository = receiveOnionRepository;
     }
 
     /**
@@ -81,6 +82,7 @@ public class OnionController {
                     for(Message message : messages) {
                         messageIdList.add(message.getId());
                     }
+                    Collections.sort(messageIdList);
                     return ResponseEntity.ok(OnionDetailResponse.from(onion, receiveOnion, userName, messageIdList));
                 }
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -104,8 +106,9 @@ public class OnionController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)){
             try {
+                String receiverNumber = onionService.getMobileNumberByUserId(userId);
                 List<OnionOutlineDto> onionOutlineDtos = new ArrayList<>();
-                List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(userId);
+                List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(receiverNumber);
                 String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions) {
                     onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
@@ -175,32 +178,36 @@ public class OnionController {
      * 전송 여부, 삭제 여부를 판단하여 전송하지 않았고, 삭제되지 않는 양파들의 리스트를 보내준다.
      * @return 키우고 있는 양파 리스트
      */
-//    @GetMapping("/growing")
-//    public ResponseEntity<List<SendOnionResponse>> readSendOnions(
-//            @RequestHeader("Authorization") String token) {
-//        final Long userId = authorizeService.getAuthorization(token);
-//        if(authorizeService.isAuthorization(userId)){
-//            try {
-    // 만약 썪은거라면 그냥 썪은 채로 출력
-//                List<SendOnion> sendOnions = onionService.findSendOnions(userId);
-//                List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
-//                for(SendOnion sendOnion : sendOnions){
-//                    Onion onion = sendOnion.getOnion();
-//                    if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
-////                        boolean isDead = onionService.checkOnionIsDeadAndTime2Go(onion);
-////                        boolean isTime2Go = onionService.checkTime2Go(onion);
-//                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, isDead, isTime2Go));
-//                    }
-//                }
-//                return ResponseEntity.ok(sendOnionResponses);
-//            } catch (SendOnionNotFoundException e) {
-//                log.error(e.getMessage());
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//            }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//        }
-//    }
+    @GetMapping("/growing")
+    public ResponseEntity<List<SendOnionResponse>> readSendOnions(
+            @RequestHeader("Authorization") String token) {
+        final Long userId = authorizeService.getAuthorization(token);
+        if(authorizeService.isAuthorization(userId)){
+            try {
+                List<SendOnion> sendOnions = onionService.findSendOnions(userId);
+                List<SendOnionResponse> sendOnionResponses = new ArrayList<>();
+                for(SendOnion sendOnion : sendOnions){
+                    Onion onion = sendOnion.getOnion();
+                    Long DaePyoJaId = onion.getUserId();
+                    String DaePyoJa = onionService.getNameByUserId(DaePyoJaId);
+                    if(sendOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
+                        boolean isDead, isTime2Go, isWatered;
+                        isDead = onionService.checkOnionIsDeadAndTime2Go(onion).get("isDead");
+                        isTime2Go = onionService.checkOnionIsDeadAndTime2Go(onion).get("time2Go");
+                        isWatered = onionService.checkOnionIsWatered(onion);
+                        sendOnionResponses.add(SendOnionResponse.from(sendOnion, DaePyoJa, isDead, isTime2Go, isWatered));
+                    }
+                }
+                return ResponseEntity.ok(sendOnionResponses);
+            } catch (SendOnionNotFoundException e) {
+                log.error(e.getMessage());
+                return ResponseEntity.
+                        status(HttpStatus.NOT_ACCEPTABLE).build();
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+    }
 
     /**
      * Home화면에서 양파에 메시지를 추가한다.
@@ -264,7 +271,7 @@ public class OnionController {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(onionService.getMobileNumberByUserId(userId));
                 for(ReceiveOnion receiveOnion : receiveOnions){
-                    String senderName = onionService.getNameByUserId(receiveOnion.getUserId());
+                    String senderName = onionService.getNameByUserId(receiveOnion.getFromUserId());
                     receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, senderName));
                 }
                 return ResponseEntity.ok(receiveOnionResponses);
@@ -291,8 +298,8 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)) {
             try {
                 Message message = onionService.findMessageById(messageId);
-                String userName = onionService.getNameByUserId(userId);
-                return ResponseEntity.ok(MessageDetailResponse.from(messageId, userName, message));
+                String messageSender = onionService.getNameByUserId(message.getUserId());
+                return ResponseEntity.ok(MessageDetailResponse.from(messageId, messageSender, message));
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

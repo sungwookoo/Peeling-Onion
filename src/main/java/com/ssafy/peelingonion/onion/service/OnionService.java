@@ -35,6 +35,7 @@ public class OnionService {
 	private final StorageRepository storageRepository;
 	private final MyFieldRepository myFieldRepository;
 
+	private final long DEAD_TIME = 60 * 60 * 24 * 3L;
 	public OnionService(OnionRepository onionRepository,
 		SendOnionRepository sendOnionRepository,
 		RecordRepository recordRepository,
@@ -77,7 +78,7 @@ public class OnionService {
 			.sender_id(srcUserId)
 			.receiver_id(desUserId)
 			.content("")
-			.created_at(Instant.now())
+			.created_at(Instant.now().plusSeconds(60*60*9))
 			.type(type)
 			.build();
 		try {
@@ -105,43 +106,128 @@ public class OnionService {
 		// 메시지를 저장할 때, 뭘해야하나???
 		if (opOnion.isPresent()) {
 			Onion onion = opOnion.get();
-			onion.setLatestModify(Instant.now());
+			onion.setLatestModify(Instant.now().plusSeconds(60*60*9));
 			Onion oni = onionRepository.save(onion);
 			messageRepository.save(Message.from(userId, oni, record, messageCreateRequest));
 		}
 	}
 
-	//    public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
-	//        Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
-	//        // 키우는 기간이 3일 미만인 양파의 경우
-	//        // 양파 생성 due date에서 양파 생성일을 빼기
-	//        Instant createdTime = onion.getCreatedAt();
-	//        Instant growDueDate = onion.getCreatedAt();
-	//        Instant lastModified = onion.getLatestModify();
-	//        long growTime = createdTime.until(growDueDate, ChronoUnit.SECONDS);
-	//        // 키우는 기간이 3일 이상인 경우
-	//        if(growTime >= 259200) {
-	//
-	//
-	//
-	//        } else {
-	//            // 키우는 기간이 3일 미만인 경우
-	//            // 만약
-	//        }
-	//    }
+	public boolean checkOnionIsWatered(Onion onion) {
+		Instant lastModified = onion.getLatestModify();
+		// 1. 메세지가 없다면 그냥 추가하면 된다.
+		if(onion.getMessages().isEmpty()) {
+			return false;
+		// 2. 메세지가 있다면
+		} else {
+			// 2-1. lastModified의 날짜를 가져와서 오늘 날짜와 비교
+			// 오늘 == 수정일 -> isWatered: true/ 아니면 false
+			Date dateNow = Date.from(Instant.now().plusSeconds(60*60*9));
+			Date dateModified = Date.from(lastModified);
+			Calendar calendar1 = Calendar.getInstance();
+			calendar1.setTime(dateNow);
+			Calendar calendar2 = Calendar.getInstance();
+			calendar2.setTime(dateModified);
+			int year1 = calendar1.get(Calendar.YEAR);
+			int month1 = calendar1.get(Calendar.MONTH) + 1;
+			int day1 = calendar1.get(Calendar.DAY_OF_MONTH);
+			int year2 = calendar2.get(Calendar.YEAR);
+			int month2 = calendar2.get(Calendar.MONTH) + 1;
+			int day2 = calendar2.get(Calendar.DAY_OF_MONTH);
 
-	//    public boolean checkTime2Go(Onion onion) {
-	//
-	//    }
+			return year1 == year2 && month1 == month2 && day1 == day2;
+		}
+	}
+
+	public Map<String, Boolean> checkOnionIsDeadAndTime2Go(Onion onion) {
+		// 이미 썪어있다면 썪은 여부는 판단이 불가능하다.
+		Map<String, Boolean> isDeadAndTime2Go = new HashMap<>();
+		// 양파 생성 due date에서 양파 생성일을 빼기
+		Instant createdTime = onion.getCreatedAt();
+		Instant growDueDate = onion.getGrowDueDate();
+		Instant lastModified = onion.getLatestModify();
+		long growTime = createdTime.until(growDueDate, ChronoUnit.SECONDS);
+		// 1. 키우는 기간이 3일 이상인 경우
+		if(growTime >= DEAD_TIME) {
+			// 1-1. 지금이 growDueDate를 넘었다면 -> 보낼 수도 있음
+			if(Instant.now().plusSeconds(60*60*9).isAfter(growDueDate)) {
+				// 1-1-1. lastModified가 growDueDate차이가 3일이 넘기면 썪음
+				if(lastModified.until(growDueDate, ChronoUnit.SECONDS) >= DEAD_TIME) {
+					isDeadAndTime2Go.put("isDead", true);
+					isDeadAndTime2Go.put("time2Go", false);
+				// 1-1-2. lastModified가 growDueDate차이가 3일 안이면 안썪음
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+				}
+				// 1-2. 아직 growDueDate를 넘기지 않았다면 -> 못보냄, 썪음 여부만 판단
+			} else {
+				// 1-2-1. lastModified가 3일이 지났다면 -> 썪음
+				if(lastModified.until(Instant.now(), ChronoUnit.SECONDS) >= DEAD_TIME) {
+					isDeadAndTime2Go.put("isDead", true);
+				// 1-2-2. lastModified가 3일이 지나지 않았다면 -> 썪지 않음
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+				}
+				isDeadAndTime2Go.put("time2Go", false);
+			}
+
+			// 2. 키우는 기간이 3일 미만인 경우
+		} else {
+			// 2-1.지금이 growDueDate를 넘었다면
+			if(Instant.now().plusSeconds(60*60*9).isAfter(growDueDate)) {
+				// 2-1-1. 만약 onion에 메시지가 있다면 보낼 수 있음
+				if(!onion.getMessages().isEmpty()) {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+					// 2-1-2. onion에 메세지가 없다면 썪었고, 보낼 수 없음
+				} else {
+					isDeadAndTime2Go.put("isDead", true);
+					isDeadAndTime2Go.put("time2Go", false);
+				}
+				// 2-2. 아직 growDueDate를 못넘겼다면 -> 안썪음, 보낼 수 없음
+			} else {
+				// 2-2-1. growDueDate가 created_at날짜보다 하루 뒤이고 메세지가 있다면
+				if(createdTime.plusSeconds(60*60*24).isAfter(growDueDate) && !onion.getMessages().isEmpty()) {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", true);
+				} else {
+					isDeadAndTime2Go.put("isDead", false);
+					isDeadAndTime2Go.put("time2Go", false);
+				}
+			}
+		}
+		return isDeadAndTime2Go;
+	}
 
 	public void throwOnion(Long onionId) {
 		Optional<Onion> opOnion = onionRepository.findById(onionId);
 		if (opOnion.isPresent()) {
 			Onion onion = opOnion.get();
-			// getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
-			if (onion.getGrowDueDate().isBefore(Instant.now()) && !onion.getIsDisabled().booleanValue()) {
+			// growDueDate가 created_at날짜보다 하루 뒤이고, 메세지가 있다면
+			if (onion.getCreatedAt().plusSeconds(60*60*24).isAfter(onion.getGrowDueDate()) && !onion.getMessages().isEmpty()){
 				// 양파의 전송일 추가하기
-				onion.setSendDate(Instant.now());
+				onion.setSendDate(Instant.now().plusSeconds(60*60*9));
+				onionRepository.save(onion);
+				// 내가 만든 양파에서 해당 양파 전송여부 true
+				Set<SendOnion> sendOnions = onion.getSendOnions();
+				for (SendOnion sendOnion : sendOnions) {
+					sendOnion.setIsSended(Boolean.TRUE);
+					sendOnionRepository.save(sendOnion);
+				}
+				// 내가 받은 양파에서 수신 여부 true
+				ReceiveOnion receiveOnion = receiveOnionRepository.findByOnion(onion);
+				receiveOnion.setIsReceived(Boolean.TRUE);
+				receiveOnionRepository.save(receiveOnion);
+				Long targetId = getUserIdFromMobileNumber(receiveOnion.getReceiverNumber());
+				if (targetId > 0) {
+					addAlarm(onion.getUserId(), targetId, ONION_RECEIVE);
+				}
+			}
+
+			// getGrowDueDate가 지났다면, 그리고 삭제한 양파가 아니라면 아래의 로직을 실행
+			if (onion.getGrowDueDate().isBefore(Instant.now().plusSeconds(60*60*9)) && !onion.getIsDisabled().booleanValue()) {
+				// 양파의 전송일 추가하기
+				onion.setSendDate(Instant.now().plusSeconds(60*60*9));
 				onionRepository.save(onion);
 				// 내가 만든 양파에서 해당 양파 전송여부 true
 				Set<SendOnion> sendOnions = onion.getSendOnions();
@@ -214,8 +300,8 @@ public class OnionService {
 		throw new IllegalStateException("해당 양파가 없음");
 	}
 
-	public List<ReceiveOnion> findBookmarkedOnions(Long userId) {
-		return receiveOnionRepository.findByUserIdAndIsBookmarked(userId, Boolean.TRUE);
+	public List<ReceiveOnion> findBookmarkedOnions(String receiverNumber) {
+		return receiveOnionRepository.findByReceiverNumberAndIsBookmarked(receiverNumber, Boolean.TRUE);
 	}
 
 	public void bookmarkOnion(Long onionId) {
@@ -234,12 +320,21 @@ public class OnionService {
 	public void deleteOnion(Long onionId, Long userId) {
 		Optional<Onion> opOnion = onionRepository.findById(onionId);
 		if (opOnion.isPresent()) {
-			if (opOnion.get().getUserId().equals(userId)) {
-				Onion onion = opOnion.get();
+			Onion onion = opOnion.get();
+			Iterator<ReceiveOnion> iterator = onion.getReceiveOnions().iterator();
+			ReceiveOnion receiveOnion = iterator.next();
+			String receiverNumber = receiveOnion.getReceiverNumber();
+			String requesterNumber = getMobileNumberByUserId(userId);
+			if (onion.getUserId().equals(userId)) {
 				onion.setIsDisabled(Boolean.TRUE);
 				onionRepository.save(onion);
+				return;
+			} else if (Objects.equals(requesterNumber, receiverNumber)){
+				onion.setIsDisabled(Boolean.TRUE);
+				onionRepository.save(onion);
+				return;
 			} else {
-				throw new IllegalStateException("양파를 만든 대표자만 삭제할 수 있습니다.");
+				throw new IllegalStateException("양파를 만든 대표자나 양파의 수신자만 삭제할 수 있습니다.");
 			}
 		}
 		throw new IllegalStateException("없는 양파입니다.");
@@ -304,4 +399,6 @@ public class OnionService {
 			return -2L;
 		}
 	}
+
+
 }

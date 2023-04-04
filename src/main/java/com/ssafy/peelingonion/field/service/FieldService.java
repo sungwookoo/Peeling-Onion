@@ -29,6 +29,7 @@ public class FieldService {
 	private final FieldRepository fieldRepository;
 	private final MyFieldRepository myFieldRepository;
 	private final StorageRepository storageRepository;
+
 	public FieldService(FieldRepository fieldRepository,
 						MyFieldRepository myFieldRepository,
 						StorageRepository storageRepository,
@@ -43,7 +44,7 @@ public class FieldService {
 		Field field = Field.builder()
 			.name(fieldCreateReuqest.getName())
 			.isDisabled(Boolean.FALSE)
-			.createdAt(Instant.now())
+			.createdAt(Instant.now().plusSeconds(60*60*9))
 			.build();
 		fieldRepository.save(field);
 		// myField 객체 생성 후, 저장

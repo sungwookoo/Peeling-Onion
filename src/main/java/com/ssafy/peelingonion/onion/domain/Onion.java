@@ -90,9 +90,9 @@ public class Onion {
 				.name(onionCreateRequest.getName())
 				.imgSrc(onionCreateRequest.getImg_src())
 				.userId(userId)
-				.createdAt(Instant.now())
-				.latestModify(Instant.now())
-				.growDueDate(inst)
+				.createdAt(Instant.now().plusSeconds(60*60*9))
+				.latestModify(Instant.now().plusSeconds(60*60*9))
+				.growDueDate(inst.plusSeconds(60*60*24))
 				.isDisabled(Boolean.FALSE)
 				.isSingle(onionCreateRequest.getIs_single())
 				.build();

@@ -21,10 +21,10 @@ public class MessageDetailResponse {
     public Integer neg_rate;
     public Integer neu_rate;
     public String file_src;
-    public static MessageDetailResponse from(Long messageId, String userName, Message message) {
+    public static MessageDetailResponse from(Long messageId, String messageSender, Message message) {
         return MessageDetailResponse.builder()
                 .id(messageId)
-                .sender(userName)
+                .sender(messageSender)
                 .content(message.getContent())
                 .created_at(message.getCreatedAt())
                 .pos_rate(message.getPosRate())

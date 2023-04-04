@@ -11,5 +11,5 @@ public interface ReceiveOnionRepository extends JpaRepository<ReceiveOnion, Long
     Optional<ReceiveOnion> findByOnionIdAndIsReceived(Long onionId, Boolean isReceived);
     List<ReceiveOnion> findAllByReceiverNumberAndIsReceivedAndIsChecked(String receiveNumber, Boolean isReceived, Boolean isChecked);
 
-    List<ReceiveOnion> findByUserIdAndIsBookmarked(Long userId, Boolean isBookmarked);
+    List<ReceiveOnion> findByReceiverNumberAndIsBookmarked(String receiverNumber, Boolean isBookmarked);
 }

@@ -54,7 +54,7 @@ public class Record {
 
 	public static Record from(MessageCreateRequest messageCreateRequest) {
 		return Record.builder()
-				.createdAt(Instant.now())
+				.createdAt(Instant.now().plusSeconds(60*60*9))
 				.fileSrc(messageCreateRequest.getFile_src())
 				.build();
 	}
