@@ -19,6 +19,14 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
   int onionsPerPage = 4;
   int shelvesPerPage = 2;
   int onionsPerShelf = 2;
+  late final List<CustomOnionByOnionIdPostbox> _onions = widget._onions;
+
+  void _deleteOnion(int index) {
+    setState(() {
+      _onions.removeAt(index);
+    });
+    print('그냥 로컬에서 지우기');
+  }
 
   late int numOfPages = (widget._onions.length / onionsPerPage).ceil();
   @override
@@ -28,8 +36,9 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
       return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/images/wall_paper.jpg'),
-              fit: BoxFit.fill),
+            image: AssetImage('assets/images/wall_paper.jpg'),
+            fit: BoxFit.fill,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -90,8 +99,10 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
                           if (globalIndex < widget._onions.length) {
                             // 각 양파 1개 (텍스트 + 이미지)
                             return PostboxOneOnion(
-                                onions: widget._onions,
-                                globalIndex: globalIndex);
+                              onions: widget._onions,
+                              globalIndex: globalIndex,
+                              onUpdate: () => _deleteOnion(globalIndex),
+                            );
                           } else {
                             return const SizedBox.shrink();
                           }

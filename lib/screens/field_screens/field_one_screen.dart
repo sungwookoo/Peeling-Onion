@@ -79,7 +79,12 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
         return Container(
           width: (MediaQuery.of(context).size.width - 60),
           height: (MediaQuery.of(context).size.width - 60),
-          color: Colors.brown,
+          // color: Colors.brown,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/field.png'), fit: BoxFit.fill),
+          ),
+
           // _onions api 받아온 뒤 빌드
           child: FutureBuilder(
             future: _onions,
@@ -93,49 +98,50 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                   child: GridView(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 4,
+                      crossAxisCount: 3,
                       childAspectRatio: 1,
                     ),
                     children: onionsData.map((onion) {
-                      return Wrap(
-                        direction: Axis.horizontal,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          // 꾹 누르면 이동/삭제 선택창이 나타나게
-                          // 이동 누르면 이전 창으로 가서, 밭을 선택할 수 있음
-                          GestureDetector(
-                            onLongPressStart: (details) {
-                              final RenderBox box =
-                                  context.findRenderObject() as RenderBox;
-                              final Offset position =
-                                  box.globalToLocal(details.globalPosition);
-                              showDeleteModal(
-                                context,
-                                onion,
-                                () => _showDeleteConfirmationDialog(
-                                    innerContext, onion.id),
-                                () => widget.parentShowMoveSelectDialog(
-                                    innerContext, onion.id, widget.field.id),
-                                position,
-                              );
-                            },
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      OnionOneScreen(onionId: onion.id),
-                                ),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                Text(onion.name),
-                                Image.asset(onion.imgSrc),
-                              ],
+                      return GestureDetector(
+                        onLongPressStart: (details) {
+                          final RenderBox box =
+                              context.findRenderObject() as RenderBox;
+                          final Offset position =
+                              box.globalToLocal(details.globalPosition);
+                          showDeleteModal(
+                            context,
+                            onion,
+                            () => _showDeleteConfirmationDialog(
+                                innerContext, onion.id),
+                            () => widget.parentShowMoveSelectDialog(
+                                innerContext, onion.id, widget.field.id),
+                            position,
+                          );
+                        },
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OnionOneScreen(onionId: onion.id),
                             ),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                onion.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Expanded(
+                                child: Image.asset(onion.imgSrc),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       );
                     }).toList(),
                   ),

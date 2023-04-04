@@ -13,8 +13,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class RecordScreen extends StatefulWidget {
   final CustomHomeOnion onion;
+  final VoidCallback onUpdate;
 
-  const RecordScreen({super.key, required this.onion});
+  const RecordScreen({super.key, required this.onion, required this.onUpdate});
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -433,10 +434,17 @@ class _RecordScreenState extends State<RecordScreen> {
                                 child: const Text('취소'),
                               ),
                               TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   Navigator.pop(context);
                                   saveRecordMessage();
                                   Navigator.pop(context);
+                                  // 이부분 테스트
+                                  // 이렇게 하면 된다고?
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((_) {
+                                    widget.onUpdate();
+                                  });
+                                  // widget.onUpdate();
                                 },
                                 child: const Text('저장'),
                               )
