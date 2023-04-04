@@ -47,6 +47,7 @@ class _RecordScreenState extends State<RecordScreen> {
     final sttresult = await SttApiService().getSttToken();
     setState(() {
       sttToken = sttresult;
+      print('sttToken : $sttToken');
     });
     await Permission.microphone.request();
     await Permission.storage.request();
@@ -83,7 +84,7 @@ class _RecordScreenState extends State<RecordScreen> {
       },
       'use_multi_channel': false,
       'use_itn': false,
-      'paragraph_splitter': {'min': 1, 'max': 50},
+      // 'paragraph_splitter': {'min': 1, 'max': 50},
     };
 
     var configData = jsonEncode(config);
@@ -100,6 +101,7 @@ class _RecordScreenState extends State<RecordScreen> {
     if (response.statusCode == 200) {
       final responseString = await response.stream.bytesToString();
       final responseData = jsonDecode(responseString);
+      print(responseData);
       while (true) {
         var getResult = await getSTT(responseData['id']);
         if (getResult['status'] == 'completed') {
@@ -130,7 +132,7 @@ class _RecordScreenState extends State<RecordScreen> {
     }
   }
 
-  void _startTimer() {
+  void _startTimer() async {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _time--;
