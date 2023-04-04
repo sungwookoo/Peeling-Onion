@@ -16,6 +16,7 @@ import java.time.Instant;
 public class SendOnionResponse {
     public Long id;
     public String name;
+    public String onion_maker;
     public String img_src;
     public Instant created_at;
     public Instant lastest_modified;
@@ -25,11 +26,12 @@ public class SendOnionResponse {
     public boolean is_dead;
     public boolean is_time2go;
     public boolean is_watered;
-    public static SendOnionResponse from(SendOnion s, boolean isDead, boolean isTime2Go, boolean isWatered){
+    public static SendOnionResponse from(SendOnion s, String onion_maker, boolean isDead, boolean isTime2Go, boolean isWatered){
         Onion o = s.getOnion();
         return SendOnionResponse.builder()
                 .id(o.getId())
                 .name(o.getName())
+                .onion_maker(onion_maker)
                 .img_src(o.getImgSrc())
                 .created_at(o.getCreatedAt())
                 .lastest_modified(o.getLatestModify())
