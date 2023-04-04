@@ -3,6 +3,7 @@ import 'package:front/models/custom_models.dart';
 import 'package:front/screens/home_screens/home_widgets/home_onion_detail.dart';
 import 'package:front/screens/record_screens/record_screen.dart';
 import 'package:front/services/onion_api_service.dart';
+import 'package:front/widgets/kakao_share.dart';
 
 // 양파 1개
 class HomeOneOnion extends StatefulWidget {
@@ -22,13 +23,44 @@ class HomeOneOnion extends StatefulWidget {
 
 class _HomeOneOnionState extends State<HomeOneOnion> {
   // 양파 전송 모달
-  void _showSendConfirmDialog(BuildContext context, int onionId) {
+  void _showSendConfirmDialog(BuildContext context, CustomHomeOnion onion) {
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('양파를 전송하시겠습니까?'),
-          content: const Text('전송할 경우 상대에게 알림이 갑니다.'),
+          content: SizedBox(
+            height: 220,
+            child: Column(
+              children: [
+                const Text('전송할 경우 상대에게 알림이 갑니다.'),
+                Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        height: 100,
+                        child: Image.asset(onion.imgSrc),
+                      ),
+                      const SizedBox(height: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('양파 이름 : ${onion.name}'),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Text('받을 번호 : ${onion.receiverNumber}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -39,9 +71,48 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
-                OnionApiService.sendOnionById(onionId);
+                OnionApiService.sendOnionById(onion.id);
+                _showSendCompleteDialog(context, onion);
               },
               child: const Text('전송'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // 양파 전송 후 성공 모달
+  void _showSendCompleteDialog(BuildContext context, CustomHomeOnion onion) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('배송 완료!!'),
+          content: SizedBox(
+            height: 200,
+            child: Column(
+              children: [
+                const Text('대상에게 공유하기 버튼을 누르세요!'),
+                Expanded(
+                  child: Image.asset('assets/images/gift_box.png'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('취소'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                shareMessage();
+              },
+              child: const Text('공유하기'),
             ),
           ],
         );
@@ -68,8 +139,9 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                OnionApiService.deleteOnionById(onionId);
                 widget.onDelete();
+                Navigator.pop(innerContext);
               },
               child: const Text('삭제'),
             ),
@@ -79,7 +151,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
     );
   }
 
-// delete 모달 표시
+  // delete 모달 표시
   void showDeleteModal(BuildContext context, CustomHomeOnion onion,
       VoidCallback onDelete) async {
     final RenderBox box = context.findRenderObject() as RenderBox;
@@ -104,11 +176,9 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
               IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  // TODO: Implement the delete functionality
                   Navigator.pop(context);
+                  // await Future.delayed(const Duration(milliseconds: 100));
                   _showDeleteConfirmationDialog(context, onion.id);
-                  // OnionApiService.deleteOnionById(onion.id);
-                  // onDelete();
                 },
               ),
             ],
@@ -134,7 +204,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                   : widget._onion.isTime2go && widget._onion.isOnionMaker
                       ? GestureDetector(
                           onTap: () {
-                            _showSendConfirmDialog(context, widget._onion.id);
+                            _showSendConfirmDialog(context, widget._onion);
                           },
                           child: Image.asset('assets/images/ready_to_go.png'),
                         )

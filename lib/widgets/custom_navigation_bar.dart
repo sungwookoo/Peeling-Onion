@@ -38,7 +38,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       resizeToAvoidBottomInset: false,
       // app Bar
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        title: const Text('Peeling Onion'),
         actions: [
           Consumer<AlarmProvider>(
             builder: (context, alarmProvider, _) {

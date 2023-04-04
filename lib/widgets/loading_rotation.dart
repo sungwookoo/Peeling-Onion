@@ -31,9 +31,14 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: RotationTransition(
-        turns: _controller,
-        child: Image.asset(widget.imagePath),
+      child: Column(
+        children: [
+          RotationTransition(
+            turns: _controller,
+            child: Image.asset(widget.imagePath),
+          ),
+          const Text('Loading...')
+        ],
       ),
     );
   }
