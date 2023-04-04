@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:front/alarm_provider.dart';
 import 'package:front/screens/login_screens/loading_screen.dart';
 import 'package:front/screens/login_screens/sign_in_screen.dart';
 import 'package:front/services/notification_service.dart';
@@ -12,6 +11,7 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 import 'package:front/user_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env"); // 추가
@@ -30,7 +30,6 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => UserIdModel()),
-      ChangeNotifierProvider(create: (context) => AlarmProvider()),
     ],
     child: const App(),
   ));
@@ -48,25 +47,21 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-
+    Permission.notification.request();
     FirebaseMessaging.onMessage.listen(showFlutterNotification);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationService().getFcmToken();
-    // AlarmProvider().getUnreadAlarm();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AlarmProvider>(
-      create: (context) => AlarmProvider(),
-      child: MaterialApp(
-        routes: {
-          '/': (context) => const LoadingScreen(),
-          '/signin': (context) => const SigninScreen(),
-          '/home': (context) => const CustomNavigationBar(),
-        },
-        theme: ThemeData(fontFamily: 'NanumGothic'),
-      ),
+    return MaterialApp(
+      routes: {
+        '/': (context) => const LoadingScreen(),
+        '/signin': (context) => const SigninScreen(),
+        '/home': (context) => const CustomNavigationBar(),
+      },
+      theme: ThemeData(fontFamily: 'NanumGothic'),
     );
   }
 }
