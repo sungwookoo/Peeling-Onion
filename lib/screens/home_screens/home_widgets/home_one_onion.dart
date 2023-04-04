@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
+import 'package:front/screens/home_screens/home_widgets/home_onion_detail.dart';
 import 'package:front/screens/record_screens/record_screen.dart';
 import 'package:front/services/onion_api_service.dart';
 import '../../../widgets/show_delete_modal.dart';
@@ -97,7 +98,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            RecordScreen(onion: widget._onion)),
+                            HomeOnionDetail(onion: widget._onion)),
                   );
                 },
                 // child: Image.asset(widget._onion.imgSrc),
