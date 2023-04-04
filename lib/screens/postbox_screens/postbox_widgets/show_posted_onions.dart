@@ -28,7 +28,8 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
       return Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/images/wall_paper.jpg')),
+              image: AssetImage('assets/images/wall_paper.jpg'),
+              fit: BoxFit.fill),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
