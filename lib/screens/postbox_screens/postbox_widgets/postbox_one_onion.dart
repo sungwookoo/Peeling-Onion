@@ -8,25 +8,29 @@ class PostboxOneOnion extends StatelessWidget {
     super.key,
     required List<CustomOnionByOnionIdPostbox> onions,
     required this.globalIndex,
+    required this.onUpdate,
   }) : _onions = onions;
 
   final List<CustomOnionByOnionIdPostbox> _onions;
   final int globalIndex;
+  final VoidCallback onUpdate;
 
   @override
   Widget build(BuildContext context) {
     // 양파를 클릭하면 양파 상세 페이지로, 꾹 누르면 삭제창 뜨게
     return GestureDetector(
       // 양파 클릭하면 상세 페이지로.
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             // OnionOneScreen 클래스 사용
-            builder: (context) =>
-                OnionOneScreen(onionId: _onions.elementAt(globalIndex).id),
+            builder: (context) => OnionOneScreen(
+              onionId: _onions.elementAt(globalIndex).id,
+            ),
           ),
         );
+        onUpdate();
       },
       child: OneOnion(onion: _onions.elementAt(globalIndex)),
     );

@@ -41,7 +41,9 @@ class _PackageScreenState extends State<PackageScreen> {
                 return Stack(
                   children: [
                     // ShowPostedOnions 클래스 사용
-                    ShowPostedOnions(onions: onionsData),
+                    ShowPostedOnions(
+                      onions: onionsData,
+                    ),
                   ],
                 );
               } else if (snapshot.hasError) {

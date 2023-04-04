@@ -11,11 +11,13 @@ class HomeOneOnion extends StatefulWidget {
     super.key,
     required CustomHomeOnion onion,
     required this.onDelete,
+    required this.onUpdate,
   }) : _onion = onion;
 
   final CustomHomeOnion _onion;
   // final int globalIndex;
   final VoidCallback onDelete;
+  final VoidCallback onUpdate;
 
   @override
   State<HomeOneOnion> createState() => _HomeOneOnionState();
@@ -104,12 +106,14 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                widget.onUpdate();
               },
               child: const Text('취소'),
             ),
             ElevatedButton(
               onPressed: () async {
                 Navigator.pop(context);
+                widget.onUpdate();
                 shareMessage();
               },
               child: const Text('공유하기'),
@@ -215,8 +219,10 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          RecordScreen(onion: widget._onion)),
+                                      builder: (context) => RecordScreen(
+                                            onion: widget._onion,
+                                            onUpdate: widget.onUpdate,
+                                          )),
                                 );
                               },
                               child:

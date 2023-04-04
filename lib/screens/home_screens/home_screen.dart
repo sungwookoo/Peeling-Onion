@@ -42,7 +42,8 @@ class _HomeScreenState extends State<HomeScreen> {
               List<CustomHomeOnion> onionsData =
                   snapshot.data as List<CustomHomeOnion>;
               // 양파들 출력
-              return ShowGrowingOnions(onions: onionsData);
+              return ShowGrowingOnions(
+                  onions: onionsData, onUpdate: () => updateOnions());
             } else if (snapshot.hasError) {
               return Text('에러: ${snapshot.error}');
             }
@@ -118,10 +119,11 @@ class _HomeScreenState extends State<HomeScreen> {
 // 양파들을 격자로 표시 (페이지 뷰 사용)
 class ShowGrowingOnions extends StatefulWidget {
   final List<CustomHomeOnion> _onions;
-
+  final VoidCallback onUpdate;
   const ShowGrowingOnions({
     super.key,
     required List<CustomHomeOnion> onions,
+    required this.onUpdate,
   }) : _onions = onions;
 
   @override
@@ -215,9 +217,9 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                             int globalIndex = firstOnionIndex + itemIndex;
                             if (globalIndex < widget._onions.length) {
                               return HomeOneOnion(
-                                onion: widget._onions.elementAt(globalIndex),
-                                onDelete: () => _deleteOnion(globalIndex),
-                              );
+                                  onion: widget._onions.elementAt(globalIndex),
+                                  onDelete: () => _deleteOnion(globalIndex),
+                                  onUpdate: widget.onUpdate);
                             } else {
                               return const SizedBox.shrink();
                             }
