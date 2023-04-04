@@ -67,6 +67,7 @@ public class OnionService {
 		// 모아보내기의 경우, 알림서버에 해당 메시지를 등록한다.
 		if (!onionCreateRequest.is_single.booleanValue()) {
 			senderIds.stream()
+				.filter(e -> !e.equals(userId))
 				.forEach(e -> addAlarm(userId, e, ONION_ADD_SENDER));
 		}
 	}
