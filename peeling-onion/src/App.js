@@ -1,7 +1,9 @@
 import React from "react";
 import "./App.css";
 import axios from "axios";
-import logo from "./0000768589_DP000101_20230403223406.png";
+import onion1 from "./img/onion1.png";
+import onion2 from "./img/onion2.png";
+import onion3 from "./img/onion3.png";
 
 function App() {
   const downloadApk = async () => {
@@ -33,7 +35,13 @@ function App() {
       <div className="device-image ios">
         <div className="device">
           {/* <img src="https://picsum.photos/1500/2500" /> */}
-          <img src={logo} className="App-logo onion" alt="React" />
+          <img src={onion1} className="App-logo onion" alt="React" />
+          <img src={onion2} className="App-logo onion" alt="React" />
+          <img src={onion3} className="App-logo onion" alt="React" />
+          <img src={onion1} className="App-logo onion" alt="React" />
+          <img src={onion2} className="App-logo onion" alt="React" />
+          <img src={onion3} className="App-logo onion" alt="React" />
+
           {/* <img src="https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net%2Fimage%2F5400%2F2023%2F01%2F18%2F0000210703_001_20230118124202158.jpg&type=sc960_832" /> */}
         </div>
       </div>
