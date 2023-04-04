@@ -26,6 +26,8 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
   ValueNotifier<bool> isPlayed = ValueNotifier<bool>(false);
   // url 주소를 나타낼 변수
   late Future<CustomMessage>? messageData;
+  // 북마크 여부 판단
+  final ValueNotifier<bool> _isBookMarked = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -37,6 +39,7 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     } else {
       messageData = OnionApiService.getMessage(1);
     }
+    _isBookMarked.value = widget.onion.isBookmarked;
   }
 
   // 이전 메시지 출력 함수
@@ -90,86 +93,116 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
         if (snapshot.hasData) {
           CustomMessage message = snapshot.data as CustomMessage;
           return Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                            image: DecorationImage(
-                          image: AssetImage('assets/images/note.png'),
-                          fit: BoxFit.fill,
-                        )),
-                        height: 320,
-                        width: 350,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 50.0, left: 20, right: 20),
-                          child: Column(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(8, 50, 8, 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                              image: DecorationImage(
+                            image: AssetImage('assets/images/rainbow.jpg'),
+                            fit: BoxFit.fill,
+                          )),
+                          height: 320,
+                          width: 350,
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 50.0, left: 20, right: 20),
+                            child: Column(
+                              children: [
+                                Text(message.createdAt),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Text('내용 : ${message.content}'),
+                                widget.onion.isSingle
+                                    ? const Text('')
+                                    : Text('from ${message.sender}'),
+                              ],
+                            ),
+                          ),
+                        ),
+                        // 양파 이미지
+                        Flexible(
+                          child: Stack(
                             children: [
-                              Text(message.createdAt),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Text('내용 : ${message.content}'),
-                              widget.onion.isSingle
-                                  ? const Text('')
-                                  : Text('from ${message.sender}'),
+                              Image.asset(widget.onion.imgSrc,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8),
+                              // 즐겨찾기 나타내는 아이콘
+                              ValueListenableBuilder(
+                                valueListenable: _isBookMarked,
+                                builder: (BuildContext context, bool value,
+                                    Widget? child) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      _isBookMarked.value =
+                                          !_isBookMarked.value;
+                                      OnionApiService.postMarkedOnionById(
+                                          widget.onion.id);
+                                    },
+                                    // 북마크 아이콘
+                                    child: _isBookMarked.value
+                                        ? const Icon(Icons.star)
+                                        : const Icon(
+                                            Icons.star_border_outlined),
+                                  );
+                                },
+                              )
                             ],
                           ),
                         ),
-                      ),
-                      // 양파 이미지
-                      Image.asset(widget.onion.imgSrc,
-                          width: MediaQuery.of(context).size.width * 0.8),
-                      // 오디오 재생 버튼
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1.0,
+                        // 오디오 재생 버튼
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white,
                           ),
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // 녹음 버튼들 출력
+                            children: [
+                              // 이전 재생 버튼
+                              IconButton(
+                                onPressed: prev,
+                                icon: const Icon(Icons.navigate_before_rounded),
+                              ),
+                              // 녹음 재생 위젯
+                              ListenAudioUrl(
+                                urlPath: message.fileSrc,
+                                isPlayed: isPlayed,
+                              ),
+                              // 다음 재생 버튼
+                              IconButton(
+                                onPressed: next,
+                                icon: const Icon(Icons.navigate_next_rounded),
+                              ),
+                            ],
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          // 녹음 버튼들 출력
+                        Column(
                           children: [
-                            // 이전 재생 버튼
-                            IconButton(
-                              onPressed: prev,
-                              icon: const Icon(Icons.navigate_before_rounded),
-                            ),
-                            // 녹음 재생 위젯
-                            ListenAudioUrl(
-                              urlPath: message.fileSrc,
-                              isPlayed: isPlayed,
-                            ),
-                            // 다음 재생 버튼
-                            IconButton(
-                              onPressed: next,
-                              icon: const Icon(Icons.navigate_next_rounded),
-                            ),
+                            Text('양파 이름 : ${widget.onion.name}'),
+                            Text('보낸 이 : ${widget.onion.sender}'),
+                            Text('보낸 날짜 : ${widget.onion.sendDate}'),
+                            // Text('내용 : ${}')
                           ],
                         ),
-                      ),
-                      Column(
-                        children: [
-                          Text('양파 이름 : ${widget.onion.name}'),
-                          Text('보낸 이 : ${widget.onion.sender}'),
-                          Text('보낸 날짜 : ${widget.onion.sendDate}'),
-                          // Text('내용 : ${}')
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         } else if (snapshot.hasError) {

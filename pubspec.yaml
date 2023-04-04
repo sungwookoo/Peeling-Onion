@@ -99,13 +99,15 @@ flutter:
     - assets/images/note.png
     - assets/images/customonion1.png
     - assets/images/customonion2.png
+    - assets/images/background.png
 
     - assets/images/need_water.png
     - assets/images/ready_to_go.png
     - assets/images/field.png
     - assets/images/gift_box.png
     - assets/images/pannel_nosand.png
-    - assets/images/pannel.png
+    - assets/images/pannel.png    
+    - assets/images/rainbow.jpg
     - assets/images/kakao_login.png
 
     - assets/images/createAlone.png
@@ -114,6 +116,11 @@ flutter:
     - assets/images/start_image.png
     - assets/icons/alarm_color.png
     - assets/icons/noalarm_color.png
+
+    - assets/images/invite.jpg
+    - assets/images/oniondead.png
+    - assets/images/getMessage.png
+    - assets/images/timetosend.png
 
   #   - images/a_dot_ham.jpeg
 
