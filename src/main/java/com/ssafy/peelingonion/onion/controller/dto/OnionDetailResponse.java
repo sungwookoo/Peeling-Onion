@@ -25,12 +25,12 @@ public class OnionDetailResponse {
     public Boolean is_single;
     public Boolean is_bookmarked;
     public List<Long> message_id_list;
-    public static OnionDetailResponse from(Onion o, ReceiveOnion r, String userName, List<Long> messageIdList){
+    public static OnionDetailResponse from(Onion o, ReceiveOnion r, String DaePyoJa, List<Long> messageIdList){
         return OnionDetailResponse.builder()
                 .id(o.getId())
                 .name(o.getName())
                 .img_src(o.getImgSrc())
-                .sender(userName)
+                .sender(DaePyoJa)
                 .created_at(o.getCreatedAt())
                 .send_date(o.getSendDate())
                 .grow_due_date(o.getGrowDueDate())
