@@ -25,7 +25,7 @@ class _MypageScreenState extends State<MypageScreen> {
   bool _isNicknameEditing = false;
   bool _isPhoneNumberEditing = false;
   bool _isPhoneValid = true;
-  bool _isAuthCodeSent = false;
+  bool _isAuthCodeSent = true;
   bool _isAuthCodeValid = false;
   String? _verificationId;
   String? _phoneValidationMessage;
@@ -62,13 +62,13 @@ class _MypageScreenState extends State<MypageScreen> {
       return;
     }
 
-    // 정규식을 사용해 8자 이내의 한글 혹은 영문만 허용
-    RegExp regExp =
-        RegExp(r'^[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AFa-zA-Z]{1,8}$');
+    // 정규식을 사용해 8자 이내의 한글, 한글 자모음 혹은 영문 소문자만 허용
+    RegExp regExp = RegExp(r'^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{1,8}$');
+
     if (!regExp.hasMatch(_nicknameController.text)) {
       setState(() {
         _isNicknameValid = false;
-        _nicknameValidationMessage = '닉네임은 8자 이내의 한글 혹은 영문만 입력 가능합니다.';
+        _nicknameValidationMessage = '닉네임은 8자 이내의 한글 혹은 영문 소문자만 입력 가능합니다.';
       });
       return;
     }
@@ -316,9 +316,11 @@ class _MypageScreenState extends State<MypageScreen> {
   @override
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
+
     return Scaffold(
       body: Container(
         color: const Color.fromRGBO(253, 253, 245, 1),
+        height: double.infinity,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(30.0),
@@ -329,7 +331,6 @@ class _MypageScreenState extends State<MypageScreen> {
                   if (snapshot.hasData) {
                     final nickname = snapshot.data!['nickname'];
                     final phoneNumber = snapshot.data!['mobileNumber'];
-
                     return Column(
                       children: [
                         const SizedBox(
@@ -339,35 +340,36 @@ class _MypageScreenState extends State<MypageScreen> {
                           "마이페이지",
                           style: TextStyle(
                             fontSize: 40,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                             color: Color(0xffA1D57A),
                           ),
                         ),
                         const SizedBox(
                           height: 50,
                         ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // SizedBox(
-                            //   width: 60,
-                            // ),
-                            Text(
-                              "회원정보 수정",
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
                         SizedBox(
                           width: 270,
                           child: Column(
                             children: [
+                              const Row(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // SizedBox(
+                                  //   width: 60,
+                                  // ),
+                                  Text(
+                                    "회원정보 수정",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600,
+                                        color: Color.fromRGBO(56, 102, 101, 1)),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -375,82 +377,149 @@ class _MypageScreenState extends State<MypageScreen> {
                                   const Text(
                                     '닉네임 :',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 17,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                   Text(
                                     // '$nickname',
                                     '$nickname',
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isNicknameEditing =
-                                            !_isNicknameEditing;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: _isNicknameEditing
-                                          ? Colors.grey
-                                          : Colors.green,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      minimumSize: const Size(40, 30),
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'NanumMyeongjo',
+                                      fontWeight: FontWeight.w700,
                                     ),
-                                    child:
-                                        Text(_isNicknameEditing ? '취소' : '수정'),
-                                  )
+                                  ),
+                                  if (!_isNicknameEditing)
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isNicknameEditing =
+                                              !_isNicknameEditing;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green, // 변경된 부분
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: const Size(40, 30),
+                                      ),
+                                      child: const Text(
+                                        '수정',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  if (_isNicknameEditing)
+                                    OutlinedButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isNicknameEditing =
+                                              !_isNicknameEditing;
+                                        });
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                          color: Colors.green, // 변경된 부분
+                                          width: 2.0,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: const Size(40, 30),
+                                      ),
+                                      child: const Text(
+                                        '취소',
+                                        style: TextStyle(
+                                          color: Colors.green, // 변경된 부분
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                               // const NicknameForm(),
                               if (_isNicknameEditing)
-                                Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      TextFormField(
-                                        controller: _nicknameController,
-                                        decoration: InputDecoration(
-                                          labelText: '닉네임',
-                                          hintText: '8자 이내의 한글 혹은 영문',
-                                          suffixIcon: IconButton(
-                                            icon: _nicknameChanged
-                                                ? const Icon(Icons.check,
-                                                    color: Colors.red)
-                                                : ElevatedButton(
-                                                    onPressed: () =>
-                                                        nicknameChange(context),
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      minimumSize: const Size(
-                                                          40, 30), // 이 부분 수정
-                                                    ),
-                                                    child: const Text('완료'),
-                                                  ),
-                                            onPressed: _checkNickname,
+                                Column(
+                                  children: [
+                                    Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          TextFormField(
+                                            controller: _nicknameController,
+                                            decoration: InputDecoration(
+                                                labelText: '닉네임',
+                                                hintText: '한글 혹은 영문 소문자(1~8자)',
+                                                hintStyle: const TextStyle(
+                                                    fontSize: 14),
+                                                suffix: Container(
+                                                    child: _nicknameChanged
+                                                        ? ElevatedButton(
+                                                            onPressed:
+                                                                _checkNickname,
+                                                            child: const Text(
+                                                                '중복확인'))
+                                                        : ElevatedButton(
+                                                            onPressed: () =>
+                                                                nicknameChange(
+                                                                    context),
+                                                            child: const Text(
+                                                                '완료')))
+
+                                                // suffixIcon: IconButton(
+                                                //   icon: _nicknameChanged
+                                                //       ? const Icon(Icons.check,
+                                                //           color: Colors.red)
+                                                //       : ElevatedButton(
+                                                //           onPressed: () =>
+                                                //               nicknameChange(
+                                                //                   context),
+                                                //           style: ElevatedButton
+                                                //               .styleFrom(
+                                                //             backgroundColor:
+                                                //                 Colors.green,
+                                                //             minimumSize:
+                                                //                 const Size(40,
+                                                //                     30), // 이 부분 수정
+                                                //           ),
+                                                //           child: const Text('완료'),
+                                                //         ),
+                                                //   onPressed: _checkNickname,
+                                                // ),
+                                                ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return '닉네임을 입력해주세요.';
+                                              }
+                                              return null;
+                                            },
                                           ),
-                                        ),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return '닉네임을 입력해주세요.';
-                                          }
-                                          return null;
-                                        },
+                                          if (_nicknameValidationMessage !=
+                                              null)
+                                            Text(_nicknameValidationMessage!),
+                                        ],
                                       ),
-                                      if (_nicknameValidationMessage != null)
-                                        Text(_nicknameValidationMessage!),
-                                    ],
-                                  ),
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    )
+                                  ],
                                 ),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                              // const SizedBox(
+                              //   height: 8,
+                              // ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -458,33 +527,73 @@ class _MypageScreenState extends State<MypageScreen> {
                                   const Text(
                                     '전화번호 :',
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 17),
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.grey,
+                                      fontSize: 17,
+                                    ),
                                   ),
                                   Text(
                                     // '$nickname',
                                     '$phoneNumber',
-                                    style: const TextStyle(fontSize: 15),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isPhoneNumberEditing =
-                                            !_isPhoneNumberEditing;
-                                      });
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: _isPhoneNumberEditing
-                                          ? Colors.grey
-                                          : Colors.green,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      minimumSize: const Size(40, 30),
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'NanumMyeongjo',
+                                      fontWeight: FontWeight.w700,
                                     ),
-                                    child: Text(
-                                        _isPhoneNumberEditing ? '취소' : '수정'),
-                                  )
+                                  ),
+                                  if (!_isPhoneNumberEditing)
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isPhoneNumberEditing =
+                                              !_isPhoneNumberEditing;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green, // 변경된 부분
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: const Size(40, 30),
+                                      ),
+                                      child: const Text(
+                                        '수정',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  if (_isPhoneNumberEditing)
+                                    OutlinedButton(
+                                      onPressed: () async {
+                                        setState(() {
+                                          _isPhoneNumberEditing =
+                                              !_isPhoneNumberEditing;
+                                        });
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                          color: Colors.green, // 변경된 부분
+                                          width: 2.0,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        fixedSize: const Size(40, 30),
+                                      ),
+                                      child: const Text(
+                                        '취소',
+                                        style: TextStyle(
+                                          color: Colors.green, // 변경된 부분
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                               if (_isPhoneNumberEditing)
@@ -492,12 +601,38 @@ class _MypageScreenState extends State<MypageScreen> {
                                   controller: _phoneNumberController,
                                   keyboardType: TextInputType.phone,
                                   decoration: InputDecoration(
-                                    labelText: '전화번호',
+                                    labelText: '바꿀 전화번호',
                                     hintText: '숫자 11자리',
+                                    hintStyle: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                    labelStyle: const TextStyle(
+                                        color: Color(0xffA1D57A)),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xffA1D57A)),
+                                    ),
                                     suffixIcon: ElevatedButton(
                                       onPressed: _sendAuthCode,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: _isAuthCodeSent
+                                            ? Colors.grey
+                                            : Colors.green,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        // minimumSize: const Size(40, 30),
+                                        fixedSize: const Size(40, 0),
+                                        // padding: const EdgeInsets.all(2),
+                                      ),
                                       child: Text(
-                                          _isAuthCodeSent ? '재인증하기' : '인증하기'),
+                                        _isAuthCodeSent ? '재인증' : '인증',
+                                        style: const TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   validator: (value) {
@@ -507,8 +642,23 @@ class _MypageScreenState extends State<MypageScreen> {
                                     return null;
                                   },
                                 ),
-                              if (_phoneValidationMessage != null)
-                                Text(_phoneValidationMessage!),
+
+                              if (_phoneValidationMessage != null &&
+                                  _isPhoneNumberEditing)
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      _phoneValidationMessage!,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               const SizedBox(height: 16),
                               if (_isAuthCodeSent)
                                 Column(
@@ -566,7 +716,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                         "로그아웃",
                                         style: TextStyle(
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       Icon(
@@ -594,7 +744,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                         "회원탈퇴",
                                         style: TextStyle(
                                           fontSize: 22,
-                                          fontWeight: FontWeight.w700,
+                                          fontWeight: FontWeight.w600,
                                           color: Color.fromRGBO(255, 85, 73, 1),
                                         ),
                                       ),

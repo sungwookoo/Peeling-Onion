@@ -38,7 +38,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       resizeToAvoidBottomInset: false,
       // app Bar
       appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+        // title: const Text('BottomNavigationBar Sample'),
         actions: [
           Consumer<AlarmProvider>(
             builder: (context, alarmProvider, _) {
@@ -56,8 +56,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         ],
       ),
       // 화면 내용
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: Container(
+        child: Center(
+          child: _widgetOptions.elementAt(_selectedIndex),
+        ),
       ),
       // 네비게이션 바. 커스텀은 여기서
       bottomNavigationBar: BottomNavigationBar(
