@@ -109,7 +109,9 @@ public class OnionController {
                 List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(receiverNumber);
                 String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions) {
-                    onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
+                    if(receiveOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
+                        onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
+                    }
                 }
                 return ResponseEntity.ok(onionOutlineDtos);
             } catch(FieldNotFoundException e){
@@ -271,8 +273,10 @@ public class OnionController {
                 List<ReceiveOnionResponse> receiveOnionResponses = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findReceiveOnions(onionService.getMobileNumberByUserId(userId));
                 for(ReceiveOnion receiveOnion : receiveOnions){
-                    String senderName = onionService.getNameByUserId(receiveOnion.getFromUserId());
-                    receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, senderName));
+                    if(receiveOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
+                        String senderName = onionService.getNameByUserId(receiveOnion.getFromUserId());
+                        receiveOnionResponses.add(ReceiveOnionResponse.from(receiveOnion, senderName));
+                    }
                 }
                 return ResponseEntity.ok(receiveOnionResponses);
             } catch (ReceiveOnionNotFoundException e) {
