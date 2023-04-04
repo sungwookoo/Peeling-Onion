@@ -46,13 +46,13 @@ public class AlarmService {
 		this.typeImgMap = new HashMap<>();
 		this.typeImgMap.put(0, null);
 		this.typeImgMap.put(1,
-			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/time_to_send.jpg?raw=true");
 		this.typeImgMap.put(2,
 			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
 		this.typeImgMap.put(3,
-			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/grow_done.jpg?raw=true");
 		this.typeImgMap.put(4,
-			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/onion_post.jpg?raw=true");
+			"https://github.com/Brute-force-is-timeout/ImageSource/blob/main/invite.jpg?raw=true");
 	}
 
 	public void sendMessageTo(String targetToken, String title, String body, int type) throws IOException {
@@ -75,7 +75,7 @@ public class AlarmService {
 
 	private String makeContentByType(Alarm alarm) {
 		final String sender = getNameByUserId(alarm.getSenderId());
-		final String receiver = getNameByUserId(alarm.getReceiverId());
+		// final String receiver = getNameByUserId(alarm.getReceiverId());
 
 		String msg;
 		switch (alarm.getType().intValue()) {
@@ -83,13 +83,13 @@ public class AlarmService {
 				msg = "양파가 상하기 직전이에요.";
 				break;
 			case ConstValues.ONION_RECEIVE:
-				msg = sender + "에게 양파가 도착했어요";
+				msg = sender + "님이 보낸 양파가 도착했어요";
 				break;
 			case ConstValues.ONION_GROW_DONE:
 				msg = "양파를 보낼 수 있어요.";
 				break;
 			case ConstValues.ONION_ADD_SENDER:
-				msg = sender + "님이 " + receiver + "에게 보내는 메시지에 초대했어요";
+				msg = sender + "님이 만든 모아보내기 양파에 초대되었어요";
 				break;
 			default:
 				msg = "Peeling Onion";
@@ -228,7 +228,7 @@ public class AlarmService {
 
 	public boolean readAlarm(Long userId, Long alarmId) {
 		Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(AlarmNotFoundException::new);
-		if (alarm.getReceiverId() == userId) {
+		if (alarm.getReceiverId().equals(userId)) {
 			alarm.setIsRead(true);
 			alarmRepository.save(alarm);
 			return true;

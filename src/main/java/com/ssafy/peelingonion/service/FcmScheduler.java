@@ -1,6 +1,8 @@
 package com.ssafy.peelingonion.service;
 
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +30,16 @@ public class FcmScheduler {
 	@Async
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 60) // execute every 1 hour
 	public void sendFcmMessage() {
+		log.info("{}", ZonedDateTime.now(ZoneId.of("Asia/Seoul")));
 		try {
 			List<Alarm> notSendedAlarmList = alarmRepository.findByIsSended(false);
 			for (Alarm alarm : notSendedAlarmList) {
-				if(!alarmService.getActivate(alarm.getReceiverId()))
+				if (!alarmService.getActivate(alarm.getReceiverId()).booleanValue())
 					continue;
 				String nameByUserId = alarmService.getNameByUserId(alarm.getReceiverId());
-				if (nameByUserId == null) {
+				if (nameByUserId == null || nameByUserId.equals("")) {
 					continue;
 				}
-				if (nameByUserId.equals(""))
-					continue;
 
 				alarmService.sendMessageTo(alarm); // fcm server에 전송
 				alarm.setIsSended(true); // 보냄처리
