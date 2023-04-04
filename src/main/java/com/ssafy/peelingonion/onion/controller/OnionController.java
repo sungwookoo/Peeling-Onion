@@ -297,8 +297,8 @@ public class OnionController {
         if (authorizeService.isAuthorization(userId)) {
             try {
                 Message message = onionService.findMessageById(messageId);
-                String userName = onionService.getNameByUserId(userId);
-                return ResponseEntity.ok(MessageDetailResponse.from(messageId, userName, message));
+                String messageSender = onionService.getNameByUserId(message.getUserId());
+                return ResponseEntity.ok(MessageDetailResponse.from(messageId, messageSender, message));
             } catch (Exception e) {
                 log.error(e.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
