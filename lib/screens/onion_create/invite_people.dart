@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../services/find_user_api_service.dart';
+import '../../widgets/loading_rotation.dart';
 
 class InvitePeople extends StatefulWidget {
   const InvitePeople({Key? key, required this.people}) : super(key: key);
@@ -202,7 +203,8 @@ class _InvitePeopleState extends State<InvitePeople> {
                       return const Text('데이터를 불러오는데 문제가 발생했습니다.');
                     }
 
-                    return const CircularProgressIndicator();
+                    return const CustomLoadingWidget(
+                        imagePath: 'assets/images/onion_image.png');
                   },
                 )
               ],

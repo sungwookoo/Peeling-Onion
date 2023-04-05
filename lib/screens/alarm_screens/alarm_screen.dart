@@ -118,13 +118,8 @@ class _AlarmScreenState extends State<AlarmScreen> {
                   return const Text('데이터를 불러오는데 문제가 발생했습니다');
                 }
 
-                return const Expanded(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: CustomLoadingWidget(
-                        imagePath: 'assets/images/onion_image.png'),
-                  ),
-                );
+                return const CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png');
               },
             )
           ],

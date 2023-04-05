@@ -7,6 +7,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
+import '../../widgets/loading_rotation.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -617,7 +618,8 @@ class _MypageScreenState extends State<MypageScreen> {
                   } else if (snapshot.hasError) {
                     return Text('에러 발생: ${snapshot.error}');
                   } else {
-                    return const CircularProgressIndicator();
+                    return const CustomLoadingWidget(
+                        imagePath: 'assets/images/onion_image.png');
                   }
                 },
               ),

@@ -7,6 +7,7 @@ import 'package:front/services/onion_api_service.dart';
 import '../../../models/custom_models.dart';
 import 'package:front/services/field_api_service.dart';
 import '../field_widgets/field_one_screen_here.dart';
+import '../../../widgets/loading_rotation.dart';
 
 // 밭 Grid 로 출력
 class MakeFields extends StatefulWidget {
@@ -171,7 +172,8 @@ class _MakeFieldsState extends State<MakeFields> {
                     return const Text('에러');
                   } else {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CustomLoadingWidget(
+                          imagePath: 'assets/images/onion_image.png'),
                     );
                   }
                 }),
