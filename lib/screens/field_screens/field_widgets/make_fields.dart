@@ -1,23 +1,24 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:front/screens/field_screens/field_one_screen.dart';
+import 'package:front/screens/field_screens/field_widgets/field_one_screen_here.dart';
 import 'package:front/screens/field_screens/field_widgets/show_bookmarked_onions.dart';
 import 'package:front/services/onion_api_service.dart';
 import '../../../models/custom_models.dart';
 import 'package:front/services/field_api_service.dart';
-import '../field_widgets/field_one_screen_here.dart';
 import '../../../widgets/loading_rotation.dart';
 
 // 밭 Grid 로 출력
 class MakeFields extends StatefulWidget {
   final List<CustomField> _fields;
-  // final VoidCallback onDelete;
+  final Function onCreate;
 
   const MakeFields({
     super.key,
     required List<CustomField> fields,
-    // this.draggedOnionId,
+    required this.onCreate,
   }) : _fields = fields;
 
   @override
@@ -194,17 +195,22 @@ class _MakeFieldsState extends State<MakeFields> {
           // 양파 이동시키려는 상태면 아래 글을 표시
           if (_isOnionMoving)
             Center(
-              child: Row(
+              child: Column(
                 children: [
-                  const Text('양파를 옮길 밭을 골라주세요!'),
-                  OutlinedButton(
-                    onPressed: () {
-                      setState(() {
-                        _isOnionMoving = false;
-                      });
-                    },
-                    child: const Text('취소'),
-                  )
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+                  Column(
+                    children: [
+                      const Text('양파를 옮길 밭을 골라주세요!'),
+                      OutlinedButton(
+                        onPressed: () {
+                          setState(() {
+                            _isOnionMoving = false;
+                          });
+                        },
+                        child: const Text('취소'),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -213,16 +219,34 @@ class _MakeFieldsState extends State<MakeFields> {
             children: [
               // 즐겨찾기 목록
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(left: 50),
-                  alignment: Alignment.bottomLeft,
-                  child: GestureDetector(
-                    onTap: () => _showBookmarkedDialog(),
-                    child: SizedBox(
-                      height: 50,
-                      child: Image.asset('assets/images/star_yellow.png'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 즐겨찾기 아이콘
+                    Container(
+                      padding: const EdgeInsets.only(left: 50),
+                      alignment: Alignment.bottomLeft,
+                      child: GestureDetector(
+                        onTap: () => _showBookmarkedDialog(),
+                        child: SizedBox(
+                          height: 50,
+                          child: Image.asset('assets/images/star_yellow.png'),
+                        ),
+                      ),
                     ),
-                  ),
+                    // 밭 추가 아이콘
+                    Container(
+                      padding: const EdgeInsets.only(right: 50),
+                      alignment: Alignment.bottomLeft,
+                      child: GestureDetector(
+                        onTap: () => widget.onCreate(),
+                        child: SizedBox(
+                          height: 50,
+                          child: Image.asset('assets/images/shovel.png'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               // 아래의 밭 페이지 구현
@@ -318,7 +342,17 @@ class _MakeFieldsState extends State<MakeFields> {
                                     }
                                   },
                                   // 전체 밭 화면에서 나타나게 할 밭 1개
-                                  child: FieldOneScreenHere(field: field),
+                                  child: Animate(
+                                      // 양파 이동 중이면, 밭 표지판을 진동시키기
+                                      child: _isOnionMoving
+                                          ? FieldOneScreenHere(field: field)
+                                              .animate(
+                                                delay: 10.ms,
+                                                onPlay: (controller) =>
+                                                    controller.repeat(),
+                                              )
+                                              .moveX(begin: 0, end: 5)
+                                          : FieldOneScreenHere(field: field)),
                                 ),
                               );
                             }).toList(),
