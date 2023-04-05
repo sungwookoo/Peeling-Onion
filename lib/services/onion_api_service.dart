@@ -5,7 +5,6 @@ import 'package:http/http.dart' as http;
 import 'package:front/models/custom_models.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-// Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 // 양파 api 요청들
 class OnionApiService {
   // base url
