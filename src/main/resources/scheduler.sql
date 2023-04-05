@@ -19,6 +19,7 @@ BEGIN
          onion.send_onion b
     WHERE 1 = 1
       AND a.send_date is null
+      AND a.is_disabled = false
       AND a.id = b.onion_id
       AND a.latest_modify BETWEEN (a.grow_due_date + INTERVAL 2 day) AND (a.grow_due_date + INTERVAL 3 day);
 END$$
@@ -40,6 +41,8 @@ BEGIN
     FROM onion.onion a
     WHERE 1 = 1
       AND a.send_date is null
+      AND a.is_disabled = false
+      AND a.is_disabled = true
       AND a.grow_due_date <= now();
 END$$
 DELIMITER ;
