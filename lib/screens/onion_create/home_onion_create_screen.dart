@@ -48,7 +48,7 @@ class _OnionCreateState extends State<OnionCreate> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 85,
+                      height: 100,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -69,8 +69,8 @@ class _OnionCreateState extends State<OnionCreate> {
                         Image(
                           image: AssetImage(
                               'assets/images/customonion$_imageidx.png'),
-                          height: 250,
-                          width: 250,
+                          height: 220,
+                          width: 220,
                           fit: BoxFit.cover,
                         ),
                         IconButton(
