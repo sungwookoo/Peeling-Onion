@@ -106,7 +106,7 @@ flutter:
     - assets/images/field.png
     - assets/images/gift_box.png
     - assets/images/pannel_nosand.png
-    - assets/images/pannel.png    
+    - assets/images/pannel.png
     - assets/images/rainbow.jpg
     - assets/images/kakao_login.png
 
@@ -121,6 +121,20 @@ flutter:
     - assets/images/oniondead.png
     - assets/images/getMessage.png
     - assets/images/timetosend.png
+
+    - assets/images/customonion1_positive.png
+    - assets/images/customonion1_negative.png
+    - assets/images/customonion2_negative.png
+    - assets/images/customonion2_positive.png
+    - assets/images/customonion3_positive.png
+    - assets/images/customonion3_negative.png
+    - assets/images/customonion4_negative.png
+    - assets/images/customonion4_positive.png
+    - assets/images/customonion5_positive.png
+    - assets/images/customonion5_negative.png
+    - assets/images/customonion3.png
+    - assets/images/customonion4.png
+    - assets/images/customonion5.png
 
   #   - images/a_dot_ham.jpeg
 
