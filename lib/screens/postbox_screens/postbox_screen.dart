@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import 'package:front/screens/postbox_screens/postbox_widgets/show_posted_onions.dart';
+import '../../widgets/loading_rotation.dart';
 
 class PackageScreen extends StatefulWidget {
   const PackageScreen({super.key});
@@ -50,7 +51,8 @@ class _PackageScreenState extends State<PackageScreen> {
                 return Text('에러: ${snapshot.error}');
               }
               // 로딩 화면
-              return const CircularProgressIndicator();
+              return const CustomLoadingWidget(
+                  imagePath: 'assets/images/onion_image.png');
             },
           ),
         ),
