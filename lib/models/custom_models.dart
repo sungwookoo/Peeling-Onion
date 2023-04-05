@@ -154,7 +154,7 @@ class CustomAlarmField {
   final int receiverId;
   final int alarmType;
   final int alarmId;
-  final bool isRead;
+  bool isRead;
 
   CustomAlarmField.fromJson(Map<String, dynamic> json)
       : senderId = json['sender_id'],
@@ -163,4 +163,8 @@ class CustomAlarmField {
         alarmType = json['type'],
         alarmId = json['message_id'],
         isRead = json['is_read'];
+
+  void changeReadStatus() {
+    isRead = true;
+  }
 }

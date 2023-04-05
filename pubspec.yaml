@@ -155,6 +155,16 @@ flutter:
     - assets/images/onionbottle/5onionbottle.png
     - assets/images/onionbottle/5onionbottle_positive.png
     - assets/images/onionbottle/5onionbottle_negative.png
+
+    - assets/images/deadonion.png
+    - assets/images/0customonionsand.png
+    - assets/images/1customonionsand.png
+    - assets/images/2customonionsand.png
+    - assets/images/3customonionsand.png
+    - assets/images/4customonionsand.png
+    - assets/images/5customonionsand.png
+
+    - assets/images/letterpaper.png
   #   - images/a_dot_ham.jpeg
 
   fonts:
@@ -176,6 +186,14 @@ flutter:
           weight: 700
         - asset: assets/fonts/NanumMyeongjoExtraBold.otf
           weight: 800
+    - family: cookieRun
+      fonts:
+        - asset: assets/fonts/CookieRunRegular.ttf
+          weight: 400
+        - asset: assets/fonts/CookieRunBold.ttf
+          weight: 700
+        - asset: assets/fonts/CookieRunBlack.ttf
+          weight: 900
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -72,6 +72,10 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
     );
   }
 
+  int onionsPerPage = 6;
+  int shelvesPerPage = 2;
+  int onionsPerShelf = 3;
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -90,9 +94,9 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             future: _onions,
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
-                List<CustomOnionFromField> onionsData =
+                List<CustomOnionFromField> onions =
                     snapshot.data as List<CustomOnionFromField>;
-
+                int numOfPages = (onions.length / onionsPerPage).ceil();
                 return Center(
                   // 양파들을 격자로 표시
                   child: GridView(
@@ -101,7 +105,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                       crossAxisCount: 3,
                       childAspectRatio: 1,
                     ),
-                    children: onionsData.map((onion) {
+                    children: onions.map((onion) {
                       return GestureDetector(
                         onLongPressStart: (details) {
                           final RenderBox box =
