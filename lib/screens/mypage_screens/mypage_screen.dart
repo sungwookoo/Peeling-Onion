@@ -160,46 +160,6 @@ class _MypageScreenState extends State<MypageScreen> {
     }
   }
 
-  // void nicknameChange() async {
-  // // 회원가입 완료 처리 및 다음 화면으로 이동
-  // Map<String, dynamic> data = {
-  //   'nickname': _nicknameController.text,
-  //   'mobile_number': _phoneNumberController.text,
-  //   //   "img_src": "01050429167",
-  //   "kakaoId": tokenInfo.id,
-  // };
-
-  // print(data);
-
-  // Future<OAuthToken?> Token = DefaultTokenManager().getToken();
-
-  // final accessToken = await Token.then((value) => value?.accessToken);
-  // print(accessToken);
-
-  // http.Response response = await http.post(
-  //   Uri.parse('$baseUrl/user'),
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': 'Bearer $accessToken',
-  //   },
-  //   body: json.encode(data),
-  // );
-
-  // print(response.statusCode);
-  // if (response.statusCode == 200) {
-  //   // 성공적으로 회원가입이 완료된 경우
-  //   print(response.body);
-  //   CustomUser customUser = CustomUser.fromJson(json.decode(response.body));
-  //   Provider.of<UserIdModel>(context, listen: false)
-  //       .setUserId(customUser.userId);
-  //   print('회원가입 완료');
-  //   Navigator.pushNamed(context, '/home');
-  // } else {
-  //   // 회원가입이 실패한 경우
-  //   print('회원가입 실패: ${response.body}');
-  // }
-  // }
-
   void nicknameChange(context) async {
     if (_formKey.currentState!.validate() && _isNicknameValid) {
       Future<OAuthToken?> Token = DefaultTokenManager().getToken();
@@ -517,7 +477,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                                   borderSide: BorderSide(
                                                       color: Color(0xffA1D57A)),
                                                 ),
-                                                suffix: Container(
+                                                suffixIcon: Container(
                                                   child: _nicknameChanged
                                                       ? ElevatedButton(
                                                           onPressed:
@@ -771,17 +731,20 @@ class _MypageScreenState extends State<MypageScreen> {
                               if (_phoneValidationMessage != null &&
                                   _isPhoneNumberEditing)
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      _phoneValidationMessage!,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.red,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          _phoneValidationMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -886,14 +849,18 @@ class _MypageScreenState extends State<MypageScreen> {
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          Text(
-                                            _authCodeValidationMessage!,
-                                            style: TextStyle(
-                                              color: !_isAuthCodeValid
-                                                  ? Colors.red
-                                                  : Colors.green,
-                                              fontSize: 13,
-                                            ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                _authCodeValidationMessage!,
+                                                style: TextStyle(
+                                                  color: !_isAuthCodeValid
+                                                      ? Colors.red
+                                                      : Colors.green,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
