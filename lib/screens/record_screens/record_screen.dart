@@ -416,12 +416,22 @@ class _RecordScreenState extends State<RecordScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text('취소'),
+                  SizedBox(
+                    width: 70,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      iconSize: 40,
+                      icon: Image.asset('assets/icons/undoIcon.png'),
+                    ),
                   ),
+                  // OutlinedButton(
+                  //   onPressed: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  //   child: const Text('취소'),
+                  // ),
                   ElevatedButton(
                     onPressed: () async {
                       if (_myRecorder.isRecording) {
@@ -459,7 +469,7 @@ class _RecordScreenState extends State<RecordScreen> {
                             size: 70,
                           ),
                   ),
-                  ElevatedButton(
+                  IconButton(
                     onPressed: () {
                       if (_isListening == true || _isThinking == true) {
                         return;
@@ -505,7 +515,10 @@ class _RecordScreenState extends State<RecordScreen> {
                         );
                       }
                     },
-                    child: const Text('저장'),
+                    icon: const Image(
+                      image: AssetImage('assets/icons/saveIcon.png'),
+                    ),
+                    iconSize: 60,
                   ),
                 ],
               ),
