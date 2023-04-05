@@ -27,6 +27,7 @@ class _MypageScreenState extends State<MypageScreen> {
   bool _isPhoneNumberEditing = false;
   bool _isPhoneValid = true;
   bool _isAuthCodeSent = false;
+  // Test!!!!!
   // bool _isAuthCodeSent = true;
   bool _isAuthCodeValid = false;
   String? _verificationId;
@@ -65,7 +66,7 @@ class _MypageScreenState extends State<MypageScreen> {
     }
 
     // 정규식을 사용해 8자 이내의 한글, 한글 자모음 혹은 영문 소문자만 허용
-    RegExp regExp = RegExp(r'^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{1,8}$');
+    RegExp regExp = RegExp(r'^[가-힣ㄱ-ㅎㅏ-ㅣa-z]{1,8}$');
 
     if (!regExp.hasMatch(_nicknameController.text)) {
       setState(() {
@@ -106,7 +107,7 @@ class _MypageScreenState extends State<MypageScreen> {
       } else {
         setState(() {
           _isNicknameValid = false;
-          _nicknameValidationMessage = '잘못된 요청입니다..';
+          _nicknameValidationMessage = '잘못된 요청입니다.';
         });
       }
     } catch (error) {
@@ -232,6 +233,41 @@ class _MypageScreenState extends State<MypageScreen> {
     }
   }
 
+  void phoneNumberChange(context) async {
+    if (_isPhoneValid) {
+      Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+      final accessToken = await Token.then((value) => value?.accessToken);
+
+      try {
+        final response = await http.patch(
+          Uri.parse('$baseUrl/user'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(<String, String>{
+            'mobile_number': _phoneNumberController.text,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          setState(() {
+            _isPhoneNumberEditing = false;
+            _isPhoneValid = false;
+            _isAuthCodeSent = false;
+            _isAuthCodeValid = false;
+          });
+          getInfo();
+          print('전화번호 완료');
+        } else {
+          print('전화번호 수정 실패: ${response.body}');
+        }
+      } catch (error) {
+        print('전화번호 수정 에러: $error');
+      }
+    }
+  }
+
   Future<void> _sendAuthCode() async {
     if (_phoneNumberController.text == '') {
       setState(() {
@@ -243,6 +279,7 @@ class _MypageScreenState extends State<MypageScreen> {
     RegExp regExp = RegExp(r'^\d{11}$');
     if (!regExp.hasMatch(_phoneNumberController.text)) {
       setState(() {
+        _isPhoneValid = false;
         _phoneValidationMessage = '전화번호는 11자리 숫자만 입력 가능합니다.';
       });
       return;
@@ -268,8 +305,7 @@ class _MypageScreenState extends State<MypageScreen> {
         setState(() {
           _verificationId = verificationId;
           _isAuthCodeSent = true;
-
-          _checkNickname();
+          _phoneValidationMessage = null;
         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {
@@ -303,10 +339,19 @@ class _MypageScreenState extends State<MypageScreen> {
         verificationId: _verificationId!, smsCode: _authCodeController.text);
 
     try {
-      await auth.signInWithCredential(credential);
-      setState(() {
-        _isAuthCodeValid = true;
-      });
+      final authCredential = await auth.signInWithCredential(credential);
+      setState(
+        () {
+          _isAuthCodeValid = true;
+          _authCodeValidationMessage = '정말 바꾸시겠습니까?';
+        },
+      );
+      if (authCredential.user != null) {
+        await auth.currentUser?.delete();
+        print("auth정보삭제");
+        auth.signOut();
+        print("phone로그인된것 로그아웃");
+      }
     } catch (e) {
       setState(() {
         _isAuthCodeValid = false;
@@ -465,19 +510,80 @@ class _MypageScreenState extends State<MypageScreen> {
                                                 hintText: '한글 혹은 영문 소문자(1~8자)',
                                                 hintStyle: const TextStyle(
                                                     fontSize: 14),
+                                                labelStyle: const TextStyle(
+                                                    color: Color(0xffA1D57A)),
+                                                focusedBorder:
+                                                    const UnderlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Color(0xffA1D57A)),
+                                                ),
                                                 suffix: Container(
-                                                    child: _nicknameChanged
-                                                        ? ElevatedButton(
-                                                            onPressed:
-                                                                _checkNickname,
-                                                            child: const Text(
-                                                                '중복확인'))
-                                                        : ElevatedButton(
-                                                            onPressed: () =>
-                                                                nicknameChange(
-                                                                    context),
-                                                            child: const Text(
-                                                                '완료')))
+                                                  child: _nicknameChanged
+                                                      ? ElevatedButton(
+                                                          onPressed:
+                                                              _checkNickname,
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                Colors.green,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            // minimumSize: const Size(40, 30),
+                                                            fixedSize:
+                                                                const Size(
+                                                                    40, 0),
+                                                          ),
+                                                          child: const Text(
+                                                            '확인',
+                                                            style: TextStyle(
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : ElevatedButton(
+                                                          onPressed: () =>
+                                                              nicknameChange(
+                                                                  context),
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            backgroundColor:
+                                                                _isAuthCodeSent
+                                                                    ? Colors
+                                                                        .grey
+                                                                    : Colors
+                                                                        .green,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10),
+                                                            ),
+                                                            // minimumSize: const Size(40, 30),
+                                                            fixedSize:
+                                                                const Size(
+                                                                    40, 0),
+                                                            // padding: const EdgeInsets.all(2),
+                                                          ),
+                                                          child: const Text(
+                                                            '완료',
+                                                            style: TextStyle(
+                                                              fontSize: 10,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                )
 
                                                 // suffixIcon: IconButton(
                                                 //   icon: _nicknameChanged
@@ -510,7 +616,24 @@ class _MypageScreenState extends State<MypageScreen> {
                                           ),
                                           if (_nicknameValidationMessage !=
                                               null)
-                                            Text(_nicknameValidationMessage!),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  _nicknameValidationMessage!,
+                                                  style: TextStyle(
+                                                    fontSize: 13,
+                                                    color: _nicknameChanged
+                                                        ? Colors.red
+                                                        : Colors.green,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                         ],
                                       ),
                                     ),
@@ -657,6 +780,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                       _phoneValidationMessage!,
                                       style: const TextStyle(
                                         fontSize: 13,
+                                        color: Colors.red,
                                       ),
                                     ),
                                   ],
@@ -669,18 +793,84 @@ class _MypageScreenState extends State<MypageScreen> {
                                       controller: _authCodeController,
                                       keyboardType: TextInputType.number,
                                       decoration: InputDecoration(
-                                        labelText: '인증번호',
-                                        hintText: '6자리 숫자',
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.check,
-                                            color: _isAuthCodeValid
-                                                ? Colors.green
-                                                : Colors.red,
+                                          labelText: '인증번호',
+                                          hintText: '6자리 숫자',
+                                          labelStyle: const TextStyle(
+                                              color: Color(0xffA1D57A)),
+                                          focusedBorder:
+                                              const UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(0xffA1D57A)),
                                           ),
-                                          onPressed: _checkAuthCode,
-                                        ),
-                                      ),
+                                          suffixIcon: Container(
+                                            child: !_isAuthCodeValid
+                                                ? ElevatedButton(
+                                                    onPressed: _checkAuthCode,
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      // minimumSize: const Size(40, 30),
+                                                      fixedSize:
+                                                          const Size(40, 0),
+                                                    ),
+                                                    child: const Text(
+                                                      '확인',
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  )
+                                                : ElevatedButton(
+                                                    onPressed: () =>
+                                                        phoneNumberChange(
+                                                            context),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          _isAuthCodeSent
+                                                              ? Colors.grey
+                                                              : Colors.green,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      // minimumSize: const Size(40, 30),
+                                                      fixedSize:
+                                                          const Size(40, 0),
+                                                      // padding: const EdgeInsets.all(2),
+                                                    ),
+                                                    child: const Text(
+                                                      '완료',
+                                                      style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                          )
+
+                                          // IconButton(
+                                          //   icon: Icon(
+                                          //     Icons.check,
+                                          //     color: _isAuthCodeValid
+                                          //         ? Colors.green
+                                          //         : Colors.red,
+                                          //   ),
+                                          //   onPressed: _checkAuthCode,
+                                          // ),
+                                          ),
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return '인증번호를 입력해주세요.';
@@ -689,13 +879,30 @@ class _MypageScreenState extends State<MypageScreen> {
                                       },
                                     ),
                                     if (_authCodeValidationMessage != null)
-                                      Text(_authCodeValidationMessage!),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            _authCodeValidationMessage!,
+                                            style: TextStyle(
+                                              color: !_isAuthCodeValid
+                                                  ? Colors.red
+                                                  : Colors.green,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                   ],
                                 ),
 
                               // Text('$userId'),
                               const SizedBox(
-                                height: 300,
+                                height: 120,
                               ),
                               // ElevatedButton(
                               //   onPressed: () async {
@@ -703,6 +910,11 @@ class _MypageScreenState extends State<MypageScreen> {
                               //   },
                               //   child: const Text('공유하기'),
                               // ),
+                              IconButton(
+                                onPressed: () =>
+                                    {Navigator.pushNamed(context, '/signin')},
+                                icon: const Icon(Icons.home),
+                              ),
                               const Divider(
                                 thickness: 2,
                                 color: Colors.black,
