@@ -140,18 +140,23 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                 valueListenable: _isBookMarked,
                                 builder: (BuildContext context, bool value,
                                     Widget? child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      _isBookMarked.value =
-                                          !_isBookMarked.value;
-                                      OnionApiService.postMarkedOnionById(
-                                          widget.onion.id);
-                                    },
-                                    // 북마크 아이콘
-                                    child: _isBookMarked.value
-                                        ? const Icon(Icons.star)
-                                        : const Icon(
-                                            Icons.star_border_outlined),
+                                  return Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    height: 50,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _isBookMarked.value =
+                                            !_isBookMarked.value;
+                                        OnionApiService.postMarkedOnionById(
+                                            widget.onion.id);
+                                      },
+                                      // 북마크 아이콘
+                                      child: _isBookMarked.value
+                                          ? Image.asset(
+                                              'assets/images/star_black.png')
+                                          : Image.asset(
+                                              'assets/images/star_yellow.png'),
+                                    ),
                                   );
                                 },
                               )

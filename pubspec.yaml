@@ -122,6 +122,8 @@ flutter:
     - assets/images/getMessage.png
     - assets/images/timetosend.png
 
+    - assets/images/star_yellow.png
+    - assets/images/star_black.png
   #   - images/a_dot_ham.jpeg
 
   fonts:
