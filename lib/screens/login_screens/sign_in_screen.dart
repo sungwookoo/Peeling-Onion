@@ -71,13 +71,13 @@ class _SigninScreenState extends State<SigninScreen> {
       return;
     }
 
-    // 정규식을 사용해 8자 이내의 한글 혹은 영문만 허용
-    RegExp regExp =
-        RegExp(r'^[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AFa-zA-Z]{1,8}$');
+    // 정규식을 사용해 8자 이내의 한글, 한글 자모음 혹은 영문 소문자만 허용
+    RegExp regExp = RegExp(r'^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z]{1,8}$');
+
     if (!regExp.hasMatch(_nicknameController.text)) {
       setState(() {
         _isNicknameValid = false;
-        _nicknameValidationMessage = '닉네임은 8자 이내의 한글 혹은 영문만 입력 가능합니다.';
+        _nicknameValidationMessage = '닉네임은 8자 이내의 한글 혹은 영문 소문자만 입력 가능합니다.';
       });
       return;
     }
@@ -309,7 +309,7 @@ class _SigninScreenState extends State<SigninScreen> {
                       controller: _nicknameController,
                       decoration: InputDecoration(
                         labelText: '닉네임',
-                        hintText: '8자 이내의 한글 혹은 영문',
+                        hintText: '8자 이내의 한글 혹은 영문 소문자',
                         suffixIcon: IconButton(
                           icon: _nicknameChanged
                               ? const Icon(Icons.check, color: Colors.red)
