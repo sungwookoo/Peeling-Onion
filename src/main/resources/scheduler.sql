@@ -42,7 +42,6 @@ BEGIN
     WHERE 1 = 1
       AND a.send_date is null
       AND a.is_disabled = false
-      AND a.is_disabled = true
       AND a.grow_due_date <= now();
 END$$
 DELIMITER ;
