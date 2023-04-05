@@ -25,7 +25,8 @@ class _MypageScreenState extends State<MypageScreen> {
   bool _isNicknameEditing = false;
   bool _isPhoneNumberEditing = false;
   bool _isPhoneValid = true;
-  bool _isAuthCodeSent = true;
+  bool _isAuthCodeSent = false;
+  // bool _isAuthCodeSent = true;
   bool _isAuthCodeValid = false;
   String? _verificationId;
   String? _phoneValidationMessage;
@@ -693,7 +694,7 @@ class _MypageScreenState extends State<MypageScreen> {
 
                               // Text('$userId'),
                               const SizedBox(
-                                height: 50,
+                                height: 300,
                               ),
                               // ElevatedButton(
                               //   onPressed: () async {
@@ -715,7 +716,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                       Text(
                                         "로그아웃",
                                         style: TextStyle(
-                                          fontSize: 22,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -743,7 +744,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                       Text(
                                         "회원탈퇴",
                                         style: TextStyle(
-                                          fontSize: 22,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w600,
                                           color: Color.fromRGBO(255, 85, 73, 1),
                                         ),
