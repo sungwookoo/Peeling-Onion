@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import 'package:front/widgets/onion_with_message.dart';
+import '../../widgets/loading_rotation.dart';
 
 // 양파 밭에서 클릭하면 나오는 양파 1개 화면
 class OnionOneScreen extends StatefulWidget {
@@ -56,7 +57,8 @@ class _OnionOneScreenState extends State<OnionOneScreen> {
               } else if (snapshot.hasError) {
                 return const Text('에러');
               } else {
-                return const CircularProgressIndicator();
+                return const CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png');
               }
             },
           ),

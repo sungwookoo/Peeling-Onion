@@ -106,7 +106,7 @@ flutter:
     - assets/images/field.png
     - assets/images/gift_box.png
     - assets/images/pannel_nosand.png
-    - assets/images/pannel.png    
+    - assets/images/pannel.png
     - assets/images/rainbow.jpg
     - assets/images/kakao_login.png
 
@@ -122,6 +122,39 @@ flutter:
     - assets/images/getMessage.png
     - assets/images/timetosend.png
 
+    - assets/images/customonion1_positive.png
+    - assets/images/customonion1_negative.png
+    - assets/images/customonion2_negative.png
+    - assets/images/customonion2_positive.png
+    - assets/images/customonion3_positive.png
+    - assets/images/customonion3_negative.png
+    - assets/images/customonion4_negative.png
+    - assets/images/customonion4_positive.png
+    - assets/images/customonion5_positive.png
+    - assets/images/customonion5_negative.png
+    - assets/images/customonion3.png
+    - assets/images/customonion4.png
+    - assets/images/customonion5.png
+
+    - assets/images/star_yellow.png
+    - assets/images/star_black.png
+
+    - assets/images/onionbottle/0onionbottle.png
+    - assets/images/onionbottle/1onionbottle.png
+    - assets/images/onionbottle/1onionbottle_positive.png
+    - assets/images/onionbottle/1onionbottle_negative.png
+    - assets/images/onionbottle/2onionbottle.png
+    - assets/images/onionbottle/2onionbottle_positive.png
+    - assets/images/onionbottle/2onionbottle_negative.png
+    - assets/images/onionbottle/3onionbottle.png
+    - assets/images/onionbottle/3onionbottle_positive.png
+    - assets/images/onionbottle/3onionbottle_negative.png
+    - assets/images/onionbottle/4onionbottle.png
+    - assets/images/onionbottle/4onionbottle_positive.png
+    - assets/images/onionbottle/4onionbottle_negative.png
+    - assets/images/onionbottle/5onionbottle.png
+    - assets/images/onionbottle/5onionbottle_positive.png
+    - assets/images/onionbottle/5onionbottle_negative.png
   #   - images/a_dot_ham.jpeg
 
   fonts:

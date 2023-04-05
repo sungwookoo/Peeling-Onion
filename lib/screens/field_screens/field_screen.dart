@@ -3,6 +3,7 @@ import '../../models/custom_models.dart';
 import '../../services/field_api_service.dart';
 import './field_widgets/field_add_modal.dart';
 import './field_widgets/make_fields.dart';
+import '../../widgets/loading_rotation.dart';
 
 String textInput = '';
 
@@ -70,7 +71,8 @@ class _FieldScreenState extends State<FieldScreen> {
               return Text('Error: ${snapshot.error}');
             }
             // 로딩 화면
-            return const CircularProgressIndicator();
+            return const CustomLoadingWidget(
+                imagePath: 'assets/images/onion_image.png');
           },
         ),
         // 밭 추가하는 버튼, 모달로 띄움(이후 디자인 따라 수정할 예정)

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import './listen_audio_url.dart';
+import '../widgets/loading_rotation.dart';
 
 // 양파 + 메시지 위젯
 class OnionWithMessage extends StatefulWidget {
@@ -140,18 +141,23 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                 valueListenable: _isBookMarked,
                                 builder: (BuildContext context, bool value,
                                     Widget? child) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      _isBookMarked.value =
-                                          !_isBookMarked.value;
-                                      OnionApiService.postMarkedOnionById(
-                                          widget.onion.id);
-                                    },
-                                    // 북마크 아이콘
-                                    child: _isBookMarked.value
-                                        ? const Icon(Icons.star)
-                                        : const Icon(
-                                            Icons.star_border_outlined),
+                                  return Container(
+                                    padding: const EdgeInsets.all(8.0),
+                                    height: 50,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _isBookMarked.value =
+                                            !_isBookMarked.value;
+                                        OnionApiService.postMarkedOnionById(
+                                            widget.onion.id);
+                                      },
+                                      // 북마크 아이콘
+                                      child: _isBookMarked.value
+                                          ? Image.asset(
+                                              'assets/images/star_black.png')
+                                          : Image.asset(
+                                              'assets/images/star_yellow.png'),
+                                    ),
                                   );
                                 },
                               )
@@ -211,7 +217,8 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
           );
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child:
+                CustomLoadingWidget(imagePath: 'assets/images/onion_image.png'),
           );
         }
       },

@@ -48,7 +48,7 @@ class _OnionCreateState extends State<OnionCreate> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 30,
+                      height: 85,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -57,7 +57,7 @@ class _OnionCreateState extends State<OnionCreate> {
                           onPressed: () {
                             setState(() {
                               if (_imageidx == 0) {
-                                _imageidx = 2;
+                                _imageidx = 5;
                               } else {
                                 _imageidx--;
                               }
@@ -69,14 +69,14 @@ class _OnionCreateState extends State<OnionCreate> {
                         Image(
                           image: AssetImage(
                               'assets/images/customonion$_imageidx.png'),
-                          height: 280,
-                          width: 200,
+                          height: 250,
+                          width: 250,
                           fit: BoxFit.cover,
                         ),
                         IconButton(
                           onPressed: () {
                             setState(() {
-                              _imageidx = (_imageidx + 1) % 3;
+                              _imageidx = (_imageidx + 1) % 6;
                             });
                           },
                           icon: const Icon(Icons.keyboard_arrow_right),

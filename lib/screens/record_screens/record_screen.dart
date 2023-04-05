@@ -13,8 +13,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class RecordScreen extends StatefulWidget {
   final CustomHomeOnion onion;
+  final VoidCallback onUpdate;
 
-  const RecordScreen({super.key, required this.onion});
+  const RecordScreen({super.key, required this.onion, required this.onUpdate});
 
   @override
   State<RecordScreen> createState() => _RecordScreenState();
@@ -34,11 +35,16 @@ class _RecordScreenState extends State<RecordScreen> {
   bool _isThinking = false;
   bool _isListening = false;
   late int _onionId;
+  late int _imageId;
+  late String _imageSrc;
 
   @override
   void initState() {
     initializer();
     _onionId = widget.onion.id;
+    var img = widget.onion.imgSrc;
+    _imageId = int.parse(img[img.length - 5]);
+    _imageSrc = 'assets/images/onionbottle/${_imageId}onionbottle.png';
     super.initState();
     _myRecorder.openRecorder();
   }
@@ -74,6 +80,15 @@ class _RecordScreenState extends State<RecordScreen> {
     setState(() {
       _sttMessage = sttText;
       _isThinking = false;
+      if (_positive >= 70) {
+        _imageSrc =
+            'assets/images/onionbottle/${_imageId}onionbottle_positive.png';
+      } else if (_negative >= 70) {
+        _imageSrc =
+            'assets/images/onionbottle/${_imageId}onionbottle_negative.png';
+      } else {
+        _imageSrc = 'assets/images/onionbottle/${_imageId}onionbottle.png';
+      }
     });
   }
 
@@ -198,6 +213,7 @@ class _RecordScreenState extends State<RecordScreen> {
     var result = UploadApiService().saveMessage(
         _onionId, recordUrl, _positive, _negative, _neutral, _sttMessage);
     print(result);
+    widget.onUpdate();
   }
 
   @override
@@ -328,15 +344,15 @@ class _RecordScreenState extends State<RecordScreen> {
                               ),
                       )),
               const SizedBox(
-                height: 20,
+                height: 25,
               ),
-              const SizedBox(
+              SizedBox(
                 width: 350,
                 height: 250,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Positioned(
+                    const Positioned(
                       bottom: 0,
                       child: Image(
                         image: AssetImage(
@@ -346,10 +362,10 @@ class _RecordScreenState extends State<RecordScreen> {
                       ),
                     ),
                     Positioned(
-                      bottom: 40,
+                      bottom: 35,
                       child: Image(
-                        image: AssetImage('assets/images/onioninbottle.png'),
-                        height: 220,
+                        image: AssetImage(_imageSrc),
+                        height: 230,
                       ),
                     ),
                   ],
@@ -376,6 +392,8 @@ class _RecordScreenState extends State<RecordScreen> {
                       } else {
                         setState(() {
                           _isListening = true;
+                          _imageSrc =
+                              'assets/images/onionbottle/${_imageId}onionbottle.png';
                         });
                         _startTimer();
                         await startRecording();
@@ -433,7 +451,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                 child: const Text('취소'),
                               ),
                               TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   Navigator.pop(context);
                                   saveRecordMessage();
                                   Navigator.pop(context);
