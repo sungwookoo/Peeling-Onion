@@ -72,6 +72,10 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
     );
   }
 
+  int onionsPerPage = 6;
+  int shelvesPerPage = 2;
+  int onionsPerShelf = 3;
+
   @override
   Widget build(BuildContext context) {
     return Builder(
@@ -90,61 +94,122 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
             future: _onions,
             builder: (context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
-                List<CustomOnionFromField> onionsData =
+                List<CustomOnionFromField> onions =
                     snapshot.data as List<CustomOnionFromField>;
-
-                return Center(
-                  // 양파들을 격자로 표시
-                  child: GridView(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 1,
-                    ),
-                    children: onionsData.map((onion) {
-                      return GestureDetector(
-                        onLongPressStart: (details) {
-                          final RenderBox box =
-                              context.findRenderObject() as RenderBox;
-                          final Offset position =
-                              box.globalToLocal(details.globalPosition);
-                          showDeleteModal(
-                            context,
-                            onion,
-                            () => _showDeleteConfirmationDialog(
-                                innerContext, onion.id),
-                            () => widget.parentShowMoveSelectDialog(
-                                innerContext, onion.id, widget.field.id),
-                            position,
-                          );
-                        },
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  OnionOneScreen(onionId: onion.id),
-                            ),
-                          );
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                onion.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                int numOfPages = (onions.length / onionsPerPage).ceil();
+                return PageView.builder(
+                  itemCount: numOfPages,
+                  itemBuilder: (context, pageIndex) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: List.generate(
+                          shelvesPerPage,
+                          (shelfIndex) {
+                            int firstOnionIndex = pageIndex * onionsPerPage +
+                                shelfIndex * onionsPerShelf;
+                            // 양파 1개 출력
+                            return Expanded(
+                              // 양파 크기 조절
+                              child: LayoutBuilder(
+                                builder: (BuildContext context,
+                                    BoxConstraints constraints) {
+                                  double columnHeight =
+                                      constraints.maxHeight; // Column의 높이 구하기
+                                  double columnWidth = constraints.maxWidth; //
+                                  double a = columnWidth / 2;
+                                  double b = (columnHeight -
+                                      (MediaQuery.of(context).size.width - 16) *
+                                          (69.4 / 395.4));
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      GridView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: onionsPerShelf,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: onionsPerShelf,
+                                          childAspectRatio: a / b,
+                                        ),
+                                        itemBuilder: (BuildContext context,
+                                            int itemIndex) {
+                                          int globalIndex =
+                                              firstOnionIndex + itemIndex;
+                                          CustomOnionFromField onion =
+                                              onions.elementAt(itemIndex);
+                                          if (globalIndex < onions.length) {
+                                            // 양파 1개
+                                            return GestureDetector(
+                                              onLongPressStart: (details) {
+                                                final RenderBox box =
+                                                    context.findRenderObject()
+                                                        as RenderBox;
+                                                final Offset position =
+                                                    box.globalToLocal(
+                                                        details.globalPosition);
+                                                showDeleteModal(
+                                                  context,
+                                                  onion,
+                                                  () =>
+                                                      _showDeleteConfirmationDialog(
+                                                          innerContext,
+                                                          onion.id),
+                                                  () => widget
+                                                      .parentShowMoveSelectDialog(
+                                                          innerContext,
+                                                          onion.id,
+                                                          widget.field.id),
+                                                  position,
+                                                );
+                                              },
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        OnionOneScreen(
+                                                            onionId: onion.id),
+                                                  ),
+                                                );
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      onion.name,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    Expanded(
+                                                      child: Image.asset(
+                                                          onion.imgSrc),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return const SizedBox.shrink();
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
-                              Expanded(
-                                child: Image.asset(onion.imgSrc),
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
-                      );
-                    }).toList(),
-                  ),
+                      ),
+                    );
+                  },
                 );
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');

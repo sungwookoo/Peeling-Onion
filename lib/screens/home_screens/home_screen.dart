@@ -192,6 +192,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
             image: AssetImage('assets/images/wall_paper.jpg'),
             fit: BoxFit.fill),
       ),
+      // 양파 페이지
       child: PageView.builder(
         itemCount: numOfPages,
         itemBuilder: (context, pageIndex) {
@@ -204,35 +205,54 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                 (shelfIndex) {
                   int firstOnionIndex =
                       pageIndex * onionsPerPage + shelfIndex * onionsPerShelf;
-                  return Flexible(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: onionsPerShelf,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: onionsPerShelf,
-                            childAspectRatio: 0.9,
-                          ),
-                          itemBuilder: (BuildContext context, int itemIndex) {
-                            int globalIndex = firstOnionIndex + itemIndex;
-                            if (globalIndex < widget._onions.length) {
-                              return HomeOneOnion(
-                                  onion: widget._onions.elementAt(globalIndex),
-                                  onDelete: () => _deleteOnion(globalIndex),
-                                  onUpdate: widget.onUpdate);
-                            } else {
-                              return const SizedBox.shrink();
-                            }
-                          },
-                        ),
-                        Image.asset(
-                          'assets/images/shelf.png',
-                        ),
-                      ],
+                  // 양파 1개 출력
+                  return Expanded(
+                    // 양파 크기 조절
+                    child: LayoutBuilder(
+                      builder:
+                          (BuildContext context, BoxConstraints constraints) {
+                        double columnHeight =
+                            constraints.maxHeight; // Column의 높이 구하기
+                        double columnWidth = constraints.maxWidth; //
+                        double a = columnWidth / 2;
+                        double b = (columnHeight -
+                            (MediaQuery.of(context).size.width - 16) *
+                                (69.4 / 395.4));
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: onionsPerShelf,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: onionsPerShelf,
+                                childAspectRatio: a / b,
+                              ),
+                              itemBuilder:
+                                  (BuildContext context, int itemIndex) {
+                                int globalIndex = firstOnionIndex + itemIndex;
+                                if (globalIndex < widget._onions.length) {
+                                  // 양파 1개
+                                  return HomeOneOnion(
+                                      onion:
+                                          widget._onions.elementAt(globalIndex),
+                                      onDelete: () => _deleteOnion(globalIndex),
+                                      onUpdate: widget.onUpdate);
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                            ),
+                            // 선반 그림
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: Image.asset('assets/images/shelf.png'),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   );
                 },
