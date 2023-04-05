@@ -218,7 +218,10 @@ class _MakeFieldsState extends State<MakeFields> {
                   alignment: Alignment.bottomLeft,
                   child: GestureDetector(
                     onTap: () => _showBookmarkedDialog(),
-                    child: const Icon(Icons.star),
+                    child: SizedBox(
+                      height: 50,
+                      child: Image.asset('assets/images/star_yellow.png'),
+                    ),
                   ),
                 ),
               ),

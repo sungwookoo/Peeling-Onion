@@ -136,6 +136,8 @@ flutter:
     - assets/images/customonion4.png
     - assets/images/customonion5.png
 
+    - assets/images/star_yellow.png
+    - assets/images/star_black.png
   #   - images/a_dot_ham.jpeg
 
   fonts:
