@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
-import onion1 from "./img/onion.png";
-import onion2 from "./img/glassonion.png";
+// import onion1 from "./img/onion.png";
+// import onion2 from "./img/glassonion.png";
 import onion3 from "./img/hatonion.png";
 import onion4 from "./img/muscle.png";
 import onion5 from "./img/musikonion.png";
 import onion6 from "./img/dongeunonion.png";
 import onion7 from "./img/pinkonion.png";
 import onion8 from "./img/suckonion.png";
+import onestore from "./img/onestore.png";
 import "animate.css";
 
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isLeft, setIsLeft] = useState(true);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,6 +27,7 @@ function App() {
   } onion`;
 
   const downloadApk = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
         "/jenkins/job/fe-prod/lastSuccessfulBuild/artifact/build/app/outputs/flutter-apk/app-release.apk",
@@ -32,7 +35,7 @@ function App() {
           responseType: "blob",
         }
       );
-
+      setIsLoading(false);
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -40,6 +43,7 @@ function App() {
       document.body.appendChild(link);
       link.click();
     } catch (error) {
+      setIsLoading(false);
       console.error("APK 다운로드에 실패했습니다:", error);
     }
   };
@@ -50,11 +54,14 @@ function App() {
 
   return (
     <figure className="images" id="splash-device">
+      <div className="title-box">
+        <h1>PEELING ONION</h1>
+      </div>
       <div className="device-image ios">
         <div className="device">
           {/* <img src="https://picsum.photos/1500/2500" /> */}
-          <img src={onion1} className={logoBounceClassName} alt="React" />
-          <img src={onion2} className={logoClassName} alt="React" />
+          {/* <img src={onion1} className={logoBounceClassName} alt="React" />
+          <img src={onion2} className={logoClassName} alt="React" /> */}
           <img src={onion3} className={logoBounceClassName} alt="React" />
           <img src={onion4} className={logoClassName} alt="React" />
           <img src={onion5} className={logoBounceClassName} alt="React" />
@@ -74,11 +81,24 @@ function App() {
             <span className="m-3 ellipsis book">Send the onion with the message</span>
           </div>
         </div>
-        <a>
-          <button className="yanolja" onClick={handleClick}>
-            Get Peeling Onion App
-          </button>
-        </a>
+        <div className="download-box">
+          <a className="store" href="https://onesto.re/0000768589">
+            <button className="download-btn">
+              <span className="store-text">Download</span> <img src={onestore} className="store" />
+            </button>
+          </a>
+        </div>
+        <div className="apk-box">
+          {isLoading ? (
+            <div className="loading">
+              <div className="loader"></div>
+            </div>
+          ) : (
+            <a className="download-text" onClick={handleClick}>
+              Download Release APK
+            </a>
+          )}
+        </div>
       </figcaption>
     </figure>
   );

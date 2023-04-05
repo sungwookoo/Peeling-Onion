@@ -206,14 +206,14 @@ figure {
 }
 
 button {
-  font-weight: 100;
+  font-weight: bold;
   letter-spacing: 2px;
-  background: #f5891f;
+  background: #53fea6;
   border: 0;
   padding: 15px 25px;
   border-radius: 45px;
   font-size: 23px;
-  color: #fff;
+  color: #000;
   display: inline-block;
   margin: auto;
 }
@@ -246,8 +246,18 @@ button {
   }
 }
 
-.images {
-  padding: 15%;
+h1 {
+  font-size: 60px;
+  font-weight: bolder;
+  font-family: "YanoljaYacheR";
+  color: #000;
+}
+
+.title-box {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-height: 400px) and (orientation: landscape) {
@@ -324,11 +334,61 @@ button {
   font-weight: 700;
   font-style: normal;
 }
-
-.yanolja {
+.download-btn {
   font-family: "YanoljaYacheR";
+  width: 320px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-text {
+  font-family: "YanoljaYacheR";
+  margin-top: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-box {
+  display: flex;
+  justify-content: center;
+}
+
+.store {
+  text-decoration: none;
+  height: 90px;
+}
+
+.store-text {
+  padding-left: 50px;
 }
 
 .book {
   font-family: "BookkMyungjo-Bd";
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.apk-box {
+  display: flex;
+  justify-content: center;
 }
