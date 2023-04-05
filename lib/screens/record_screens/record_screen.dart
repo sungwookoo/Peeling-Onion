@@ -199,6 +199,7 @@ class _RecordScreenState extends State<RecordScreen> {
     var result = UploadApiService().saveMessage(
         _onionId, recordUrl, _positive, _negative, _neutral, _sttMessage);
     print(result);
+    widget.onUpdate();
   }
 
   @override
@@ -438,13 +439,6 @@ class _RecordScreenState extends State<RecordScreen> {
                                   Navigator.pop(context);
                                   saveRecordMessage();
                                   Navigator.pop(context);
-                                  // 이부분 테스트
-                                  // 이렇게 하면 된다고?
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((_) {
-                                    widget.onUpdate();
-                                  });
-                                  // widget.onUpdate();
                                 },
                                 child: const Text('저장'),
                               )
