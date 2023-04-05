@@ -43,7 +43,6 @@ class _FieldScreenState extends State<FieldScreen> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          // image: AssetImage("assets/images/createbackground.jpg"),
           image: AssetImage("assets/images/background.png"),
           fit: BoxFit.fill,
         ),
@@ -64,6 +63,7 @@ class _FieldScreenState extends State<FieldScreen> {
                   // 밭들을 grid 로 출력 (MakeField 클래스 사용)
                   MakeFields(
                     fields: fieldsData,
+                    onCreate: () => displayTextInputDialog(context, addField),
                   ),
                 ],
               );
@@ -74,13 +74,6 @@ class _FieldScreenState extends State<FieldScreen> {
             return const CustomLoadingWidget(
                 imagePath: 'assets/images/onion_image.png');
           },
-        ),
-        // 밭 추가하는 버튼, 모달로 띄움(이후 디자인 따라 수정할 예정)
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            displayTextInputDialog(context, addField);
-          },
-          child: const Text('밭 추가'),
         ),
       ),
     );
