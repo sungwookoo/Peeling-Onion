@@ -202,33 +202,29 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
           children: [
             SizedBox(
               height: 70,
-              child: widget._onion.isDead
-                  ? const Text('으악 죽었따')
-                  // 전송하기 (보낼 수 있으면서, 내가 만든 양파면)
-                  : widget._onion.isTime2go && widget._onion.isOnionMaker
+              child: widget._onion.isTime2go && widget._onion.isOnionMaker
+                  ? GestureDetector(
+                      onTap: () {
+                        _showSendConfirmDialog(context, widget._onion);
+                      },
+                      child: Image.asset('assets/images/ready_to_go.png'),
+                    )
+                  : !widget._onion.isWatered
+                      // 물 주기
                       ? GestureDetector(
                           onTap: () {
-                            _showSendConfirmDialog(context, widget._onion);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RecordScreen(
+                                        onion: widget._onion,
+                                        onUpdate: widget.onUpdate,
+                                      )),
+                            );
                           },
-                          child: Image.asset('assets/images/ready_to_go.png'),
+                          child: Image.asset('assets/images/need_water.png'),
                         )
-                      : !widget._onion.isWatered
-                          // 물 주기
-                          ? GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => RecordScreen(
-                                            onion: widget._onion,
-                                            onUpdate: widget.onUpdate,
-                                          )),
-                                );
-                              },
-                              child:
-                                  Image.asset('assets/images/need_water.png'),
-                            )
-                          : Container(),
+                      : Container(),
             ),
             Text('이름 : ${widget._onion.name}'),
             Flexible(
@@ -246,7 +242,10 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                   );
                 },
                 // child: Image.asset(widget._onion.imgSrc),
-                child: Image.asset('assets/images/onioninbottle.png'),
+                child: widget._onion.isDead
+                    ? Image.asset('assets/images/deadonion.png')
+                    : Image.asset(
+                        'assets/images/onionbottle/${widget._onion.imgSrc[widget._onion.imgSrc.length - 5]}onionbottle.png'),
               ),
             ),
           ],

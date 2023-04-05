@@ -102,11 +102,16 @@ class _AlarmScreenState extends State<AlarmScreen> {
                                     size: 8,
                                     color: Colors.red,
                                   )
-                                : null,
+                                : const SizedBox(
+                                    width: 8,
+                                  ),
                             onTap: () {
                               if (!alarm.isRead) {
+                                setState(() {
+                                  alarm.changeReadStatus();
+                                });
                                 AlarmApiService().readAlarm(alarm.alarmId);
-                                updateAlarmList();
+                                // updateAlarmList();
                               }
                             },
                           ),

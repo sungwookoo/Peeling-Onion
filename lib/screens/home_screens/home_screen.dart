@@ -24,10 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void updateOnions() {
-    setState(() {
-      onions = OnionApiService.getGrowingOnionByUserId();
-      print('됨?');
-    });
+    try {
+      setState(() {
+        onions = OnionApiService.getGrowingOnionByUserId();
+        // print('됨?');
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
