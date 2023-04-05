@@ -231,13 +231,38 @@ class _RecordScreenState extends State<RecordScreen> {
           child: Column(
             children: [
               const SizedBox(
-                height: 30,
+                height: 50,
+              ),
+              SizedBox(
+                width: 350,
+                height: 250,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const Positioned(
+                      bottom: -10,
+                      child: Image(
+                        image: AssetImage(
+                          'assets/images/shelf.png',
+                        ),
+                        height: 60,
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 50,
+                      child: Image(
+                        image: AssetImage(_imageSrc),
+                        height: 230,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               _isfirst
                   ? Container(
                       decoration: const BoxDecoration(
                           image: DecorationImage(
-                        image: AssetImage('assets/images/note.png'),
+                        image: AssetImage('assets/images/letterpaper.png'),
                         fit: BoxFit.fill,
                       )),
                       height: 320,
@@ -248,32 +273,66 @@ class _RecordScreenState extends State<RecordScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              '양파 이름 : ${widget.onion.name}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            Row(
+                              children: [
+                                const Text(
+                                  '양파 이름 : ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'CookieRun',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  widget.onion.name,
+                                  style: const TextStyle(
+                                      fontSize: 18, fontFamily: 'CookieRun'),
+                                )
+                              ],
                             ),
                             const SizedBox(
                               height: 15,
                             ),
-                            Text(
-                              'To. ${widget.onion.receiverNumber.substring(0, 3)}-${widget.onion.receiverNumber.substring(3, 7)}-${widget.onion.receiverNumber.substring(7)}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            Row(
+                              children: [
+                                const Text(
+                                  'To. ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'CookieRun',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  '${widget.onion.receiverNumber.substring(0, 3)}-${widget.onion.receiverNumber.substring(3, 7)}-${widget.onion.receiverNumber.substring(7)}',
+                                  style: const TextStyle(
+                                    fontFamily: 'CookieRun',
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
                             ),
                             const SizedBox(
                               height: 15,
                             ),
-                            Text(
-                              'DueDate : ${widget.onion.growDueDate.substring(0, 10)}',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            Row(
+                              children: [
+                                const Text(
+                                  'DueDate : ',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'CookieRun',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  widget.onion.growDueDate.substring(0, 10),
+                                  style: const TextStyle(
+                                    fontFamily: 'CookieRun',
+                                    fontSize: 18,
+                                  ),
+                                )
+                              ],
                             )
                           ],
                         ),
@@ -282,7 +341,7 @@ class _RecordScreenState extends State<RecordScreen> {
                   : Container(
                       decoration: const BoxDecoration(
                           image: DecorationImage(
-                        image: AssetImage('assets/images/note.png'),
+                        image: AssetImage('assets/images/letterpaper.png'),
                         fit: BoxFit.fill,
                       )),
                       height: 320,
@@ -298,7 +357,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                       '양파가 듣고 있습니다.',
                                       style: TextStyle(
                                         fontSize: 30,
-                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'CookieRun',
                                       ),
                                     ),
                                   if (_isListening)
@@ -306,7 +365,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                       '${_time ~/ 60} : ${_time % 60}',
                                       style: const TextStyle(
                                         fontSize: 30,
-                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'CookieRun',
                                       ),
                                     ),
                                   if (!_isListening)
@@ -314,7 +373,7 @@ class _RecordScreenState extends State<RecordScreen> {
                                       '녹음된 메시지를 분석하고 있습니다.',
                                       style: TextStyle(
                                         fontSize: 30,
-                                        fontWeight: FontWeight.w500,
+                                        fontFamily: 'CookieRun',
                                       ),
                                     )
                                 ],
@@ -326,50 +385,33 @@ class _RecordScreenState extends State<RecordScreen> {
                                     const Text(
                                       '녹음된 메시지',
                                       style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                          fontSize: 20,
+                                          fontFamily: 'CookieRun'),
                                     ),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  Text(_sttMessage),
+                                  Text(
+                                    _sttMessage,
+                                    style: const TextStyle(
+                                      fontFamily: 'CookieRun',
+                                    ),
+                                  ),
                                   const SizedBox(
                                     height: 20,
                                   ),
                                   if (_sttMessage != '어떤 말도 하지 않으셨어요!')
                                     Text(
-                                        '긍정 : $_positive%, 부정 : $_negative%, 중립 : $_neutral%'),
+                                      '긍정 : $_positive%, 부정 : $_negative%, 중립 : $_neutral%',
+                                      style: const TextStyle(
+                                        fontFamily: 'CookieRun',
+                                      ),
+                                    ),
                                 ],
                               ),
                       )),
               const SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: 350,
-                height: 250,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    const Positioned(
-                      bottom: 0,
-                      child: Image(
-                        image: AssetImage(
-                          'assets/images/shelf.png',
-                        ),
-                        height: 60,
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 35,
-                      child: Image(
-                        image: AssetImage(_imageSrc),
-                        height: 230,
-                      ),
-                    ),
-                  ],
-                ),
+                height: 20,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

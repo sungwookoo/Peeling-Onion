@@ -91,11 +91,20 @@ class _AlarmScreenState extends State<AlarmScreen> {
                                   AssetImage(_typeImage[alarm.alarmType - 1]),
                               width: 80,
                             ),
-                            title: (alarm.alarmType == 1 ||
-                                    alarm.alarmType == 3)
-                                ? Text(_typeMessage[alarm.alarmType - 1])
-                                : Text(
-                                    '${alarm.senderNickname}${_typeMessage[alarm.alarmType - 1]}'),
+                            title:
+                                (alarm.alarmType == 1 || alarm.alarmType == 3)
+                                    ? Text(
+                                        _typeMessage[alarm.alarmType - 1],
+                                        style: const TextStyle(
+                                          fontFamily: 'CookieRun',
+                                        ),
+                                      )
+                                    : Text(
+                                        '${alarm.senderNickname}${_typeMessage[alarm.alarmType - 1]}',
+                                        style: const TextStyle(
+                                          fontFamily: 'CookieRun',
+                                        ),
+                                      ),
                             trailing: !alarm.isRead
                                 ? const Icon(
                                     Icons.circle,
