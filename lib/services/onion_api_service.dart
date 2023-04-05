@@ -5,8 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:front/models/custom_models.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-Future<OAuthToken?> Token = DefaultTokenManager().getToken();
-
+// Future<OAuthToken?> Token = DefaultTokenManager().getToken();
 // 양파 api 요청들
 class OnionApiService {
   // base url
@@ -14,6 +13,7 @@ class OnionApiService {
 
   // 기르는 양파 get (홈 화면에 띄울 양파 정보)
   static Future<List<CustomHomeOnion>> getGrowingOnionByUserId() async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -23,18 +23,23 @@ class OnionApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
+    print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     print(accessToken);
     // 요청에 따라 저장
     if (response.statusCode == 200) {
       List onions = jsonDecode(utf8.decode(response.bodyBytes));
       return onions.map((onion) => CustomHomeOnion.fromJson(onion)).toList();
     } else {
+      print(response.body);
+      print(response.statusCode);
       throw Exception('Failed to get home_onions');
     }
   }
 
   // 택배함 get (유저가 받은 택배함 양파 정보 조회)
   static Future<List<CustomOnionByOnionIdPostbox>> getPostboxOnion() async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -58,6 +63,8 @@ class OnionApiService {
 
   // 양파 get (양파 1개 조회. 연결된 message들 포함)
   static Future<CustomOnionByOnionId> getOnionById(int onionId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -79,7 +86,10 @@ class OnionApiService {
   }
 
   // 양파 즐겨찾기 get
+  Future<OAuthToken?> Token = DefaultTokenManager().getToken();
   static Future<List<CustomOnionFromField>> getBookmarkedOnion() async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // get 요청 보내기
@@ -102,6 +112,8 @@ class OnionApiService {
 
   // 양파 즐겨찾기 post
   static Future<void> postMarkedOnionById(int onionId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     // post 요청 보내기
@@ -130,6 +142,8 @@ class OnionApiService {
     required bool isSingle,
     required List userList,
   }) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     var idList = userList.map((user) => user['id']).toList();
@@ -165,6 +179,8 @@ class OnionApiService {
 
   // 양파 delete (양파 삭제)
   static Future<void> deleteOnionById(int onionId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     final response = await http.delete(
@@ -181,6 +197,8 @@ class OnionApiService {
 
   // 양파 send (다 키운 양파 전송)
   static Future<void> sendOnionById(int onionId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     final response = await http.post(
@@ -198,6 +216,8 @@ class OnionApiService {
 
   // 양파의 메시지 get
   static Future<CustomMessage> getMessage(int messageId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     final response = await http.get(
@@ -218,6 +238,8 @@ class OnionApiService {
   // 양파 밭 이동
   static Future<void> updateOnionField(
       int onionId, int fromFId, int toFId) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
+
     final accessToken = await Token.then((value) => value?.accessToken);
 
     final response = await http.put(
