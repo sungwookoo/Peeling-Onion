@@ -154,9 +154,9 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                       // 북마크 아이콘
                                       child: _isBookMarked.value
                                           ? Image.asset(
-                                              'assets/images/star_black.png')
+                                              'assets/images/star_yellow.png')
                                           : Image.asset(
-                                              'assets/images/star_yellow.png'),
+                                              'assets/images/star_black.png'),
                                     ),
                                   );
                                 },
