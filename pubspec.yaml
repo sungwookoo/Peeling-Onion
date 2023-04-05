@@ -157,6 +157,12 @@ flutter:
     - assets/images/onionbottle/5onionbottle_negative.png
 
     - assets/images/deadonion.png
+    - assets/images/0customonionsand.png
+    - assets/images/1customonionsand.png
+    - assets/images/2customonionsand.png
+    - assets/images/3customonionsand.png
+    - assets/images/4customonionsand.png
+    - assets/images/5customonionsand.png
   #   - images/a_dot_ham.jpeg
 
   fonts:
