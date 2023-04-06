@@ -235,9 +235,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                       },
                       child: Image.asset('assets/images/ready_to_go.png'),
                     )
-                  : !widget._onion.isDead &&
-                          !widget._onion.isWatered &&
-                          !widget._onion.isTime2go
+                  : !widget._onion.isDead && !widget._onion.isWatered
                       // 물 주기
                       ? GestureDetector(
                           onTap: () {
