@@ -47,7 +47,10 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     if (index <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('첫 메시지입니다.'),
+          content: Text(
+            '첫 메시지입니다.',
+            style: TextStyle(fontFamily: 'CookieRun'),
+          ),
           duration: Duration(seconds: 1),
         ),
       );
@@ -69,7 +72,10 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     if (index >= widget.onion.messageIdList.length - 1) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('마지막 메시지입니다.'),
+          content: Text(
+            '마지막 메시지입니다.',
+            style: TextStyle(fontFamily: 'CookieRun'),
+          ),
           duration: Duration(seconds: 1),
         ),
       );
@@ -92,6 +98,8 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           CustomMessage message = snapshot.data as CustomMessage;
+          // widget.onion.growDueDate.substring(0, 10)
+          String createDate = message.createdAt.substring(0, 10);
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 50, 8, 20),
@@ -116,14 +124,26 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                 top: 50.0, left: 20, right: 20),
                             child: Column(
                               children: [
-                                Text(message.createdAt),
+                                Text(
+                                  createDate,
+                                  style: const TextStyle(
+                                      fontFamily: 'CookieRun', fontSize: 22),
+                                ),
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Text('내용 : ${message.content}'),
+                                Text(
+                                  '내용 : ${message.content}',
+                                  style:
+                                      const TextStyle(fontFamily: 'CookieRun'),
+                                ),
                                 widget.onion.isSingle
                                     ? const Text('')
-                                    : Text('from ${message.sender}'),
+                                    : Text(
+                                        'from ${message.sender}',
+                                        style: const TextStyle(
+                                            fontFamily: 'CookieRun'),
+                                      ),
                               ],
                             ),
                           ),
@@ -197,9 +217,18 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                         ),
                         Column(
                           children: [
-                            Text('양파 이름 : ${widget.onion.name}'),
-                            Text('보낸 이 : ${widget.onion.sender}'),
-                            Text('보낸 날짜 : ${widget.onion.sendDate}'),
+                            Text(
+                              '양파 이름 : ${widget.onion.name}',
+                              style: const TextStyle(fontFamily: 'CookieRun'),
+                            ),
+                            Text(
+                              '보낸 이 : ${widget.onion.sender}',
+                              style: const TextStyle(fontFamily: 'CookieRun'),
+                            ),
+                            Text(
+                              '보낸 날짜 : ${widget.onion.sendDate!.substring(0, 10)}',
+                              style: const TextStyle(fontFamily: 'CookieRun'),
+                            ),
                             // Text('내용 : ${}')
                           ],
                         ),
