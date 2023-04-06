@@ -188,7 +188,7 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                       },
                                     ),
                                     Text(
-                                        '메시지 : ${widget.messageIndex + 1} / ${widget.onion.messageIdList.length}'),
+                                        '메시지 : ${index + 1} / ${widget.onion.messageIdList.length}'),
                                   ],
                                 ),
                               )
