@@ -361,13 +361,21 @@ class _RecordScreenState extends State<RecordScreen> {
                                       ),
                                     ),
                                   if (_isListening)
-                                    Text(
-                                      '${_time ~/ 60} : ${_time % 60}',
-                                      style: const TextStyle(
-                                        fontSize: 30,
-                                        fontFamily: 'CookieRun',
-                                      ),
-                                    ),
+                                    _time % 60 > 9
+                                        ? Text(
+                                            '${_time ~/ 60} : ${_time % 60}',
+                                            style: const TextStyle(
+                                              fontSize: 30,
+                                              fontFamily: 'CookieRun',
+                                            ),
+                                          )
+                                        : Text(
+                                            '${_time ~/ 60} : 0${_time % 60}',
+                                            style: const TextStyle(
+                                              fontSize: 30,
+                                              fontFamily: 'CookieRun',
+                                            ),
+                                          ),
                                   if (!_isListening)
                                     const Text(
                                       '녹음된 메시지를 분석하고 있습니다.',
