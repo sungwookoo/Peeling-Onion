@@ -401,10 +401,33 @@ class _RecordScreenState extends State<RecordScreen> {
                                     height: 20,
                                   ),
                                   if (_sttMessage != '어떤 말도 하지 않으셨어요!')
-                                    Text(
-                                      '긍정 : $_positive%, 부정 : $_negative%, 중립 : $_neutral%',
-                                      style: const TextStyle(
-                                        fontFamily: 'CookieRun',
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          const TextSpan(
+                                            text: '긍정',
+                                            style:
+                                                TextStyle(color: Colors.blue),
+                                          ),
+                                          TextSpan(
+                                            text: ' : $_positive%, ',
+                                          ),
+                                          const TextSpan(
+                                            text: '부정',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                          TextSpan(
+                                            text: ' : $_negative%, ',
+                                          ),
+                                          const TextSpan(
+                                            text: '중립',
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                          TextSpan(
+                                            text: ' : $_neutral%',
+                                          ),
+                                        ],
                                       ),
                                     ),
                                 ],
@@ -497,7 +520,10 @@ class _RecordScreenState extends State<RecordScreen> {
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                child: const Text('취소'),
+                                child: const Text(
+                                  '취소',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () async {
@@ -505,7 +531,10 @@ class _RecordScreenState extends State<RecordScreen> {
                                   saveRecordMessage();
                                   Navigator.pop(context);
                                 },
-                                child: const Text('저장'),
+                                child: const Text(
+                                  '저장',
+                                  style: TextStyle(color: Colors.green),
+                                ),
                               )
                             ],
                           ),

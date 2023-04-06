@@ -159,9 +159,7 @@ class _MakeFieldsState extends State<MakeFields> {
           title: const Text(
             '즐겨찾기',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: 'CookieRun',
-            ),
+            style: TextStyle(fontFamily: 'CookieRun', color: Colors.amber),
           ),
           content: SizedBox(
             width: double.maxFinite,
@@ -234,13 +232,29 @@ class _MakeFieldsState extends State<MakeFields> {
                                 color: Colors.black,
                                 fontSize: 20),
                           ),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           OutlinedButton(
                             onPressed: () {
                               setState(() {
                                 _isOnionMoving = false;
                               });
                             },
-                            child: const Text('취소'),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(
+                                color: Colors.green, // 변경된 부분
+                                width: 2.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              '취소',
+                              style: TextStyle(color: Colors.green),
+                            ),
                           )
                         ],
                       ),

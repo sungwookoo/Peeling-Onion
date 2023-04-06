@@ -956,6 +956,7 @@ class _MypageScreenState extends State<MypageScreen> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
+                                          // backgroundColor: Colors.green[50],
                                           title: const Text(
                                             '회원탈퇴',
                                             style: TextStyle(

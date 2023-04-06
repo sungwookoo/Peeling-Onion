@@ -106,6 +106,12 @@ class _OnionCreateState extends State<OnionCreate> {
                                   ),
                                 )),
                             TextFormField(
+                              decoration: const InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffA1D57A)),
+                                ),
+                              ),
                               onSaved: (val) {
                                 setState(() {
                                   _onionName = val as String;
@@ -137,6 +143,12 @@ class _OnionCreateState extends State<OnionCreate> {
                             ),
                             TextFormField(
                               keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Color(0xffA1D57A)),
+                                ),
+                              ),
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                                 NumberFormatter(),

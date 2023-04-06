@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../services/find_user_api_service.dart';
 import '../../widgets/loading_rotation.dart';
@@ -42,9 +41,11 @@ class _InvitePeopleState extends State<InvitePeople> {
             );
           },
         ),
-        title: const Text(
-          '함께 보낼 사람 초대',
-          style: TextStyle(color: Colors.black),
+        title: const Center(
+          child: Text(
+            '함께 보낼 사람 초대',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
         actions: [
           FloatingActionButton(
@@ -56,7 +57,7 @@ class _InvitePeopleState extends State<InvitePeople> {
             child: const Text(
               '확인',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.green,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -136,7 +137,9 @@ class _InvitePeopleState extends State<InvitePeople> {
                   child: TextFormField(
                     decoration: InputDecoration(
                         hintText: '검색어를 입력하세요.',
-                        border: const OutlineInputBorder(),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green),
+                        ),
                         suffixIcon: IconButton(
                           onPressed: () async {
                             if (_findPeopleKey.currentState!.validate()) {
@@ -211,15 +214,6 @@ class _InvitePeopleState extends State<InvitePeople> {
             ),
           ),
         ),
-      ),
-      bottomSheet: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            int n = Random().nextInt(100) + 1;
-            _selectedPeople.add({'id': 123, 'nickname': n.toString()});
-          });
-        },
-        child: const Text('추가'),
       ),
     );
   }
