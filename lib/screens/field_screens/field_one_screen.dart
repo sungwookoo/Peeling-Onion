@@ -84,6 +84,7 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
           width: (MediaQuery.of(context).size.width - 60),
           height: (MediaQuery.of(context).size.width - 60),
           // color: Colors.brown,
+          padding: const EdgeInsets.all(8),
           decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage('assets/images/field.png'), fit: BoxFit.fill),
@@ -139,9 +140,14 @@ class _FieldOneScreenState extends State<FieldOneScreen> {
                                 onion.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontFamily: 'cookieRun',
+                                  color: Colors.white,
+                                ),
                               ),
                               Expanded(
-                                child: Image.asset(onion.imgSrc),
+                                child: Image.asset(
+                                    'assets/images/${onion.imgSrc[onion.imgSrc.length - 5]}customonionsand.png'),
                               ),
                             ],
                           ),
