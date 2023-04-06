@@ -78,9 +78,14 @@ class _ListenAudioUrlState extends State<ListenAudioUrl> {
             widget.urlPath != null
                 ? widget.isPlayed.value = !widget.isPlayed.value
                 : null;
+            player.onPlayerComplete.listen((_) {
+              widget.isPlayed.value = false;
+              _prepareAudio();
+            });
           },
-          icon:
-              isPlayed ? const Icon(Icons.pause) : const Icon(Icons.play_arrow),
+          icon: widget.isPlayed.value
+              ? const Icon(Icons.pause)
+              : const Icon(Icons.play_arrow),
         );
       },
     );

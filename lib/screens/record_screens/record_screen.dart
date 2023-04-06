@@ -210,7 +210,7 @@ class _RecordScreenState extends State<RecordScreen> {
 
   void saveRecordMessage() async {
     String recordUrl = await saveRecord();
-    var result = UploadApiService().saveMessage(
+    var result = await UploadApiService().saveMessage(
         _onionId, recordUrl, _positive, _negative, _neutral, _sttMessage);
     print(result);
     widget.onUpdate();

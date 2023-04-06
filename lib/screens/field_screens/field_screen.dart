@@ -55,29 +55,47 @@ class _FieldScreenState extends State<FieldScreen> {
           resizeToAvoidBottomInset: false,
           // 밭 표시 (그리드는 최대한 중앙에)
           body: FutureBuilder(
-            future: _fields,
-            builder: (context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.hasData) {
-                List<CustomField> fieldsData =
-                    snapshot.data as List<CustomField>;
-                // 밭들을 출력하는 class
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    // 밭들을 grid 로 출력 (MakeField 클래스 사용)
-                    MakeFields(
-                      fields: fieldsData,
-                      onCreate: () => displayTextInputDialog(context, addField),
-                    ),
-                  ],
-                );
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              // 로딩 화면
-              return const CustomLoadingWidget(
-                  imagePath: 'assets/images/onion_image.png');
-            },
+              future: _fields,
+              builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData) {
+                  List<CustomField> fieldsData =
+                      snapshot.data as List<CustomField>;
+                  // 밭들을 출력하는 class
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // 밭들을 grid 로 출력 (MakeField 클래스 사용)
+                      MakeFields(
+                        fields: fieldsData,
+                        onCreate: () =>
+                            displayTextInputDialog(context, addField),
+                      ),
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                // 로딩 화면
+                return const CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png');
+              }),
+          floatingActionButton: Container(
+            padding: const EdgeInsets.all(8),
+            alignment: Alignment.bottomRight,
+            child: GestureDetector(
+              onTap: () => displayTextInputDialog(context, addField),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2,
+                    )),
+                height: 65,
+                child: Image.asset('assets/images/shovel.png'),
+              ),
+            ),
           ),
         ),
       ),

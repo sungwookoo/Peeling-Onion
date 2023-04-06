@@ -156,29 +156,41 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.8),
                               // 즐겨찾기 나타내는 아이콘
-                              ValueListenableBuilder(
-                                valueListenable: _isBookMarked,
-                                builder: (BuildContext context, bool value,
-                                    Widget? child) {
-                                  return Container(
-                                    padding: const EdgeInsets.all(8.0),
-                                    height: 50,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _isBookMarked.value =
-                                            !_isBookMarked.value;
-                                        OnionApiService.postMarkedOnionById(
-                                            widget.onion.id);
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    ValueListenableBuilder(
+                                      valueListenable: _isBookMarked,
+                                      builder: (BuildContext context,
+                                          bool value, Widget? child) {
+                                        return Container(
+                                          padding: const EdgeInsets.all(8.0),
+                                          height: 50,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              _isBookMarked.value =
+                                                  !_isBookMarked.value;
+                                              OnionApiService
+                                                  .postMarkedOnionById(
+                                                      widget.onion.id);
+                                            },
+                                            // 북마크 아이콘
+                                            child: _isBookMarked.value
+                                                ? Image.asset(
+                                                    'assets/images/star_yellow.png')
+                                                : Image.asset(
+                                                    'assets/images/star_black.png'),
+                                          ),
+                                        );
                                       },
-                                      // 북마크 아이콘
-                                      child: _isBookMarked.value
-                                          ? Image.asset(
-                                              'assets/images/star_yellow.png')
-                                          : Image.asset(
-                                              'assets/images/star_black.png'),
                                     ),
-                                  );
-                                },
+                                    Text(
+                                        '메시지 : ${widget.messageIndex + 1} / ${widget.onion.messageIdList.length}'),
+                                  ],
+                                ),
                               )
                             ],
                           ),

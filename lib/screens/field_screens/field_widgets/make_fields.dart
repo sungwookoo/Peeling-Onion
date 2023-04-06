@@ -414,25 +414,6 @@ class _MakeFieldsState extends State<MakeFields> {
                 ),
               ],
             ),
-            // 밭 추가 아이콘
-            Container(
-              padding: const EdgeInsets.all(8),
-              alignment: Alignment.bottomRight,
-              child: GestureDetector(
-                onTap: () => widget.onCreate(),
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      )),
-                  height: 65,
-                  child: Image.asset('assets/images/shovel.png'),
-                ),
-              ),
-            ),
           ],
         ),
       ),
