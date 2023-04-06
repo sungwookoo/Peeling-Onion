@@ -285,6 +285,7 @@ class _MakeFieldsState extends State<MakeFields> {
                             Wrap(
                               // 각 밭들을 한 번씩 return 해서 children 에 담음
                               children: pageFields.map((field) {
+                                double top = 0;
                                 return SizedBox(
                                   width:
                                       (MediaQuery.of(context).size.width - 60) /
@@ -356,17 +357,18 @@ class _MakeFieldsState extends State<MakeFields> {
                                     },
                                     // 전체 밭 화면에서 나타나게 할 밭 1개
                                     child: Animate(
-                                        // 양파 이동 중이면, 밭 표지판을 진동시키기
-                                        child: _isOnionMoving
-                                            ? FieldOneScreenHere(field: field)
-                                                .animate(
-                                                  onPlay: (controller) =>
-                                                      controller.repeat(),
-                                                )
-                                                .moveX(begin: 0, end: 5)
-                                                .then()
-                                                .moveX(begin: 5, end: 0)
-                                            : FieldOneScreenHere(field: field)),
+                                      // 양파 이동 중이면, 밭 표지판을 진동시키기
+                                      child: _isOnionMoving
+                                          ? FieldOneScreenHere(field: field)
+                                              .animate(
+                                                onPlay: (controller) =>
+                                                    controller.repeat(),
+                                              )
+                                              .moveX(begin: 0, end: 5)
+                                              .then()
+                                              .moveX(begin: 5, end: 0)
+                                          : FieldOneScreenHere(field: field),
+                                    ),
                                   ),
                                 );
                               }).toList(),
@@ -427,32 +429,46 @@ Future<void> _showFieldPopup(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('삭제'),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
+            // const Text('삭제'),
+            // IconButton(
+            //   icon: const Icon(Icons.delete),
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //     onDelete();
+            //   },
+            // ),
+            GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
                 onDelete();
               },
+              child: const Text('삭제'),
             ),
-          ],
-        ),
-      ),
-      PopupMenuItem(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('이름 변경'),
-            IconButton(
-              icon: const Icon(Icons.update),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
                 onRename();
               },
-            ),
+              child: const Text('이동'),
+            )
           ],
         ),
       ),
+      // PopupMenuItem(
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       // const Text('이름 변경'),
+      //       IconButton(
+      //         icon: const Icon(Icons.update),
+      //         onPressed: () {
+      //           Navigator.pop(context);
+      //           onRename();
+      //         },
+      //       ),
+      //     ],
+      //   ),
+      // ),
     ],
   );
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:front/models/custom_models.dart';
 import 'package:front/services/onion_api_service.dart';
 import './listen_audio_url.dart';
-import '../widgets/loading_rotation.dart';
 
 // 양파 + 메시지 위젯
 class OnionWithMessage extends StatefulWidget {
@@ -216,10 +215,11 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
             child: Text('Failed to load onion'),
           );
         } else {
-          return const Center(
-            child:
-                CustomLoadingWidget(imagePath: 'assets/images/onion_image.png'),
-          );
+          // return const Center(
+          //   child:
+          //       CustomLoadingWidget(imagePath: 'assets/images/onion_image.png'),
+          // );
+          return Container();
         }
       },
     );
