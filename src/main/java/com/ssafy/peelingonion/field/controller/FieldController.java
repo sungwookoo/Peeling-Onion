@@ -154,7 +154,7 @@ public class FieldController {
         final Long userId = authorizeService.getAuthorization(token);
         if(authorizeService.isAuthorization(userId)) {
             try {
-                fieldService.deleteField(fieldId);
+                fieldService.deleteField(userId, fieldId);
                 return ResponseEntity.ok().build();
             } catch(FieldNotDeletedException e){
                 log.info(e.getMessage());

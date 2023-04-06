@@ -5,6 +5,7 @@ import static com.ssafy.peelingonion.common.ConstValues.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -85,10 +86,21 @@ public class FieldService {
 		return fieldRepository.save(field);
 	}
 
-	public void deleteField(Long fieldId) {
-		Field field = fieldRepository.findById(fieldId).get();
-		field.setIsDisabled(Boolean.TRUE);
-		fieldRepository.save(field);
+	public void deleteField(Long userId, Long fieldId) {
+		Optional<Field> field = fieldRepository.findById(fieldId);
+		Optional<MyField> myField = myFieldRepository.findByUserIdAndIsDefault(userId, Boolean.TRUE);
+		if(field.isPresent() && myField.isPresent()) {
+			// myField로 얻은 Field와 지울 Field가 다르면 지운다.
+			Field targetField = field.get();
+			if(!Objects.equals(myField.get().getField().getId(), targetField.getId())) {
+				targetField.setIsDisabled(Boolean.TRUE);
+				fieldRepository.save(targetField);
+			} else {
+				throw new IllegalStateException("해당 밭이 존재하지 않습니다.");
+			}
+		} else {
+			throw new IllegalStateException("해당 밭이 존재하지 않습니다.");
+		}
 	}
 
 	/**
