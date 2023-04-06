@@ -3,12 +3,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-Future<OAuthToken?> Token = DefaultTokenManager().getToken();
-
 class FindPeopleApiService {
   static String? baseUrl = dotenv.env['baseUrl'];
 
   static Future<List<Map>> findUsersByWord(String searchWord) async {
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
     final accessToken = await Token.then((value) => value?.accessToken);
     final response = await http.get(
       Uri.parse('$baseUrl/user/nickname/$searchWord'),
