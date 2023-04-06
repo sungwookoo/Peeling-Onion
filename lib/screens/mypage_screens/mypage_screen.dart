@@ -952,7 +952,47 @@ class _MypageScreenState extends State<MypageScreen> {
                                     ),
                                   ),
                                   onTap: () async {
-                                    signOut();
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text(
+                                            '회원탈퇴',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Color.fromRGBO(
+                                                  255, 85, 73, 1),
+                                            ),
+                                          ),
+                                          content:
+                                              const Text('정말로 회원탈퇴 하시겠습니까?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text(
+                                                '취소',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                Navigator.pop(context);
+                                                signOut();
+                                              },
+                                              child: const Text(
+                                                '확인',
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      255, 85, 73, 1),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                 ),
                               ],
