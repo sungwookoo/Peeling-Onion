@@ -25,6 +25,7 @@ class AlarmApiService {
           .map((alarm) => CustomAlarmField.fromJson(alarm))
           .toList();
     } else {
+      print(response.statusCode);
       throw Exception('알림 리스트 불러오기 실패');
     }
   }
