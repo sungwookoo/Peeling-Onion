@@ -37,7 +37,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       resizeToAvoidBottomInset: false,
       // app Bar
       appBar: AppBar(
-        title: const Text('Peeling Onion'),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0.0,
         actions: [
           IconButton(
             onPressed: () {
@@ -48,6 +50,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           )
         ],
       ),
+      extendBodyBehindAppBar: true,
       // 화면 내용
       body: Container(
         child: Center(
