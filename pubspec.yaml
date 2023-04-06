@@ -173,6 +173,7 @@ flutter:
     - assets/icons/undoIcon.png
     - assets/icons/saveIcon.png
     - assets/icons/addonion.png
+    - assets/images/starwithwing.png
   #   - images/a_dot_ham.jpeg
 
   fonts:
