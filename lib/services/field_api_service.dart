@@ -71,6 +71,9 @@ class FieldApiService {
     );
     // 요청 성공
     if (response.statusCode == 200) {
+      print('200 오나?');
+    } else if (response.statusCode == 304) {
+      print('기본밭을 삭제 시도했습니다.');
     } else {
       throw Exception('Failed to load fields');
     }

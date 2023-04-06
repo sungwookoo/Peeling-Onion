@@ -303,14 +303,26 @@ class _MakeFieldsState extends State<MakeFields> {
                                   // 밭을 클릭하면, 해당 밭을 확대해서 모달로 띄움. 이 때 상세 정보를 api로 받아서 보여줄 예정
                                   child: GestureDetector(
                                     onLongPressStart: (details) {
-                                      _showFieldPopup(
-                                        context,
-                                        field,
-                                        () => _showDeleteConfirmationDialog(
-                                            field.id),
-                                        () => _showGetRenameDialog(field.id),
-                                        details,
-                                      );
+                                      if (field.id ==
+                                          widget._fields.elementAt(0).id) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content:
+                                                Text('기본 밭은 수정/삭제가 불가합니다.'),
+                                            duration: Duration(seconds: 1),
+                                          ),
+                                        );
+                                      } else {
+                                        _showFieldPopup(
+                                          context,
+                                          field,
+                                          () => _showDeleteConfirmationDialog(
+                                              field.id),
+                                          () => _showGetRenameDialog(field.id),
+                                          details,
+                                        );
+                                      }
                                     },
                                     onTap: () {
                                       // 양파 밭 이동하는 상태인 경우
@@ -436,46 +448,30 @@ Future<void> _showFieldPopup(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // const Text('삭제'),
-            // IconButton(
-            //   icon: const Icon(Icons.delete),
-            //   onPressed: () {
-            //     Navigator.pop(context);
-            //     onDelete();
-            //   },
-            // ),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
                 onDelete();
               },
-              child: const Text('삭제'),
+              child: const Text(
+                '삭제',
+                style: TextStyle(color: Colors.red),
+              ),
             ),
+            const Text(' / '),
             GestureDetector(
               onTap: () {
                 Navigator.pop(context);
                 onRename();
               },
-              child: const Text('이동'),
+              child: const Text(
+                '이름 변경',
+                style: TextStyle(color: Colors.blue),
+              ),
             )
           ],
         ),
       ),
-      // PopupMenuItem(
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       // const Text('이름 변경'),
-      //       IconButton(
-      //         icon: const Icon(Icons.update),
-      //         onPressed: () {
-      //           Navigator.pop(context);
-      //           onRename();
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
     ],
   );
 }
