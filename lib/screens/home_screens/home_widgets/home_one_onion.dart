@@ -153,7 +153,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
           title: const Text('양파를 삭제하시겠습니까?'),
           content: widget._onion.isSingle
               ? const Text('삭제한 양파는 되돌릴 수 없으며, 저장된 메시지 역시 사라지게 됩니다.')
-              : const Text('모아보내기 양파입니다. 이걸 지우면 다른 사람들의 녹음 역시 사라집니다.'),
+              : const Text('함께보내기 양파입니다. 이걸 지우면 다른 사람들의 녹음 역시 사라집니다.'),
           actions: [
             TextButton(
               onPressed: () {
@@ -225,6 +225,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
           children: [
             SizedBox(
               height: 70,
+              // 택배 보내기
               child: !widget._onion.isDead &&
                       widget._onion.isTime2go &&
                       widget._onion.isOnionMaker
@@ -258,7 +259,18 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
               child: GestureDetector(
                 onLongPress: () {
                   // 양파 1개 delete 함수
-                  showDeleteModal(context, widget._onion, widget.onDelete);
+                  if (widget._onion.isOnionMaker) {
+                    showDeleteModal(context, widget._onion, widget.onDelete);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          '타인이 만든 함께보내기 양파는 삭제할 수 없습니다.',
+                        ),
+                        duration: Duration(seconds: 1),
+                      ),
+                    );
+                  }
                 },
                 onTap: () {
                   if (widget._onion.isWatered) {
