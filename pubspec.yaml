@@ -37,6 +37,7 @@ dependencies:
   intl: ^0.17.0
   http: ^0.13.3
   audioplayers: ^3.0.1
+  flutter_animate: ^4.1.1+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -138,8 +139,11 @@ flutter:
 
     - assets/images/star_yellow.png
     - assets/images/star_black.png
+    - assets/images/shovel.png
 
     - assets/images/onionbottle/0onionbottle.png
+    - assets/images/onionbottle/0onionbottle_positive.png
+    - assets/images/onionbottle/0onionbottle_negative.png
     - assets/images/onionbottle/1onionbottle.png
     - assets/images/onionbottle/1onionbottle_positive.png
     - assets/images/onionbottle/1onionbottle_negative.png
