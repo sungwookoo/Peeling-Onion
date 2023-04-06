@@ -241,12 +241,24 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                   showDeleteModal(context, widget._onion, widget.onDelete);
                 },
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            HomeOnionDetail(onion: widget._onion)),
-                  );
+                  if (widget._onion.isWatered) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomeOnionDetail(onion: widget._onion)),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecordScreen(
+                          onion: widget._onion,
+                          onUpdate: widget.onUpdate,
+                        ),
+                      ),
+                    );
+                  }
                 },
                 // child: Image.asset(widget._onion.imgSrc),
                 child: widget._onion.isDead
