@@ -3,8 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-Future<OAuthToken?> kakaoToken = DefaultTokenManager().getToken();
-
 class NotificationService {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
@@ -17,6 +15,7 @@ class NotificationService {
 
   Future<void> saveFcmToken(String token) async {
     String baseUrl = dotenv.get('baseUrl');
+    Future<OAuthToken?> kakaoToken = DefaultTokenManager().getToken();
     final accessToken = await kakaoToken.then((value) => value?.accessToken);
 
     final response = await http.post(

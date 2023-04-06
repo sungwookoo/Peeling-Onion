@@ -37,7 +37,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       resizeToAvoidBottomInset: false,
       // app Bar
       appBar: AppBar(
-        title: const Text('Peeling Onion'),
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        elevation: 0.0,
         actions: [
           IconButton(
             onPressed: () {
@@ -48,6 +50,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           )
         ],
       ),
+      extendBodyBehindAppBar: true,
       // 화면 내용
       body: Container(
         child: Center(
@@ -56,6 +59,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
       // 네비게이션 바. 커스텀은 여기서
       bottomNavigationBar: BottomNavigationBar(
+        // backgroundColor: const Color.fromRGBO(60, 106, 28, 0.08),
+        backgroundColor: const Color.fromRGBO(253, 253, 245, 1),
+        // backgroundColor: Colors.green[100],
         type: BottomNavigationBarType.fixed,
         unselectedItemColor: Colors.black,
         showUnselectedLabels: true,
@@ -78,7 +84,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.green,
         onTap: _onItemTapped,
       ),
     );

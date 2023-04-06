@@ -6,8 +6,6 @@ import 'package:simple_s3/simple_s3.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-Future<OAuthToken?> Token = DefaultTokenManager().getToken();
-
 class UploadApiService {
   final SimpleS3 _simpleS3 = SimpleS3();
   static String? baseUrl = dotenv.env['baseUrl'];
@@ -31,6 +29,7 @@ class UploadApiService {
       'neu_rate': neu,
       'file_src': recordUrl
     };
+    Future<OAuthToken?> Token = DefaultTokenManager().getToken();
     final accessToken = await Token.then((value) => value?.accessToken);
     final data = jsonEncode(datas);
 

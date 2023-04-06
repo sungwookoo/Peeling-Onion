@@ -4,6 +4,7 @@ import '../../services/field_api_service.dart';
 import './field_widgets/field_add_modal.dart';
 import './field_widgets/make_fields.dart';
 import '../../widgets/loading_rotation.dart';
+import 'package:front/widgets/on_will_pop.dart';
 
 String textInput = '';
 
@@ -40,40 +41,44 @@ class _FieldScreenState extends State<FieldScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/background.png"),
-          fit: BoxFit.fill,
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/background.png"),
+            fit: BoxFit.fill,
+          ),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        resizeToAvoidBottomInset: false,
-        // 밭 표시 (그리드는 최대한 중앙에)
-        body: FutureBuilder(
-          future: _fields,
-          builder: (context, AsyncSnapshot<dynamic> snapshot) {
-            if (snapshot.hasData) {
-              List<CustomField> fieldsData = snapshot.data as List<CustomField>;
-              // 밭들을 출력하는 class
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // 밭들을 grid 로 출력 (MakeField 클래스 사용)
-                  MakeFields(
-                    fields: fieldsData,
-                    onCreate: () => displayTextInputDialog(context, addField),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            // 로딩 화면
-            return const CustomLoadingWidget(
-                imagePath: 'assets/images/onion_image.png');
-          },
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false,
+          // 밭 표시 (그리드는 최대한 중앙에)
+          body: FutureBuilder(
+            future: _fields,
+            builder: (context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                List<CustomField> fieldsData =
+                    snapshot.data as List<CustomField>;
+                // 밭들을 출력하는 class
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // 밭들을 grid 로 출력 (MakeField 클래스 사용)
+                    MakeFields(
+                      fields: fieldsData,
+                      onCreate: () => displayTextInputDialog(context, addField),
+                    ),
+                  ],
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              // 로딩 화면
+              return const CustomLoadingWidget(
+                  imagePath: 'assets/images/onion_image.png');
+            },
+          ),
         ),
       ),
     );
