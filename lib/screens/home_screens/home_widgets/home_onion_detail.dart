@@ -13,6 +13,8 @@ class HomeOnionDetail extends StatefulWidget {
 class _HomeOnionDetailState extends State<HomeOnionDetail> {
   @override
   Widget build(BuildContext context) {
+    var img = widget.onion.imgSrc;
+    var imageId = int.parse(img[img.length - 5]);
     return Scaffold(
       body: Center(
         child: Container(
@@ -26,12 +28,12 @@ class _HomeOnionDetailState extends State<HomeOnionDetail> {
           child: Column(
             children: [
               const SizedBox(
-                height: 30,
+                height: 50,
               ),
               Container(
                 decoration: const BoxDecoration(
                     image: DecorationImage(
-                  image: AssetImage('assets/images/note.png'),
+                  image: AssetImage('assets/images/letterpaper.png'),
                   fit: BoxFit.fill,
                 )),
                 height: 320,
@@ -74,12 +76,15 @@ class _HomeOnionDetailState extends State<HomeOnionDetail> {
                 ),
               ),
               const SizedBox(
-                height: 250,
+                height: 10,
+              ),
+              SizedBox(
+                height: 300,
                 width: 350,
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    Positioned(
+                    const Positioned(
                       bottom: 0,
                       child: Image(
                         image: AssetImage(
@@ -89,10 +94,11 @@ class _HomeOnionDetailState extends State<HomeOnionDetail> {
                       ),
                     ),
                     Positioned(
-                      bottom: 40,
+                      bottom: 60,
                       child: Image(
-                        image: AssetImage('assets/images/onioninbottle.png'),
-                        height: 220,
+                        image: AssetImage(
+                            'assets/images/onionbottle/${imageId}onionbottle.png'),
+                        height: 250,
                       ),
                     ),
                   ],

@@ -262,8 +262,8 @@ class _MakeFieldsState extends State<MakeFields> {
                         _showBookmarkedDialog();
                       },
                       child: SizedBox(
-                        height: 50,
-                        child: Image.asset('assets/images/star_yellow.png'),
+                        height: 100,
+                        child: Image.asset('assets/images/starwithwing.png'),
                       ),
                     ),
                   ),
