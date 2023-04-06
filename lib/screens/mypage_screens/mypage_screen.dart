@@ -7,7 +7,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
-import '../../widgets/loading_rotation.dart';
+// import '../../widgets/loading_rotation.dart';
 import 'package:front/widgets/on_will_pop.dart';
 
 class MypageScreen extends StatefulWidget {
@@ -245,6 +245,10 @@ class _MypageScreenState extends State<MypageScreen> {
       });
       return;
     }
+
+    setState(() {
+      _isAuthCodeValid = false;
+    });
 
     FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -887,11 +891,11 @@ class _MypageScreenState extends State<MypageScreen> {
                                 //   },
                                 //   child: const Text('공유하기'),
                                 // ),
-                                IconButton(
-                                  onPressed: () =>
-                                      {Navigator.pushNamed(context, '/signin')},
-                                  icon: const Icon(Icons.home),
-                                ),
+                                // IconButton(
+                                //   onPressed: () =>
+                                //       {Navigator.pushNamed(context, '/signin')},
+                                //   icon: const Icon(Icons.home),
+                                // ),
                                 const Divider(
                                   thickness: 2,
                                   color: Colors.black,
@@ -948,7 +952,48 @@ class _MypageScreenState extends State<MypageScreen> {
                                     ),
                                   ),
                                   onTap: () async {
-                                    signOut();
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          // backgroundColor: Colors.green[50],
+                                          title: const Text(
+                                            '회원탈퇴',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Color.fromRGBO(
+                                                  255, 85, 73, 1),
+                                            ),
+                                          ),
+                                          content:
+                                              const Text('정말로 회원탈퇴 하시겠습니까?'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: const Text(
+                                                '취소',
+                                                style: TextStyle(
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                Navigator.pop(context);
+                                                signOut();
+                                              },
+                                              child: const Text(
+                                                '확인',
+                                                style: TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      255, 85, 73, 1),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   },
                                 ),
                               ],
@@ -959,8 +1004,9 @@ class _MypageScreenState extends State<MypageScreen> {
                     } else if (snapshot.hasError) {
                       return Text('에러 발생: ${snapshot.error}');
                     } else {
-                      return const CustomLoadingWidget(
-                          imagePath: 'assets/images/onion_image.png');
+                      // return const CustomLoadingWidget(
+                      //     imagePath: 'assets/images/onion_image.png');
+                      return const Text('');
                     }
                   },
                 ),

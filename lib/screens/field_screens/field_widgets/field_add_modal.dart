@@ -16,12 +16,17 @@ Future<void> displayTextInputDialog(
         builder: (context, setState) {
           // 모달 창 시작
           return AlertDialog(
-            title: const Text('밭 이름 작성'),
+            title: const Text(
+              '밭 이름 작성',
+            ),
             // 입력 창
             content: TextField(
               controller: textFieldController,
               decoration: InputDecoration(
                 hintText: '밭 이름',
+                focusedBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Color(0xffA1D57A)),
+                ),
                 errorText:
                     textFieldController.text.isEmpty ? '값을 입력해 주세요' : null,
               ),
@@ -35,13 +40,23 @@ Future<void> displayTextInputDialog(
             // 버튼 누르기
             actions: <Widget>[
               TextButton(
-                child: const Text('취소'),
+                child: const Text(
+                  '취소',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               TextButton(
-                child: const Text('등록'),
+                child: const Text(
+                  '등록',
+                  style: TextStyle(
+                    color: Colors.green,
+                  ),
+                ),
                 onPressed: () {
                   // text input 값
                   String text = textFieldController.text;

@@ -138,6 +138,10 @@ class _SigninScreenState extends State<SigninScreen> {
       return;
     }
 
+    setState(() {
+      _isAuthCodeValid = false;
+    });
+
     FirebaseAuth auth = FirebaseAuth.instance;
 
     String phoneNumber = _phoneNumberController.text;
@@ -284,6 +288,9 @@ class _SigninScreenState extends State<SigninScreen> {
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: const TextSpan(
+                          style: TextStyle(
+                            fontFamily: "CookieRun",
+                          ),
                           children: [
                             TextSpan(
                               text: "서비스 이용을 위해서\n",
@@ -296,7 +303,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               text: "전화번호 인증",
                               style: TextStyle(
                                 fontSize: 20,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 // color: Color(0xffA1D57A),
                                 color: Colors.grey,
                                 // color: Color.fromRGBO(56, 102, 101, 1),

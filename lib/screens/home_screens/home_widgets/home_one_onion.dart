@@ -68,7 +68,12 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('취소'),
+              child: const Text(
+                '취소',
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
@@ -76,7 +81,15 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                 OnionApiService.sendOnionById(onion.id);
                 _showSendCompleteDialog(context, onion);
               },
-              child: const Text('전송'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, // 변경된 부분
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text(
+                '전송',
+              ),
             ),
           ],
         );
@@ -90,7 +103,8 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('배송 완료!!'),
+          title: const Text('배송 완료!!',
+              style: TextStyle(color: Color.fromRGBO(234, 181, 211, 1))),
           content: SizedBox(
             height: 200,
             child: Column(
@@ -108,7 +122,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                 Navigator.pop(context);
                 widget.onUpdate();
               },
-              child: const Text('취소'),
+              child: const Text('취소', style: TextStyle(color: Colors.grey)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -116,6 +130,12 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                 widget.onUpdate();
                 shareMessage();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green, // 변경된 부분
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
               child: const Text('공유하기'),
             ),
           ],
