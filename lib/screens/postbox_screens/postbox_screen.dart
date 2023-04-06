@@ -35,6 +35,8 @@ class _PackageScreenState extends State<PackageScreen> {
                   image: AssetImage('assets/images/wall_paper.jpg'),
                   fit: BoxFit.fill),
             ),
+            padding:
+                EdgeInsets.fromLTRB(0, AppBar().preferredSize.height, 0, 0),
             child: FutureBuilder(
               future: onions,
               builder: (context, AsyncSnapshot<dynamic> snapshot) {
