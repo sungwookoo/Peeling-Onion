@@ -174,17 +174,20 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
       items: [
         PopupMenuItem(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(onion.name),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  Navigator.pop(context);
-                  // await Future.delayed(const Duration(milliseconds: 100));
-                  _showDeleteConfirmationDialog(context, onion.id);
-                },
-              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    // await Future.delayed(const Duration(milliseconds: 100));
+                    _showDeleteConfirmationDialog(context, onion.id);
+                  },
+                  child: const Center(
+                    child: Text(
+                      '삭제',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  )),
             ],
           ),
         ),
@@ -202,14 +205,18 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
           children: [
             SizedBox(
               height: 70,
-              child: widget._onion.isTime2go && widget._onion.isOnionMaker
+              child: !widget._onion.isDead &&
+                      widget._onion.isTime2go &&
+                      widget._onion.isOnionMaker
                   ? GestureDetector(
                       onTap: () {
                         _showSendConfirmDialog(context, widget._onion);
                       },
                       child: Image.asset('assets/images/ready_to_go.png'),
                     )
-                  : !widget._onion.isWatered
+                  : !widget._onion.isDead &&
+                          !widget._onion.isWatered &&
+                          !widget._onion.isTime2go
                       // 물 주기
                       ? GestureDetector(
                           onTap: () {

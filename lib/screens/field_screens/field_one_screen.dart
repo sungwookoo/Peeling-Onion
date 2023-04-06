@@ -199,30 +199,31 @@ Future<void> showDeleteModal(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('삭제'),
-            IconButton(
-              icon: const Icon(Icons.delete),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
                 onDelete();
               },
+              child: const Text(
+                '삭제',
+                style: TextStyle(
+                  color: Colors.red,
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
-      // 양파 이동 버튼
-      PopupMenuItem(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('이동'),
-            IconButton(
-              icon: const Icon(Icons.update),
-              onPressed: () {
+            const Text(' / '),
+            GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
                 Navigator.pop(context);
                 onMove();
               },
+              child: const Text(
+                '이동',
+                style: TextStyle(
+                  color: Colors.blue,
+                ),
+              ),
             ),
           ],
         ),
