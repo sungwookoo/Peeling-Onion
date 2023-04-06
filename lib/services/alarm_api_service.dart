@@ -5,12 +5,11 @@ import 'package:front/models/custom_models.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
-Future<OAuthToken?> kakaoToken = DefaultTokenManager().getToken();
-
 class AlarmApiService {
   static String baseUrl = dotenv.get('baseUrl');
 
   Future<List> getAlarmList() async {
+    Future<OAuthToken?> kakaoToken = DefaultTokenManager().getToken();
     final accessToken = await kakaoToken.then((value) => value?.accessToken);
 
     final response = await http.get(
@@ -31,6 +30,7 @@ class AlarmApiService {
   }
 
   Future<void> readAlarm(int alarmId) async {
+    Future<OAuthToken?> kakaoToken = DefaultTokenManager().getToken();
     final accessToken = await kakaoToken.then((value) => value?.accessToken);
 
     final response = await http.put(
