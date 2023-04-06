@@ -202,14 +202,18 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
           children: [
             SizedBox(
               height: 70,
-              child: widget._onion.isTime2go && widget._onion.isOnionMaker
+              child: !widget._onion.isDead &&
+                      widget._onion.isTime2go &&
+                      widget._onion.isOnionMaker
                   ? GestureDetector(
                       onTap: () {
                         _showSendConfirmDialog(context, widget._onion);
                       },
                       child: Image.asset('assets/images/ready_to_go.png'),
                     )
-                  : !widget._onion.isWatered
+                  : !widget._onion.isDead &&
+                          !widget._onion.isWatered &&
+                          !widget._onion.isTime2go
                       // 물 주기
                       ? GestureDetector(
                           onTap: () {
