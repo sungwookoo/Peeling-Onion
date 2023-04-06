@@ -27,27 +27,36 @@ class _OnionOneScreenState extends State<OnionOneScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<CustomOnionByOnionId>(
-        future: onion,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Row(
-              children: [
-                OnionWithMessage(
-                    onion: snapshot.data!, messageIndex: messageIndex),
-              ],
-            );
-          } else if (snapshot.hasError) {
-            return const Center(
-              child: Text('Failed to load onion'),
-            );
-          } else {
-            return const Center(
-              child: CustomLoadingWidget(
-                  imagePath: 'assets/images/onion_image.png'),
-            );
-          }
-        },
+      body: Container(
+        constraints: const BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/wall_paper.jpg'),
+            fit: BoxFit.fill,
+          ),
+        ),
+        child: FutureBuilder<CustomOnionByOnionId>(
+          future: onion,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Row(
+                children: [
+                  OnionWithMessage(
+                      onion: snapshot.data!, messageIndex: messageIndex),
+                ],
+              );
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text('Failed to load onion'),
+              );
+            } else {
+              return const Center(
+                child: CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png'),
+              );
+            }
+          },
+        ),
       ),
     );
   }

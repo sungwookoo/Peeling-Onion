@@ -434,6 +434,9 @@ class _RecordScreenState extends State<RecordScreen> {
                   // ),
                   ElevatedButton(
                     onPressed: () async {
+                      if (_isThinking) {
+                        return;
+                      }
                       if (_myRecorder.isRecording) {
                         _stopTimer();
                         setState(() {
