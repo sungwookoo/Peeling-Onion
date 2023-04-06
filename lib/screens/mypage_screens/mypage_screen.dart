@@ -8,6 +8,7 @@ import 'package:front/services/user_api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import '../../widgets/loading_rotation.dart';
+import 'package:front/widgets/on_will_pop.dart';
 
 class MypageScreen extends StatefulWidget {
   const MypageScreen({super.key});
@@ -324,634 +325,645 @@ class _MypageScreenState extends State<MypageScreen> {
   Widget build(BuildContext context) {
     final userId = Provider.of<UserIdModel>(context, listen: false).userId;
 
-    return Scaffold(
-      body: Container(
-        color: const Color.fromRGBO(253, 253, 245, 1),
-        height: double.infinity,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Center(
-              child: FutureBuilder<Map<String, dynamic>>(
-                future: userInfo, // userInfo 변수 사용
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    final nickname = snapshot.data!['nickname'];
-                    final phoneNumber = snapshot.data!['mobileNumber'];
-                    return Column(
-                      children: [
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        const Text(
-                          "마이페이지",
-                          style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xffA1D57A),
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        body: Container(
+          color: const Color.fromRGBO(253, 253, 245, 1),
+          height: double.infinity,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Center(
+                child: FutureBuilder<Map<String, dynamic>>(
+                  future: userInfo, // userInfo 변수 사용
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final nickname = snapshot.data!['nickname'];
+                      final phoneNumber = snapshot.data!['mobileNumber'];
+                      return Column(
+                        children: [
+                          const SizedBox(
+                            height: 40,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 50,
-                        ),
-                        SizedBox(
-                          width: 270,
-                          child: Column(
-                            children: [
-                              const Row(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                // mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // SizedBox(
-                                  //   width: 60,
-                                  // ),
-                                  Text(
-                                    "회원정보 수정",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color.fromRGBO(56, 102, 101, 1)),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    '닉네임 :',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 17,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    // '$nickname',
-                                    '$nickname',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'NanumMyeongjo',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  if (!_isNicknameEditing)
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isNicknameEditing =
-                                              !_isNicknameEditing;
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green, // 변경된 부분
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        fixedSize: const Size(40, 30),
-                                      ),
-                                      child: const Text(
-                                        '수정',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  if (_isNicknameEditing)
-                                    OutlinedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isNicknameEditing =
-                                              !_isNicknameEditing;
-                                        });
-                                      },
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                          color: Colors.green, // 변경된 부분
-                                          width: 2.0,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        fixedSize: const Size(40, 30),
-                                      ),
-                                      child: const Text(
-                                        '취소',
-                                        style: TextStyle(
-                                          color: Colors.green, // 변경된 부분
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              // const NicknameForm(),
-                              if (_isNicknameEditing)
-                                Column(
+                          const Text(
+                            "마이페이지",
+                            style: TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xffA1D57A),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          SizedBox(
+                            width: 270,
+                            child: Column(
+                              children: [
+                                const Row(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  // mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Form(
-                                      key: _formKey,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          TextFormField(
-                                            controller: _nicknameController,
-                                            decoration: InputDecoration(
-                                                labelText: '닉네임',
-                                                hintText: '한글 혹은 영문 소문자(1~8자)',
-                                                hintStyle: const TextStyle(
-                                                    fontSize: 14),
-                                                labelStyle: const TextStyle(
-                                                    color: Color(0xffA1D57A)),
-                                                focusedBorder:
-                                                    const UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xffA1D57A)),
-                                                ),
-                                                suffixIcon: Container(
-                                                  child: _nicknameChanged
-                                                      ? ElevatedButton(
-                                                          onPressed:
-                                                              _checkNickname,
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                Colors.green,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                            // minimumSize: const Size(40, 30),
-                                                            fixedSize:
-                                                                const Size(
-                                                                    40, 0),
-                                                          ),
-                                                          child: const Text(
-                                                            '확인',
-                                                            style: TextStyle(
-                                                              fontSize: 10,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : ElevatedButton(
-                                                          onPressed: () =>
-                                                              nicknameChange(
-                                                                  context),
-                                                          style: ElevatedButton
-                                                              .styleFrom(
-                                                            backgroundColor:
-                                                                _isAuthCodeSent
-                                                                    ? Colors
-                                                                        .grey
-                                                                    : Colors
-                                                                        .green,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                            ),
-                                                            // minimumSize: const Size(40, 30),
-                                                            fixedSize:
-                                                                const Size(
-                                                                    40, 0),
-                                                            // padding: const EdgeInsets.all(2),
-                                                          ),
-                                                          child: const Text(
-                                                            '완료',
-                                                            style: TextStyle(
-                                                              fontSize: 10,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                )
-
-                                                // suffixIcon: IconButton(
-                                                //   icon: _nicknameChanged
-                                                //       ? const Icon(Icons.check,
-                                                //           color: Colors.red)
-                                                //       : ElevatedButton(
-                                                //           onPressed: () =>
-                                                //               nicknameChange(
-                                                //                   context),
-                                                //           style: ElevatedButton
-                                                //               .styleFrom(
-                                                //             backgroundColor:
-                                                //                 Colors.green,
-                                                //             minimumSize:
-                                                //                 const Size(40,
-                                                //                     30), // 이 부분 수정
-                                                //           ),
-                                                //           child: const Text('완료'),
-                                                //         ),
-                                                //   onPressed: _checkNickname,
-                                                // ),
-                                                ),
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty) {
-                                                return '닉네임을 입력해주세요.';
-                                              }
-                                              return null;
-                                            },
+                                    // SizedBox(
+                                    //   width: 60,
+                                    // ),
+                                    Text(
+                                      "회원정보 수정",
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color:
+                                              Color.fromRGBO(56, 102, 101, 1)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      '닉네임 :',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      // '$nickname',
+                                      '$nickname',
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'NanumMyeongjo',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    if (!_isNicknameEditing)
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _isNicknameEditing =
+                                                !_isNicknameEditing;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.green, // 변경된 부분
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                           ),
-                                          if (_nicknameValidationMessage !=
-                                              null)
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                          fixedSize: const Size(40, 30),
+                                        ),
+                                        child: const Text(
+                                          '수정',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    if (_isNicknameEditing)
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _isNicknameEditing =
+                                                !_isNicknameEditing;
+                                          });
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          side: const BorderSide(
+                                            color: Colors.green, // 변경된 부분
+                                            width: 2.0,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          fixedSize: const Size(40, 30),
+                                        ),
+                                        child: const Text(
+                                          '취소',
+                                          style: TextStyle(
+                                            color: Colors.green, // 변경된 부분
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                // const NicknameForm(),
+                                if (_isNicknameEditing)
+                                  Column(
+                                    children: [
+                                      Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextFormField(
+                                              controller: _nicknameController,
+                                              decoration: InputDecoration(
+                                                  labelText: '닉네임',
+                                                  hintText:
+                                                      '한글 혹은 영문 소문자(1~8자)',
+                                                  hintStyle: const TextStyle(
+                                                      fontSize: 14),
+                                                  labelStyle: const TextStyle(
+                                                      color: Color(0xffA1D57A)),
+                                                  focusedBorder:
+                                                      const UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color:
+                                                            Color(0xffA1D57A)),
+                                                  ),
+                                                  suffixIcon: Container(
+                                                    child: _nicknameChanged
+                                                        ? ElevatedButton(
+                                                            onPressed:
+                                                                _checkNickname,
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              backgroundColor:
+                                                                  Colors.green,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              // minimumSize: const Size(40, 30),
+                                                              fixedSize:
+                                                                  const Size(
+                                                                      40, 0),
+                                                            ),
+                                                            child: const Text(
+                                                              '확인',
+                                                              style: TextStyle(
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                          )
+                                                        : ElevatedButton(
+                                                            onPressed: () =>
+                                                                nicknameChange(
+                                                                    context),
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              backgroundColor:
+                                                                  _isAuthCodeSent
+                                                                      ? Colors
+                                                                          .grey
+                                                                      : Colors
+                                                                          .green,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              // minimumSize: const Size(40, 30),
+                                                              fixedSize:
+                                                                  const Size(
+                                                                      40, 0),
+                                                              // padding: const EdgeInsets.all(2),
+                                                            ),
+                                                            child: const Text(
+                                                              '완료',
+                                                              style: TextStyle(
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                  )
+
+                                                  // suffixIcon: IconButton(
+                                                  //   icon: _nicknameChanged
+                                                  //       ? const Icon(Icons.check,
+                                                  //           color: Colors.red)
+                                                  //       : ElevatedButton(
+                                                  //           onPressed: () =>
+                                                  //               nicknameChange(
+                                                  //                   context),
+                                                  //           style: ElevatedButton
+                                                  //               .styleFrom(
+                                                  //             backgroundColor:
+                                                  //                 Colors.green,
+                                                  //             minimumSize:
+                                                  //                 const Size(40,
+                                                  //                     30), // 이 부분 수정
+                                                  //           ),
+                                                  //           child: const Text('완료'),
+                                                  //         ),
+                                                  //   onPressed: _checkNickname,
+                                                  // ),
+                                                  ),
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return '닉네임을 입력해주세요.';
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                            if (_nicknameValidationMessage !=
+                                                null)
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    _nicknameValidationMessage!,
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: _nicknameChanged
+                                                          ? Colors.red
+                                                          : Colors.green,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 15,
+                                      )
+                                    ],
+                                  ),
+                                // const SizedBox(
+                                //   height: 8,
+                                // ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      '전화번호 :',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    Text(
+                                      // '$nickname',
+                                      '$phoneNumber',
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontFamily: 'NanumMyeongjo',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    if (!_isPhoneNumberEditing)
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _isPhoneNumberEditing =
+                                                !_isPhoneNumberEditing;
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              Colors.green, // 변경된 부분
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          fixedSize: const Size(40, 30),
+                                        ),
+                                        child: const Text(
+                                          '수정',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    if (_isPhoneNumberEditing)
+                                      OutlinedButton(
+                                        onPressed: () async {
+                                          setState(() {
+                                            _isPhoneNumberEditing =
+                                                !_isPhoneNumberEditing;
+                                          });
+                                        },
+                                        style: OutlinedButton.styleFrom(
+                                          side: const BorderSide(
+                                            color: Colors.green, // 변경된 부분
+                                            width: 2.0,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          fixedSize: const Size(40, 30),
+                                        ),
+                                        child: const Text(
+                                          '취소',
+                                          style: TextStyle(
+                                            color: Colors.green, // 변경된 부분
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                if (_isPhoneNumberEditing)
+                                  TextFormField(
+                                    controller: _phoneNumberController,
+                                    keyboardType: TextInputType.phone,
+                                    decoration: InputDecoration(
+                                      labelText: '바꿀 전화번호',
+                                      hintText: '숫자 11자리',
+                                      hintStyle: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                      labelStyle: const TextStyle(
+                                          color: Color(0xffA1D57A)),
+                                      focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(0xffA1D57A)),
+                                      ),
+                                      suffixIcon: ElevatedButton(
+                                        onPressed: _sendAuthCode,
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: _isAuthCodeSent
+                                              ? Colors.grey
+                                              : Colors.green,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          // minimumSize: const Size(40, 30),
+                                          fixedSize: const Size(40, 0),
+                                          // padding: const EdgeInsets.all(2),
+                                        ),
+                                        child: Text(
+                                          _isAuthCodeSent ? '재인증' : '인증',
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return '전화번호를 입력해주세요.';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+
+                                if (_phoneValidationMessage != null &&
+                                    _isPhoneNumberEditing)
+                                  Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            _phoneValidationMessage!,
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                const SizedBox(height: 16),
+                                if (_isAuthCodeSent)
+                                  Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: _authCodeController,
+                                        keyboardType: TextInputType.number,
+                                        decoration: InputDecoration(
+                                            labelText: '인증번호',
+                                            hintText: '6자리 숫자',
+                                            labelStyle: const TextStyle(
+                                                color: Color(0xffA1D57A)),
+                                            focusedBorder:
+                                                const UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Color(0xffA1D57A)),
+                                            ),
+                                            suffixIcon: Container(
+                                              child: !_isAuthCodeValid
+                                                  ? ElevatedButton(
+                                                      onPressed: _checkAuthCode,
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            Colors.green,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        // minimumSize: const Size(40, 30),
+                                                        fixedSize:
+                                                            const Size(40, 0),
+                                                      ),
+                                                      child: const Text(
+                                                        '확인',
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : ElevatedButton(
+                                                      onPressed: () =>
+                                                          phoneNumberChange(
+                                                              context),
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            _isAuthCodeSent
+                                                                ? Colors.grey
+                                                                : Colors.green,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        // minimumSize: const Size(40, 30),
+                                                        fixedSize:
+                                                            const Size(40, 0),
+                                                        // padding: const EdgeInsets.all(2),
+                                                      ),
+                                                      child: const Text(
+                                                        '완료',
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ),
+                                            )
+
+                                            // IconButton(
+                                            //   icon: Icon(
+                                            //     Icons.check,
+                                            //     color: _isAuthCodeValid
+                                            //         ? Colors.green
+                                            //         : Colors.red,
+                                            //   ),
+                                            //   onPressed: _checkAuthCode,
+                                            // ),
+                                            ),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return '인증번호를 입력해주세요.';
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                                      if (_authCodeValidationMessage != null)
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Row(
                                               children: [
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
                                                 Text(
-                                                  _nicknameValidationMessage!,
+                                                  _authCodeValidationMessage!,
                                                   style: TextStyle(
-                                                    fontSize: 13,
-                                                    color: _nicknameChanged
+                                                    color: !_isAuthCodeValid
                                                         ? Colors.red
                                                         : Colors.green,
+                                                    fontSize: 13,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 15,
-                                    )
-                                  ],
-                                ),
-                              // const SizedBox(
-                              //   height: 8,
-                              // ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    '전화번호 :',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey,
-                                      fontSize: 17,
-                                    ),
+                                          ],
+                                        ),
+                                    ],
                                   ),
-                                  Text(
-                                    // '$nickname',
-                                    '$phoneNumber',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontFamily: 'NanumMyeongjo',
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  if (!_isPhoneNumberEditing)
-                                    ElevatedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isPhoneNumberEditing =
-                                              !_isPhoneNumberEditing;
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.green, // 변경된 부분
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        fixedSize: const Size(40, 30),
-                                      ),
-                                      child: const Text(
-                                        '수정',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  if (_isPhoneNumberEditing)
-                                    OutlinedButton(
-                                      onPressed: () async {
-                                        setState(() {
-                                          _isPhoneNumberEditing =
-                                              !_isPhoneNumberEditing;
-                                        });
-                                      },
-                                      style: OutlinedButton.styleFrom(
-                                        side: const BorderSide(
-                                          color: Colors.green, // 변경된 부분
-                                          width: 2.0,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        fixedSize: const Size(40, 30),
-                                      ),
-                                      child: const Text(
-                                        '취소',
-                                        style: TextStyle(
-                                          color: Colors.green, // 변경된 부분
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              if (_isPhoneNumberEditing)
-                                TextFormField(
-                                  controller: _phoneNumberController,
-                                  keyboardType: TextInputType.phone,
-                                  decoration: InputDecoration(
-                                    labelText: '바꿀 전화번호',
-                                    hintText: '숫자 11자리',
-                                    hintStyle: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                    labelStyle: const TextStyle(
-                                        color: Color(0xffA1D57A)),
-                                    focusedBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Color(0xffA1D57A)),
-                                    ),
-                                    suffixIcon: ElevatedButton(
-                                      onPressed: _sendAuthCode,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: _isAuthCodeSent
-                                            ? Colors.grey
-                                            : Colors.green,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        // minimumSize: const Size(40, 30),
-                                        fixedSize: const Size(40, 0),
-                                        // padding: const EdgeInsets.all(2),
-                                      ),
-                                      child: Text(
-                                        _isAuthCodeSent ? '재인증' : '인증',
-                                        style: const TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return '전화번호를 입력해주세요.';
-                                    }
-                                    return null;
-                                  },
-                                ),
 
-                              if (_phoneValidationMessage != null &&
-                                  _isPhoneNumberEditing)
-                                Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
+                                // Text('$userId'),
+                                const SizedBox(
+                                  height: 120,
+                                ),
+                                // ElevatedButton(
+                                //   onPressed: () async {
+                                //     shareMessage();
+                                //   },
+                                //   child: const Text('공유하기'),
+                                // ),
+                                IconButton(
+                                  onPressed: () =>
+                                      {Navigator.pushNamed(context, '/signin')},
+                                  icon: const Icon(Icons.home),
+                                ),
+                                const Divider(
+                                  thickness: 2,
+                                  color: Colors.black,
+                                ),
+                                InkWell(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          _phoneValidationMessage!,
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.red,
+                                          "로그아웃",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Colors.grey,
+                                        )
                                       ],
                                     ),
-                                  ],
+                                  ),
+                                  onTap: () async {
+                                    logOut(context);
+                                  },
                                 ),
-                              const SizedBox(height: 16),
-                              if (_isAuthCodeSent)
-                                Column(
-                                  children: [
-                                    TextFormField(
-                                      controller: _authCodeController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: InputDecoration(
-                                          labelText: '인증번호',
-                                          hintText: '6자리 숫자',
-                                          labelStyle: const TextStyle(
-                                              color: Color(0xffA1D57A)),
-                                          focusedBorder:
-                                              const UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(0xffA1D57A)),
+                                const Divider(
+                                  thickness: 1,
+                                ),
+                                InkWell(
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "회원탈퇴",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color:
+                                                Color.fromRGBO(255, 85, 73, 1),
                                           ),
-                                          suffixIcon: Container(
-                                            child: !_isAuthCodeValid
-                                                ? ElevatedButton(
-                                                    onPressed: _checkAuthCode,
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          Colors.green,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      // minimumSize: const Size(40, 30),
-                                                      fixedSize:
-                                                          const Size(40, 0),
-                                                    ),
-                                                    child: const Text(
-                                                      '확인',
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  )
-                                                : ElevatedButton(
-                                                    onPressed: () =>
-                                                        phoneNumberChange(
-                                                            context),
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      backgroundColor:
-                                                          _isAuthCodeSent
-                                                              ? Colors.grey
-                                                              : Colors.green,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      // minimumSize: const Size(40, 30),
-                                                      fixedSize:
-                                                          const Size(40, 0),
-                                                      // padding: const EdgeInsets.all(2),
-                                                    ),
-                                                    child: const Text(
-                                                      '완료',
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ),
-                                          )
-
-                                          // IconButton(
-                                          //   icon: Icon(
-                                          //     Icons.check,
-                                          //     color: _isAuthCodeValid
-                                          //         ? Colors.green
-                                          //         : Colors.red,
-                                          //   ),
-                                          //   onPressed: _checkAuthCode,
-                                          // ),
-                                          ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return '인증번호를 입력해주세요.';
-                                        }
-                                        return null;
-                                      },
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: Colors.grey,
+                                        )
+                                      ],
                                     ),
-                                    if (_authCodeValidationMessage != null)
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                _authCodeValidationMessage!,
-                                                style: TextStyle(
-                                                  color: !_isAuthCodeValid
-                                                      ? Colors.red
-                                                      : Colors.green,
-                                                  fontSize: 13,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                  ],
-                                ),
-
-                              // Text('$userId'),
-                              const SizedBox(
-                                height: 120,
-                              ),
-                              // ElevatedButton(
-                              //   onPressed: () async {
-                              //     shareMessage();
-                              //   },
-                              //   child: const Text('공유하기'),
-                              // ),
-                              IconButton(
-                                onPressed: () =>
-                                    {Navigator.pushNamed(context, '/signin')},
-                                icon: const Icon(Icons.home),
-                              ),
-                              const Divider(
-                                thickness: 2,
-                                color: Colors.black,
-                              ),
-                              InkWell(
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "로그아웃",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Colors.grey,
-                                      )
-                                    ],
                                   ),
+                                  onTap: () async {
+                                    signOut();
+                                  },
                                 ),
-                                onTap: () async {
-                                  logOut(context);
-                                },
-                              ),
-                              const Divider(
-                                thickness: 1,
-                              ),
-                              InkWell(
-                                child: const Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "회원탈퇴",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color.fromRGBO(255, 85, 73, 1),
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Colors.grey,
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                onTap: () async {
-                                  signOut();
-                                },
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('에러 발생: ${snapshot.error}');
-                  } else {
-                    return const CustomLoadingWidget(
-                        imagePath: 'assets/images/onion_image.png');
-                  }
-                },
+                        ],
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('에러 발생: ${snapshot.error}');
+                    } else {
+                      return const CustomLoadingWidget(
+                          imagePath: 'assets/images/onion_image.png');
+                    }
+                  },
+                ),
               ),
             ),
           ),
