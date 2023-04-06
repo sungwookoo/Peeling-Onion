@@ -32,6 +32,7 @@ class _CustomLoadingWidgetState extends State<CustomLoadingWidget>
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           RotationTransition(
             turns: _controller,
