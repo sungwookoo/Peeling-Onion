@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/services/user_api_service.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:front/widgets/on_will_pop.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -116,80 +117,83 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            'assets/images/start_image.png',
-            fit: BoxFit.cover,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "양파로 전하는",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontFamily: 'NanumMyeongjo',
-                  ),
-                ),
-                const SizedBox(height: 7),
-                const Text(
-                  "고마움, 감사함",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                    fontFamily: 'NanumMyeongjo',
-                  ),
-                ),
-                const SizedBox(height: 30),
-                const Text(
-                  "Peeling Onion",
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    fontFamily: 'NanumMyeongjo',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () async {
-                    await kakaoLogin(context);
-                  },
-                  child: Image.asset(
-                    'assets/images/kakao_login.png',
-                    width: 180,
-                  ),
-                ),
-                // FutureBuilder<String>(
-                //   future: accessTokenFuture,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.connectionState == ConnectionState.waiting) {
-                //       return const CircularProgressIndicator();
-                //     }
-                //     if (snapshot.hasData) {
-                //       return Padding(
-                //           padding: const EdgeInsets.symmetric(horizontal: 20),
-                //           child: SelectableText(
-                //             'Access Token: \n ${snapshot.data}',
-                //             style: const TextStyle(fontSize: 32),
-                //           ));
-                //     } else {
-                //       return const Text('No access token found');
-                //     }
-                //   },
-                // ),
-              ],
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Image.asset(
+              'assets/images/start_image.png',
+              fit: BoxFit.cover,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
             ),
-          ),
-        ],
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "양파로 전하는",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontFamily: 'NanumMyeongjo',
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  const Text(
+                    "고마움, 감사함",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      fontFamily: 'NanumMyeongjo',
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  const Text(
+                    "Peeling Onion",
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                      fontFamily: 'NanumMyeongjo',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () async {
+                      await kakaoLogin(context);
+                    },
+                    child: Image.asset(
+                      'assets/images/kakao_login.png',
+                      width: 180,
+                    ),
+                  ),
+                  // FutureBuilder<String>(
+                  //   future: accessTokenFuture,
+                  //   builder: (context, snapshot) {
+                  //     if (snapshot.connectionState == ConnectionState.waiting) {
+                  //       return const CircularProgressIndicator();
+                  //     }
+                  //     if (snapshot.hasData) {
+                  //       return Padding(
+                  //           padding: const EdgeInsets.symmetric(horizontal: 20),
+                  //           child: SelectableText(
+                  //             'Access Token: \n ${snapshot.data}',
+                  //             style: const TextStyle(fontSize: 32),
+                  //           ));
+                  //     } else {
+                  //       return const Text('No access token found');
+                  //     }
+                  //   },
+                  // ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

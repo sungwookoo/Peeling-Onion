@@ -269,7 +269,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 40,
+                      height: 90,
                     ),
                     const Text(
                       "회원가입",
@@ -289,7 +289,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               text: "서비스 이용을 위해서\n",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Color(0xffA1D57A),
+                                color: Colors.grey,
                               ),
                             ),
                             TextSpan(
@@ -297,14 +297,17 @@ class _SigninScreenState extends State<SigninScreen> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xffA1D57A),
+                                // color: Color(0xffA1D57A),
+                                color: Colors.grey,
+                                // color: Color.fromRGBO(56, 102, 101, 1),
                               ),
                             ),
                             TextSpan(
                               text: "을 진행해주세요.",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Color(0xffA1D57A),
+                                color: Colors.grey,
+                                // color: Color(0xffA1D57A),
                               ),
                             ),
                           ],
@@ -535,7 +538,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                 ),
                             ],
                           ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -557,7 +560,10 @@ class _SigninScreenState extends State<SigninScreen> {
                                 // minimumSize: const Size(40, 30),
                                 // fixedSize: const Size(40, 0),
                               ),
-                              child: const Text('회원가입 완료'),
+                              child: const Text(
+                                '회원가입 완료',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
                             ),
                           ],
                         ),

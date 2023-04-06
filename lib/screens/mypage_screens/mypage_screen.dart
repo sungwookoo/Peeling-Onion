@@ -344,7 +344,7 @@ class _MypageScreenState extends State<MypageScreen> {
                       return Column(
                         children: [
                           const SizedBox(
-                            height: 40,
+                            height: 90,
                           ),
                           const Text(
                             "마이페이지",
