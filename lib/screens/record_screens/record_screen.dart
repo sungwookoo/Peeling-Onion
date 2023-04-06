@@ -426,15 +426,9 @@ class _RecordScreenState extends State<RecordScreen> {
                       icon: Image.asset('assets/icons/undoIcon.png'),
                     ),
                   ),
-                  // OutlinedButton(
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   child: const Text('취소'),
-                  // ),
                   ElevatedButton(
                     onPressed: () async {
-                      if (_isThinking) {
+                      if (_isThinking && !_isListening) {
                         return;
                       }
                       if (_myRecorder.isRecording) {
