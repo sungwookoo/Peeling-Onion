@@ -174,17 +174,20 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
       items: [
         PopupMenuItem(
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(onion.name),
-              IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  Navigator.pop(context);
-                  // await Future.delayed(const Duration(milliseconds: 100));
-                  _showDeleteConfirmationDialog(context, onion.id);
-                },
-              ),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                    // await Future.delayed(const Duration(milliseconds: 100));
+                    _showDeleteConfirmationDialog(context, onion.id);
+                  },
+                  child: const Center(
+                    child: Text(
+                      '삭제',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  )),
             ],
           ),
         ),
