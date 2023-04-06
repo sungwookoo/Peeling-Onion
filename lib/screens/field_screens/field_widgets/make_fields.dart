@@ -155,7 +155,14 @@ class _MakeFieldsState extends State<MakeFields> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('즐겨찾기 양파들'),
+          backgroundColor: const Color(0xFFFEFEF5),
+          title: const Text(
+            '즐겨찾기',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'CookieRun',
+            ),
+          ),
           content: SizedBox(
             width: double.maxFinite,
             child: FutureBuilder(

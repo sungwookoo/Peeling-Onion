@@ -86,6 +86,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.green,
         onTap: _onItemTapped,
+        selectedLabelStyle: const TextStyle(fontFamily: 'CookieRun'),
+        unselectedLabelStyle: const TextStyle(fontFamily: 'CookieRun'),
       ),
     );
   }
