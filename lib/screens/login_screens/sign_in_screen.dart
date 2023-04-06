@@ -36,7 +36,7 @@ class _SigninScreenState extends State<SigninScreen> {
   String? _prevNicknameText;
   String? _authCodeValidationMessage;
 
-  bool _isNicknameValid = true;
+  bool _isNicknameValid = false;
   bool _isPhoneValid = true;
   bool _nicknameChanged = true;
   bool _isAuthCodeSent = false;
@@ -158,8 +158,7 @@ class _SigninScreenState extends State<SigninScreen> {
         setState(() {
           _verificationId = verificationId;
           _isAuthCodeSent = true;
-
-          _checkNickname();
+          _phoneValidationMessage = null;
         });
       },
       codeAutoRetrievalTimeout: (String verificationId) {
@@ -270,7 +269,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 Column(
                   children: [
                     const SizedBox(
-                      height: 40,
+                      height: 90,
                     ),
                     const Text(
                       "회원가입",
@@ -290,7 +289,7 @@ class _SigninScreenState extends State<SigninScreen> {
                               text: "서비스 이용을 위해서\n",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Color(0xffA1D57A),
+                                color: Colors.grey,
                               ),
                             ),
                             TextSpan(
@@ -298,14 +297,17 @@ class _SigninScreenState extends State<SigninScreen> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500,
-                                color: Color(0xffA1D57A),
+                                // color: Color(0xffA1D57A),
+                                color: Colors.grey,
+                                // color: Color.fromRGBO(56, 102, 101, 1),
                               ),
                             ),
                             TextSpan(
                               text: "을 진행해주세요.",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Color(0xffA1D57A),
+                                color: Colors.grey,
+                                // color: Color(0xffA1D57A),
                               ),
                             ),
                           ],
@@ -332,7 +334,7 @@ class _SigninScreenState extends State<SigninScreen> {
                                     borderSide:
                                         BorderSide(color: Color(0xffA1D57A)),
                                   ),
-                                  suffix: Container(
+                                  suffixIcon: Container(
                                     child: _nicknameChanged
                                         ? ElevatedButton(
                                             onPressed: _checkNickname,
@@ -414,9 +416,34 @@ class _SigninScreenState extends State<SigninScreen> {
                           decoration: InputDecoration(
                             labelText: '전화번호',
                             hintText: '숫자 11자리',
+                            hintStyle: const TextStyle(
+                              fontSize: 14,
+                            ),
+                            labelStyle:
+                                const TextStyle(color: Color(0xffA1D57A)),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xffA1D57A)),
+                            ),
                             suffixIcon: ElevatedButton(
                               onPressed: _sendAuthCode,
-                              child: Text(_isAuthCodeSent ? '재인증하기' : '인증하기'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _isAuthCodeSent
+                                    ? Colors.grey
+                                    : Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                // minimumSize: const Size(40, 30),
+                                fixedSize: const Size(40, 0),
+                                // padding: const EdgeInsets.all(2),
+                              ),
+                              child: Text(
+                                _isAuthCodeSent ? '재인증' : '인증',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
                           validator: (value) {
@@ -427,7 +454,21 @@ class _SigninScreenState extends State<SigninScreen> {
                           },
                         ),
                         if (_phoneValidationMessage != null)
-                          Text(_phoneValidationMessage!),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                _phoneValidationMessage!,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
                         const SizedBox(height: 16),
                         if (_isAuthCodeSent)
                           Column(
@@ -438,15 +479,35 @@ class _SigninScreenState extends State<SigninScreen> {
                                 decoration: InputDecoration(
                                   labelText: '인증번호',
                                   hintText: '6자리 숫자',
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      Icons.check,
-                                      color: _isAuthCodeValid
-                                          ? Colors.green
-                                          : Colors.red,
-                                    ),
-                                    onPressed: _checkAuthCode,
+                                  labelStyle:
+                                      const TextStyle(color: Color(0xffA1D57A)),
+                                  focusedBorder: const UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Color(0xffA1D57A)),
                                   ),
+                                  suffixIcon: Container(
+                                      child: _isAuthCodeValid
+                                          ? const Icon(Icons.check,
+                                              size: 30, color: Colors.green)
+                                          : ElevatedButton(
+                                              onPressed: _checkAuthCode,
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.green,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                // minimumSize: const Size(40, 30),
+                                                fixedSize: const Size(40, 0),
+                                              ),
+                                              child: const Text(
+                                                '확인',
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            )),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -456,10 +517,28 @@ class _SigninScreenState extends State<SigninScreen> {
                                 },
                               ),
                               if (_authCodeValidationMessage != null)
-                                Text(_authCodeValidationMessage!),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          _authCodeValidationMessage!,
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                             ],
                           ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -469,15 +548,23 @@ class _SigninScreenState extends State<SigninScreen> {
                                       _isAuthCodeValid
                                   ? _completeSignUp
                                   : null,
-                              child: const Text('회원가입 완료'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _isNicknameValid &&
+                                        _isPhoneValid &&
+                                        _isAuthCodeValid
+                                    ? Colors.green
+                                    : Colors.grey,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                // minimumSize: const Size(40, 30),
+                                // fixedSize: const Size(40, 0),
+                              ),
+                              child: const Text(
+                                '회원가입 완료',
+                                style: TextStyle(fontWeight: FontWeight.w700),
+                              ),
                             ),
-                            // IconButton(
-                            //   onPressed: () =>
-                            //       {Navigator.pushNamed(context, '/home')},
-                            // Navigator.pushNamed(context, '/signin');
-
-                            //   icon: const Icon(Icons.home),
-                            // )
                           ],
                         ),
                       ],
