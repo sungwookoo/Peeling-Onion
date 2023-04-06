@@ -172,6 +172,7 @@ flutter:
     - assets/images/letterpaper.png
     - assets/icons/undoIcon.png
     - assets/icons/saveIcon.png
+    - assets/icons/addonion.png
   #   - images/a_dot_ham.jpeg
 
   fonts:

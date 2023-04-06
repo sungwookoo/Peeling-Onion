@@ -40,89 +40,104 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: FutureBuilder(
-            future: onions,
-            builder: (context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.hasData) {
-                List<CustomHomeOnion> onionsData =
-                    snapshot.data as List<CustomHomeOnion>;
-                // 양파들 출력
-                return ShowGrowingOnions(
-                    onions: onionsData, onUpdate: () => updateOnions());
-              } else if (snapshot.hasError) {
-                return Text('에러: ${snapshot.error}');
-              }
-              // 로딩 화면
-              // return const CircularProgressIndicator();
-              return const CustomLoadingWidget(
-                  imagePath: 'assets/images/onion_image.png');
-            },
+          backgroundColor: Colors.white,
+          body: Center(
+            child: FutureBuilder(
+              future: onions,
+              builder: (context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData) {
+                  List<CustomHomeOnion> onionsData =
+                      snapshot.data as List<CustomHomeOnion>;
+                  // 양파들 출력
+                  return ShowGrowingOnions(
+                      onions: onionsData, onUpdate: () => updateOnions());
+                } else if (snapshot.hasError) {
+                  return Text('에러: ${snapshot.error}');
+                }
+                // 로딩 화면
+                // return const CircularProgressIndicator();
+                return const CustomLoadingWidget(
+                    imagePath: 'assets/images/onion_image.png');
+              },
+            ),
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    insetPadding: EdgeInsets.zero,
-                    content: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 0, vertical: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            child: const Image(
-                              image:
-                                  AssetImage('assets/images/createAlone.png'),
-                              width: 120,
-                              height: 120,
+          floatingActionButton: Container(
+              padding: const EdgeInsets.all(8),
+              alignment: Alignment.bottomRight,
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          insetPadding: EdgeInsets.zero,
+                          content: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 0, vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                InkWell(
+                                  child: const Image(
+                                    image: AssetImage(
+                                        'assets/images/createAlone.png'),
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const OnionCreate(
+                                                        isTogether: false)))
+                                        .then((value) => updateOnions());
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                InkWell(
+                                  child: const Image(
+                                    image: AssetImage(
+                                        'assets/images/createTogether.png'),
+                                    width: 120,
+                                    height: 120,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const OnionCreate(
+                                                        isTogether: true)))
+                                        .then((value) => updateOnions());
+                                  },
+                                )
+                              ],
                             ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const OnionCreate(
-                                                  isTogether: false)))
-                                  .then((value) => updateOnions());
-                            },
                           ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          InkWell(
-                            child: const Image(
-                              image: AssetImage(
-                                  'assets/images/createTogether.png'),
-                              width: 120,
-                              height: 120,
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const OnionCreate(
-                                                  isTogether: true)))
-                                  .then((value) => updateOnions());
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                });
-          },
-        ),
-        // bottomNavigationBar: const NavigateBar(),
-      ),
+                        );
+                      });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFFDFDF5),
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 2,
+                      )),
+                  height: 65,
+                  child: Image.asset('assets/icons/addonion.png'),
+                ),
+              ))
+          // bottomNavigationBar: const NavigateBar(),
+          ),
     );
   }
 }
