@@ -166,6 +166,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
               image: AssetImage('assets/images/wall_paper.jpg'),
               fit: BoxFit.fill),
         ),
+        padding: EdgeInsets.fromLTRB(0, AppBar().preferredSize.height, 0, 0),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -199,6 +200,7 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
             image: AssetImage('assets/images/wall_paper.jpg'),
             fit: BoxFit.fill),
       ),
+      padding: EdgeInsets.fromLTRB(0, AppBar().preferredSize.height, 0, 0),
       // 양파 페이지
       child: PageView.builder(
         itemCount: numOfPages,
@@ -224,11 +226,12 @@ class _ShowGrowingOnionsState extends State<ShowGrowingOnions> {
                         double a = columnWidth / 2;
                         double b = (columnHeight -
                             (MediaQuery.of(context).size.width - 16) *
-                                (69.4 / 395.4));
+                                (64.9 / 395.4));
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             GridView.builder(
+                              padding: EdgeInsets.zero, // set padding to zero
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: onionsPerShelf,

@@ -33,35 +33,27 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
   Widget build(BuildContext context) {
     // 선반이 비어있으면, 빈 선반 표시
     if (widget._onions.isEmpty) {
-      return Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/wall_paper.jpg'),
-            fit: BoxFit.fill,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            // Display 3 shelves
-            children: List.generate(
-              shelvesPerPage,
-              (shelfIndex) {
-                // Display each shelf
-                return Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      // Display shelf image
-                      Image.asset(
-                        'assets/images/shelf.png',
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // Display 3 shelves
+          children: List.generate(
+            shelvesPerPage,
+            (shelfIndex) {
+              // Display each shelf
+              return Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    // Display shelf image
+                    Image.asset(
+                      'assets/images/shelf.png',
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       );
@@ -87,6 +79,8 @@ class _ShowPostedOnionsState extends State<ShowPostedOnions> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GridView.builder(
+                        padding: EdgeInsets.zero, // set padding to zero
+
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: onionsPerShelf,
