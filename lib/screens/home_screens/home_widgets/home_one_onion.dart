@@ -32,7 +32,7 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
         return AlertDialog(
           title: const Text('양파를 전송하시겠습니까?'),
           content: SizedBox(
-            height: 220,
+            height: 230,
             child: Column(
               children: [
                 const Text('전송할 경우 상대에게 알림이 갑니다.'),
@@ -40,13 +40,13 @@ class _HomeOneOnionState extends State<HomeOneOnion> {
                   child: Column(
                     children: [
                       const SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
                       SizedBox(
                         height: 100,
                         child: Image.asset(onion.imgSrc),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
