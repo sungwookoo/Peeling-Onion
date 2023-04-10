@@ -107,9 +107,9 @@ public class OnionController {
                 String receiverNumber = onionService.getMobileNumberByUserId(userId);
                 List<OnionOutlineDto> onionOutlineDtos = new ArrayList<>();
                 List<ReceiveOnion> receiveOnions = onionService.findBookmarkedOnions(receiverNumber);
-                String userName = onionService.getNameByUserId(userId);
                 for(ReceiveOnion receiveOnion : receiveOnions) {
                     if(receiveOnion.getOnion().getIsDisabled() == Boolean.FALSE) {
+                        String userName = onionService.getNameByUserId(receiveOnion.getOnion().getUserId());
                         onionOutlineDtos.add(OnionOutlineDto.from(receiveOnion, userName));
                     }
                 }
