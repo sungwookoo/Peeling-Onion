@@ -124,6 +124,8 @@ flutter:
     - assets/images/getMessage.png
     - assets/images/timetosend.png
 
+    - assets/images/customonion0_positive.png
+    - assets/images/customonion0_negative.png
     - assets/images/customonion1_positive.png
     - assets/images/customonion1_negative.png
     - assets/images/customonion2_negative.png

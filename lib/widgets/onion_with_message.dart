@@ -39,6 +39,7 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
     } else {
       messageData = OnionApiService.getMessage(1);
     }
+    print(widget.onion.imgSrc.substring(0, 26));
     _isBookMarked.value = widget.onion.isBookmarked;
   }
 
@@ -98,6 +99,14 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           CustomMessage message = snapshot.data as CustomMessage;
+          String img;
+          if (message.posRate >= 70) {
+            img = '${widget.onion.imgSrc.substring(0, 26)}_positive.png';
+          } else if (message.negRate >= 70) {
+            img = '${widget.onion.imgSrc.substring(0, 26)}_negative.png';
+          } else {
+            img = '${widget.onion.imgSrc.substring(0, 26)}.png';
+          }
           // widget.onion.growDueDate.substring(0, 10)
           String createDate = message.createdAt.substring(0, 10);
           return Expanded(
@@ -152,9 +161,10 @@ class _OnionWithMessageState extends State<OnionWithMessage> {
                         Flexible(
                           child: Stack(
                             children: [
-                              Image.asset(widget.onion.imgSrc,
+                              Image.asset(img,
                                   width:
                                       MediaQuery.of(context).size.width * 0.8),
+
                               // 즐겨찾기 나타내는 아이콘
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.8,
