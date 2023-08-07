@@ -1,0 +1,395 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 0.5s linear;
+  }
+}
+
+.spin-left {
+  animation: App-logo-spin-left 1s linear infinite;
+}
+
+.spin-right {
+  animation: App-logo-spin-right 1s linear infinite;
+}
+
+@keyframes App-logo-spin-left {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes App-logo-spin-right {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* body {
+  padding: 0;
+  background: #b52b6e;
+  font: 16px "Helvetica Neue";
+  background-image: linear-gradient(
+    to bottom right,
+    transparent,
+    #cd3d4c 25%,
+    #e45a25 50%,
+    #f37a20 75%,
+    #f5891f
+  );
+  background-size: cover;
+  margin: 0;
+} */
+
+body {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+body,
+html {
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+figure {
+  margin: 0;
+}
+
+#splash-message {
+  animation: 0.5s slideup;
+  text-align: center;
+  background: #fff;
+  padding: 25px 10px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  .message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #231f20;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    position: relative;
+    text-align: left;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 300;
+    .site-name {
+      font-weight: 500;
+    }
+    .copy {
+      padding-left: 20px;
+      max-width: 90%;
+    }
+  }
+  .app-icon {
+    background: url(http://nikosquad.net/mindbody/img/splash/mindbody-app.png) center center
+      no-repeat;
+    background-size: 100%;
+    min-width: 50px;
+    height: 50px;
+  }
+}
+
+.device-image {
+  animation: 0.6s slideup;
+  text-align: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+  &.ios {
+    .site-name {
+      top: 160px;
+    }
+  }
+  &.android {
+    .site-name {
+      top: 135px;
+    }
+  }
+  .device {
+    transform: scale(0.8);
+    position: relative;
+    transform-origin: bottom;
+    @media (min-height: 535px) {
+      transform: scale(0.9);
+    }
+    @media (min-height: 600px) {
+      transform: scale(1);
+    }
+  }
+  .site-name {
+    color: #fff;
+    font-family: Sans-Serif;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 135px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 85%;
+    display: block;
+    margin: auto;
+  }
+  img {
+    vertical-align: bottom;
+    max-width: 300px;
+    margin-bottom: 170px;
+  }
+}
+
+button {
+  font-weight: bold;
+  letter-spacing: 2px;
+  background: #53fea6;
+  border: 0;
+  padding: 15px 25px;
+  border-radius: 45px;
+  font-size: 23px;
+  color: #000;
+  display: inline-block;
+  margin: auto;
+}
+
+#splash-device {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.onion {
+  width: 120px;
+  height: 120px;
+}
+
+.ellipsis {
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+}
+
+@media screen and (max-width: 449px) {
+  .images {
+    padding-top: 0;
+  }
+}
+
+h1 {
+  text-align: center;
+  font-size: 60px;
+  font-weight: bolder;
+  font-family: "YanoljaYacheR";
+  color: #000;
+}
+
+.title-box {
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-height: 400px) and (orientation: landscape) {
+  .device-image {
+    width: 40vw;
+    .device {
+      @media (max-height: 340px) {
+        transform: scale(0.6);
+      }
+    }
+    img {
+      margin-bottom: 0;
+    }
+  }
+  #splash-message {
+    animation: 0.3s slideInFromRight;
+    width: 58vw;
+    top: 50%;
+    left: auto;
+    transform: translateY(-50%);
+    right: 0;
+    bottom: auto;
+    .app-icon {
+      min-width: 40px;
+      height: 40px;
+    }
+    .message .copy {
+      padding-left: 15px;
+      font-size: 15px;
+      .site-name {
+        font-size: 16px;
+      }
+    }
+    button {
+      font-size: 16px;
+    }
+  }
+}
+
+@keyframes slideup {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translate(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0, -50%);
+  }
+}
+
+@font-face {
+  font-family: "YanoljaYacheR";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/YanoljaYacheR.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BookkMyungjo-Bd";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkMyungjo-Bd.woff2")
+    format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+.download-btn {
+  font-family: "YanoljaYacheR";
+  width: 320px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-text {
+  font-family: "YanoljaYacheR";
+  margin-top: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download-box {
+  display: flex;
+  justify-content: center;
+}
+
+.store {
+  text-decoration: none;
+  height: 90px;
+}
+
+.store-text {
+  padding-left: 50px;
+}
+
+.book {
+  font-family: "BookkMyungjo-Bd";
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.apk-box {
+  display: flex;
+  justify-content: center;
+}
