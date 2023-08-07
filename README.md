@@ -86,5 +86,4 @@
 ![po8](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/e0c8e275-c5aa-4b08-a591-c42412a716fb)
 ![po7](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/c78d3b53-5d32-4c01-8b46-27dadf1d9a0d)
 ![po6](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/251cf4ee-e3bb-4c7c-abf0-398df04eb3b3)
-![po5](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/22f7a97e-7569-4a87-8c28-ce4e1a06900f)
 ![po4](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/7f121a8d-68d2-4ceb-b287-bd76243604c3)
