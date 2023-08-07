@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: https://eureka.ssafy.shop/eureka/
