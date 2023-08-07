@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "430647698728",
+    "project_id": "peeling-onion-80d46",
+    "storage_bucket": "peeling-onion-80d46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430647698728:android:5ad0de96eaa8dca4c91c1d",
+        "android_client_info": {
+          "package_name": "com.example.front"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430647698728-2abr4hgnoogs5am9b0ekgjbkre7ngktn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3CSu3klLUlZuH8RhyPC_5MfYThrrhwik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430647698728-2abr4hgnoogs5am9b0ekgjbkre7ngktn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

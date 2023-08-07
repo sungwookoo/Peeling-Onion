@@ -1,0 +1,31 @@
+spring:
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: false
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+
+logging:
+  level:
+    root: debug
+
+settings:
+  cross-origin: "*"
+
+authServer: https://test.auth.ssafy.shop
+userServer: https://test.user.ssafy.shop
+alarmServer: https://test.alarm.ssafy.shop
