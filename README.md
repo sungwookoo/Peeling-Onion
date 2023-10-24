@@ -76,8 +76,8 @@
 
 ✔️ **결과**
 
-- [앱 다운로드 페이지](https://ssafy.shop)
-- [원스토어 링크](https://onesto.re/0000768589)
+- [앱 다운로드 페이지]~~(https://ssafy.shop)~~
+- [원스토어 링크]~~(https://onesto.re/0000768589)~~
 
 ![po12](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/36ab8086-b5cd-4916-a332-2898cf8b7dba)
 ![po11](https://github.com/sungwookoo/Peeling-Onion/assets/53362965/34475bf9-bb1d-4b72-b7b1-a9875ef6225d)
